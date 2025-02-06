@@ -1,3 +1,4 @@
+/* Reseta margens e paddings, e define fontes gerais */
 * {
     margin: 0;
     padding: 0;
@@ -5,6 +6,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* Corpo da página */
 body {
     display: flex;
     flex-direction: column;
@@ -12,6 +14,7 @@ body {
     background-color: white;
 }
 
+/* Cabeçalho do site */
 header.cabecalho {
     width: 100%;
     background-color: #38a5ff;
@@ -22,11 +25,13 @@ header.cabecalho {
     font-weight: bold;
 }
 
+/* Container geral, divide o conteúdo entre o menu e o conteúdo principal */
 .container {
     display: flex;
     flex: 1;
 }
 
+/* Menu lateral */
 nav.menu {
     width: 15%;
     background-color: #38a5ff;
@@ -50,6 +55,7 @@ nav.menu a:hover {
     border-radius: 8px;
 }
 
+/* Conteúdo principal */
 .conteudo {
     flex: 1;
     display: flex;
@@ -58,36 +64,43 @@ nav.menu a:hover {
     padding: 20px;
 }
 
+/* Contêiner do calendário */
 .calendario-container {
     display: flex;
     justify-content: center;
 }
 
+/* Layout da grade dos meses */
 .calendario {
     width: 100%;
     height: 100%;
-    background-color: rgb(247, 247, 247);
+    background-color: transparent;
     border-radius: 10px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr); /* 4 colunas */
+    grid-template-rows: repeat(3, 1fr); /* 3 linhas */
     gap: 10px;
     padding: 20px;
 }
 
+/* Estilo de cada mês */
 .mes {
-    width: 180px;
-    height: 130px;
-    background-color: #38a5ff;
+    width: 230px;
+    height: 193px;
+    background-color: #f1f1f1;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    border-radius: 8px;
+    border-radius: 9px;
+    margin-right: 7px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
 }
 
+/* Estilo do mês expandido */
 .mes.expanded {
     position: fixed;
     top: 15%;
@@ -99,6 +112,7 @@ nav.menu a:hover {
     transform: scale(1);
 }
 
+/* Estilo do calendário expandido */
 .calendario-expandido {
     display: grid;
     grid-template-columns: repeat(7, 1fr); /* 7 colunas para os dias da semana */
@@ -108,47 +122,27 @@ nav.menu a:hover {
     margin-top: 10px; /* Distância para separar dos botões */
 }
 
+/* Cabeçalhos de dias no calendário */
 .calendario-expandido .header {
     font-weight: bold;
-    background-color: #38a5ff;
+    background-color: #f1f1f1;
 }
 
+/* Estilo dos dias do mês */
 .calendario-expandido .day {
-    padding: 20px; /* Aumentando o espaço interno para garantir um bom tamanho */
+    padding: 20px;
     background-color: #fafafa;
-    color: #0058a0;
+    color: #b0b0b0;
     border-radius: 5px;
     cursor: pointer;
-    min-width: 40px; /* Tamanho mínimo para largura */
-    min-height: 40px; /* Tamanho mínimo para altura */
+    min-width: 40px;
+    min-height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+/* Hover nos dias */
 .calendario-expandido .day:hover {
-    background-color: #ededed;
-}
-
-.navigation {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #fafafa;
-    border-radius: 8px 8px 0 0;
-    margin-bottom: 15px;
-}
-
-.botao-nav {
-    background-color: #38a5ff;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 45%;
-}
-
-.botao-nav:hover {
-    background-color: #4db8ff;
+    background-color: #dfdfdf;
 }
