@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - FOAG</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .login-page {
+      width: 100vw;
+      height: 100vh;
+      background-color: white;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+    }
+
+    .left-section {
+      width: 50%;
+      background: url('https://source.unsplash.com/1024x768/?nature') no-repeat center center/cover;
+    }
+
+    .right-section {
+      width: 50%;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px;
+      position: relative;
+    }
+
+    .logo {
+      background-color: #007bff;
+      color: white;
+      font-size: 2em;
+      padding: 10px 20px;
+      width: 100%;
+      text-align: left;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #007bff;
+      margin-bottom: 2em;
+      text-align: center;
+    }
+
+    form {
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 15px 18px;
+      border: 2px solid #ddd;
+      border-radius: 25px;
+      font-size: 1.2rem;
+      margin-bottom: 1.5em;
+    }
+
+    .action-links {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1.5em;
+    }
+
+    .action-links a {
+      color: #007bff;
+      text-decoration: none;
+      font-size: 1em;
+    }
+
+    button[type="submit"] {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 15px;
+      font-size: 1.2rem;
+      border-radius: 25px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-page">
+    <div class="left-section"></div>
+    <div class="right-section">
+      <div class="logo">FOAG</div>
+      <h1>Login</h1>
+      <form action="#" method="POST">
+        <input type="email" id="email" name="email" placeholder="E-mail">
+        <input type="password" id="password" name="password" placeholder="Senha">
+        <div class="action-links">
+          <a href="#">CADASTRE-SE</a>
+        </div>
+        <button type="submit">entrar</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
