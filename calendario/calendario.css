@@ -1,58 +1,81 @@
-
-body {
-    font-family: Arial, sans-serif;
+* {
     margin: 0;
     padding: 0;
-  }
-  
-  header.cabecalho {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: white;
+}
+
+header.cabecalho {
+    width: 100%;
     background-color: #38a5ff;
     color: white;
     text-align: center;
-    padding: 20px;
+    padding: 15px;
     font-size: 24px;
-  }
-  
-  .container {
+    font-weight: bold;
+}
+
+.container {
     display: flex;
-    min-height: 100vh;
-  }
-  
-  nav.menu {
-    width: 200px;
+    flex: 1;
+}
+
+nav.menu {
+    width: 15%;
     background-color: #38a5ff;
-    color: white;
     padding: 20px;
-  }
-  
-  nav.menu a {
-    display: block;
-    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+nav.menu a {
     text-decoration: none;
-    padding: 10px 0;
-  }
-  
-  nav.menu a:hover {
-    background-color: #444;
-  }
-  
-  .conteudo {
-    flex-grow: 1;
-    padding: 20px;
-  }
-  
-  .calendario-container {
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    transition: 0.3s;
+}
+
+nav.menu a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+
+.conteudo {
+    flex: 1;
     display: flex;
     justify-content: center;
-  }
-  
-  .calendario {
+    align-items: center;
+    padding: 20px;
+}
+
+.calendario-container {
+    display: flex;
+    justify-content: center;
+}
+
+.calendario {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(247, 247, 247);
+    border-radius: 10px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     gap: 10px;
-  }
-  
-  .mes {
+    padding: 20px;
+}
+
+.mes {
     width: 180px;
     height: 130px;
     background-color: #38a5ff;
@@ -63,21 +86,69 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 8px;
-  }
-  
-  .mes:hover {
-    background-color: #4db8ff;
-  }
-  
-  /* Estilo para o mês expandido */
-  .mes.expanded {
+}
+
+.mes.expanded {
     position: fixed;
-    top: 10%;
-    left: 10%;
-    width: 80%;
-    height: 80%;
+    top: 15%;
+    left: 30%;
+    width: 40%;
+    height: 60%;
     z-index: 999;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     transform: scale(1);
-  }
-  
+}
+
+.calendario-expandido {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 colunas para os dias da semana */
+    gap: 5px;
+    text-align: center;
+    padding: 10px;
+    margin-top: 10px; /* Distância para separar dos botões */
+}
+
+.calendario-expandido .header {
+    font-weight: bold;
+    background-color: #38a5ff;
+}
+
+.calendario-expandido .day {
+    padding: 20px; /* Aumentando o espaço interno para garantir um bom tamanho */
+    background-color: #fafafa;
+    color: #0058a0;
+    border-radius: 5px;
+    cursor: pointer;
+    min-width: 40px; /* Tamanho mínimo para largura */
+    min-height: 40px; /* Tamanho mínimo para altura */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calendario-expandido .day:hover {
+    background-color: #ededed;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #fafafa;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 15px;
+}
+
+.botao-nav {
+    background-color: #38a5ff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 45%;
+}
+
+.botao-nav:hover {
+    background-color: #4db8ff;
+}
