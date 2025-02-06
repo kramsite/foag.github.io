@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Site</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: white;
+        }
+        .cabecalho {
+            width: 100%;
+            background-color: #38a5ff;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .container {
+            display: flex;
+            flex: 1;
+        }
+        .menu {
+            width: 20%;
+            background-color: #38a5ff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .menu a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            padding: 10px;
+            transition: 0.3s;
+        }
+        .menu a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+        }
+        .conteudo {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .calendario {
+            width: 70%;
+            height: 80%;
+            background-color: #7d5ffb;
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+        .calendario div {
+            background-color: white;
+            color: #7d5ffb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .calendario div:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <header class="cabecalho">Meu Site</header>
+    <div class="container">
+        <nav class="menu">
+            <a href="#">Início</a>
+            <a href="#">Sobre</a>
+            <a href="#">Serviços</a>
+            <a href="#">Contato</a>
+        </nav>
+        <div class="conteudo">
+            <div class="calendario">
+                <div>Jan</div>
+                <div>Fev</div>
+                <div>Mar</div>
+                <div>Abr</div>
+                <div>Mai</div>
+                <div>Jun</div>
+                <div>Jul</div>
+                <div>Ago</div>
+                <div>Set</div>
+                <div>Out</div>
+                <div>Nov</div>
+                <div>Dez</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
