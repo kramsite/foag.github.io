@@ -1,0 +1,83 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header.cabecalho {
+    background-color: #38a5ff;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 24px;
+  }
+  
+  .container {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  nav.menu {
+    width: 200px;
+    background-color: #38a5ff;
+    color: white;
+    padding: 20px;
+  }
+  
+  nav.menu a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 0;
+  }
+  
+  nav.menu a:hover {
+    background-color: #444;
+  }
+  
+  .conteudo {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .calendario-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .calendario {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  
+  .mes {
+    width: 180px;
+    height: 130px;
+    background-color: #38a5ff;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+  }
+  
+  .mes:hover {
+    background-color: #4db8ff;
+  }
+  
+  /* Estilo para o mês expandido */
+  .mes.expanded {
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    z-index: 999;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    transform: scale(1);
+  }
+  
