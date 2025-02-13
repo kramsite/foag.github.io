@@ -22,17 +22,31 @@
 
         function adicionarLinha() {
             const tabela = document.getElementById("scheduleTable");
-            const novaLinha = tabela.insertRow(tabela.rows.length - 1); // Adiciona antes do botão
-
-            // Cria as células para a nova linha
+            const novaLinha = tabela.insertRow(tabela.rows.length);
             for (let i = 0; i < 6; i++) {
                 const celula = novaLinha.insertCell(i);
+                celula.contentEditable = true;
+                celula.style.backgroundColor = i === 0 ? "#007BFF" : "#e3f2fd";
+                celula.style.color = i === 0 ? "white" : "black";
                 if (i === 0) {
-                    celula.innerHTML = "Nova Hora";
-                } else {
-                    celula.contentEditable = true;
+                    celula.innerHTML = "Novo Horário";
                 }
             }
+        }
+
+        function adicionarIntervalo() {
+            const tabela = document.getElementById("scheduleTable");
+            const novaLinha = tabela.insertRow(tabela.rows.length);
+            const celula = novaLinha.insertCell(0);
+            celula.colSpan = 6;
+            celula.contentEditable = true;
+            celula.style.backgroundColor = "#ffcccb";
+            celula.innerHTML = "Intervalo";
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById("menuLateral");
+            menu.style.width = menu.style.width === "250px" ? "0" : "250px";
         }
     </script>
     <style>
@@ -40,7 +54,51 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
+        
+        .header {
+            background: #38a5ff;
+            padding: 15px;
+            text-align: left;
+            position: relative;
+        }
+        
+        .menu-button {
+            background: transparent;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 30px;
+        }
+        
+        .menu-lateral {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #38a5ff;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+        
+        .menu-lateral a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+        
+        .menu-lateral a:hover {
+            background-color: #575757;
+        }
+        
         table {
             width: 80%;
             margin: 20px auto;
@@ -63,10 +121,15 @@
             background-color: #e3f2fd;
             cursor: text;
         }
+        td:first-child {
+            background-color: #007BFF;
+            color: white;
+            contenteditable: true;
+        }
         button {
             margin: 10px;
             padding: 10px;
-            background-color: #28a745;
+            background-color: #38a5ff;
             color: white;
             border: none;
             cursor: pointer;
@@ -74,17 +137,20 @@
         button:hover {
             background-color: #218838;
         }
-        textarea, input[type="text"], input[type="date"] {
-            width: 80%;
-            margin: 10px auto;
-            padding: 10px;
-            font-size: 16px;
-            display: block;
-        }
     </style>
 </head>
 <body onload="carregarEdicoes()">
-    <h2>Horário Escolar</h2>
+    <div class="header">
+        <button class="menu-button" onclick="toggleMenu()">☰</button>
+    </div>
+    
+    <div id="menuLateral" class="menu-lateral">
+        <a href="javascript:void(0)" onclick="toggleMenu()">Fechar</a>
+        <a href="#">Opção 1</a>
+        <a href="#">Opção 2</a>
+        <a href="#">Opção 3</a>
+    </div>
+    
     <table id="scheduleTable">
         <tr>
             <th>Horário</th>
@@ -95,7 +161,7 @@
             <th>Sexta-feira</th>
         </tr>
         <tr>
-            <td>07:00 - 07:50</td>
+            <td contenteditable="true">07:00 - 07:50</td>
             <td contenteditable="true">Matemática</td>
             <td contenteditable="true">História</td>
             <td contenteditable="true">Português</td>
@@ -103,7 +169,7 @@
             <td contenteditable="true">Geografia</td>
         </tr>
         <tr>
-            <td>07:50 - 08:40</td>
+            <td contenteditable="true">07:50 - 08:40</td>
             <td contenteditable="true">Inglês</td>
             <td contenteditable="true">Matemática</td>
             <td contenteditable="true">Educação Física</td>
@@ -113,5 +179,6 @@
     </table>
     <button onclick="salvarEdicoes()">Salvar Edições</button>
     <button onclick="adicionarLinha()">Adicionar Linha</button>
+    <button onclick="adicionarIntervalo()">Adicionar Intervalo</button>
 </body>
 </html>
