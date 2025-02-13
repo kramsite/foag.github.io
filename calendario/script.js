@@ -67,3 +67,38 @@ function expandirMes(elemento, mes) {
   
     return dias;
   }
+
+  // Função para obter o número de dias no mês considerando anos bissextos
+function obterDiasDoMes(mes) {
+  const anoAtual = new Date().getFullYear();
+  const isBissexto = (anoAtual % 4 === 0 && anoAtual % 100 !== 0) || (anoAtual % 400 === 0);
+
+  const meses = {
+    Janeiro: 31,
+    Fevereiro: isBissexto ? 29 : 28,
+    Março: 31,
+    Abril: 30,
+    Maio: 31,
+    Junho: 30,
+    Julho: 31,
+    Agosto: 31,
+    Setembro: 30,
+    Outubro: 31,
+    Novembro: 30,
+    Dezembro: 31
+  };
+
+  const dias = [];
+  const primeiroDia = new Date(anoAtual, Object.keys(meses).indexOf(mes), 1).getDay();
+
+  for (let i = 0; i < primeiroDia; i++) {
+      dias.push(''); // Espaços vazios para dias antes do primeiro do mês
+  }
+
+  for (let i = 1; i <= meses[mes]; i++) {
+      dias.push(i);
+  }
+
+  return dias;
+}
+
