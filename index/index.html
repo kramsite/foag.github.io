@@ -55,24 +55,25 @@
       position: relative;
     }
 
-    .logo {
-      background-color: #38a5ff;
-      color: white;
-      font-size: 2.2em;
-      padding: 15px 20px;
-      width: 100%;
-      text-align: left;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-    }
+.logo {
+  font-family: 'snap itc';
+  background-color: #38a5ff;
+  color: white;
+  font-size: 2.2em;
+  padding: 15px 20px;
+  width: 100%;
+  text-align: left;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+}
 
     .logo img {
-      width: 80px;
-      height: 80px;
+      width: 40px;
+      height: 40px;
       margin-right: 10px;
     }
 
@@ -123,6 +124,16 @@
     button:hover {
       background-color: #0056b3;
     }
+
+    @font-face {
+  font-family: 'Ame Chan Pop Maru';
+  src: url('fonts/AmeChanPopMaru.woff2') format('woff2'),
+       url('fonts/AmeChanPopMaru.woff') format('woff'),
+       url('fonts/AmeChanPopMaru.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
   </style>
 </head>
 <body>
@@ -132,7 +143,7 @@
     </div>
     <div class="right-section">
       <div class="logo">
-        <img src="../index/img/foag.png" alt="Logo">
+       FOAG
       </div>
       <h1>Login</h1>
       <form id="loginForm">

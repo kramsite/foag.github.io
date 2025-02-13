@@ -88,7 +88,7 @@ nav.menu a:hover {
     width: 230px;
     height: 193px;
     background-color: #f1f1f1;
-    color: white;
+    color: rgb(60, 60, 60);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -110,7 +110,29 @@ nav.menu a:hover {
     z-index: 999;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     transform: scale(1);
+    border: 3px solid #38a5ff;
 }
+
+.mes.expanded::before {
+    content: attr(data-month);
+    display: block;
+    background-color: #38a5ff;
+    color: white;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.mes.expanded {
+    padding-top: 50px; /* Espaço para a faixa azul */
+    border: 5px solid #38a5ff;
+}
+
 
 /* Estilo do calendário expandido */
 .calendario-expandido {
@@ -132,7 +154,7 @@ nav.menu a:hover {
 .calendario-expandido .day {
     padding: 20px;
     background-color: #fafafa;
-    color: #b0b0b0;
+    color: #000000;
     border-radius: 5px;
     cursor: pointer;
     min-width: 40px;
