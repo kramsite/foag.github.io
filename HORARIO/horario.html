@@ -4,9 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horário Escolar</title>
-    <link rel="stylesheet" href="horario.css">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        function salvarEdicoes() {
+            const tabela = document.getElementById("scheduleTable");
+            localStorage.setItem("horarioEscolar", tabela.innerHTML);
+            alert("Horário salvo com sucesso!");
+        }
+
+        function carregarEdicoes() {
+            const tabela = document.getElementById("scheduleTable");
+            const dadosSalvos = localStorage.getItem("horarioEscolar");
+            if (dadosSalvos) {
+                tabela.innerHTML = dadosSalvos;
+            }
+        }
+
+        function adicionarLinha() {
+            const tabela = document.getElementById("scheduleTable");
+            const novaLinha = tabela.insertRow(tabela.rows.length - 1); // Adiciona antes do botão
+
+            // Cria as células para a nova linha
+            for (let i = 0; i < 6; i++) {
+                const celula = novaLinha.insertCell(i);
+                if (i === 0) {
+                    celula.innerHTML = "Nova Hora";
+                } else {
+                    celula.contentEditable = true;
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        td[contenteditable="true"] {
+            background-color: #e3f2fd;
+            cursor: text;
+        }
+        button {
+            margin: 10px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        textarea, input[type="text"], input[type="date"] {
+            width: 80%;
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 16px;
+            display: block;
+        }
+    </style>
 </head>
-<body>
+<body onload="carregarEdicoes()">
     <h2>Horário Escolar</h2>
     <table id="scheduleTable">
         <tr>
@@ -33,33 +110,8 @@
             <td contenteditable="true">Artes</td>
             <td contenteditable="true">Português</td>
         </tr>
-        <tr>
-            <td>08:40 - 09:30</td>
-            <td contenteditable="true">Química</td>
-            <td contenteditable="true">Biologia</td>
-            <td contenteditable="true">História</td>
-            <td contenteditable="true">Matemática</td>
-            <td contenteditable="true">Filosofia</td>
-        </tr>
-        <tr>
-            <td colspan="6"><strong>Intervalo (09:30 - 09:50)</strong></td>
-        </tr>
-        <tr>
-            <td>09:50 - 10:40</td>
-            <td contenteditable="true">Física</td>
-            <td contenteditable="true">Geografia</td>
-            <td contenteditable="true">Inglês</td>
-            <td contenteditable="true">Biologia</td>
-            <td contenteditable="true">Sociologia</td>
-        </tr>
-        <tr>
-            <td>10:40 - 11:30</td>
-            <td contenteditable="true">Redação</td>
-            <td contenteditable="true">Filosofia</td>
-            <td contenteditable="true">Ciências</td>
-            <td contenteditable="true">História</td>
-            <td contenteditable="true">Química</td>
-        </tr>
     </table>
+    <button onclick="salvarEdicoes()">Salvar Edições</button>
+    <button onclick="adicionarLinha()">Adicionar Linha</button>
 </body>
 </html>
