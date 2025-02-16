@@ -96,7 +96,7 @@ nav.menu a:hover {
 
 /* Estilo dos meses */
 .mes {
-    width: 230px;
+    width: auto;
     height: auto; /* Altura ajustada para caber os dias */
     background-color: #f1f1f1;
     color: rgb(60, 60, 60);
@@ -170,11 +170,7 @@ nav.menu a:hover {
     cursor: pointer;
     transition: background-color 0.3s ease;
     height: 35px;
-}
-
-/* Efeito de hover nos dias */
-.dia:hover {
-    background-color: #e0e0e0;
+    width: 30px;
 }
 
 /* Responsividade: Ajustes para telas menores */
