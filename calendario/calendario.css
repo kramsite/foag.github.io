@@ -16,10 +16,11 @@ body {
 
 /* Cabeçalho do site */
 header.cabecalho {
+    font-family: 'snap itc';
     width: 100%;
     background-color: #38a5ff;
     color: white;
-    text-align: center;
+    text-align: left;
     padding: 15px;
     font-size: 24px;
     font-weight: bold;
@@ -86,11 +87,12 @@ nav.menu a:hover {
 /* Estilo de cada mês */
 .mes {
     width: 230px;
-    height: 193px;
+    height: auto; /* Altura ajustada para caber os dias */
     background-color: #f1f1f1;
     color: rgb(60, 60, 60);
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Flex para alinhar o mês e os dias */
+    justify-content: flex-start;
     align-items: center;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -98,6 +100,12 @@ nav.menu a:hover {
     margin-right: 7px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     border: 1px solid #e0e0e0;
+    padding: 10px;
+}
+
+/* Desabilita interação com os dias do calendário pequeno */
+.mes .dias .dia {
+    pointer-events: none; /* Desabilita interação com os dias no calendário pequeno */
 }
 
 /* Estilo do mês expandido */
@@ -111,60 +119,79 @@ nav.menu a:hover {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     transform: scale(1);
     border: 3px solid #38a5ff;
+    padding-top: 50px;
 }
-
-.mes.expanded::before {
-    content: attr(data-month);
-    display: block;
-    background-color: #38a5ff;
-    color: white;
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    padding: 10px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-}
-
-.mes.expanded {
-    padding-top: 50px; /* Espaço para a faixa azul */
-    border: 5px solid #38a5ff;
-}
-
 
 /* Estilo do calendário expandido */
-.calendario-expandido {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 colunas para os dias da semana */
-    gap: 5px;
-    text-align: center;
-    padding: 10px;
-    margin-top: 10px; /* Distância para separar dos botões */
-}
-
-/* Cabeçalhos de dias no calendário */
-.calendario-expandido .header {
-    font-weight: bold;
-    background-color: #f1f1f1;
-}
-
-/* Estilo dos dias do mês */
-.calendario-expandido .day {
-    padding: 20px;
-    background-color: #fafafa;
-    color: #000000;
-    border-radius: 5px;
-    cursor: pointer;
-    min-width: 40px;
-    min-height: 40px;
+.mes.expanded .calendario-mes {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-/* Hover nos dias */
-.calendario-expandido .day:hover {
-    background-color: #dfdfdf;
+/* Estilo para os dias da semana no calendário expandido */
+.mes.expanded .dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 colunas, uma para cada dia da semana */
+    gap: 5px;
+    width: 100%;
+    padding: 5px;
+}
+
+.mes.expanded .dias .day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: 35px;
+    pointer-events: auto; /* Permite interação com os dias no calendário expandido */
+}
+
+.mes.expanded .dias .day:hover {
+    background-color: #e0e0e0;
+}
+
+/* Cabeçalho dos meses */
+.header-mes {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    background-color: #38a5ff;
+    color: white;
+    width: 100%;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 5px;
+}
+
+/* Estilo dos dias no calendário pequeno */
+.dia {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: 35px;
+}
+
+/* Permite interações apenas no calendário expandido */
+.mes.expanded .dia {
+    pointer-events: auto; /* Interação habilitada quando expandido */
+}
+
+/* Desabilita interação com os dias no calendário pequeno */
+.mes .dias .dia {
+    pointer-events: none; /* Não permite interação nos dias do calendário pequeno */
+}
+
+.dia:hover {
+    background-color: #e0e0e0;
 }
