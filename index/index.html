@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Poppins';
     }
 
     body {
@@ -18,19 +19,41 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      flex-direction: column;
+      overflow: hidden; /* Impede rolagem na página */
     }
 
+    /* Cabeçalho fixo no topo */
+    .logo {
+      font-family: 'snap itc';
+      background-color: #38a5ff;
+      color: white;
+      font-size: 2.2em;
+      padding: 15px 20px;
+      width: 100%;
+      text-align: left;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 0; /* Remove qualquer margem que poderia criar espaço */
+    }
+
+    /* Página de login */
     .login-page {
       width: 100vw;
       height: 100vh;
       background-color: white;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
+      margin-top: 0; /* Remove qualquer margem entre o cabeçalho fixo e o conteúdo */
     }
 
     .left-section {
       width: 50%;
+      height: 100vh; /* Garante que a imagem ocupe toda a altura da tela */
       background: url('https://source.unsplash.com/1024x768/?nature') no-repeat center center/cover;
       position: relative;
     }
@@ -51,30 +74,8 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 80px 60px;
-      position: relative;
-    }
-
-.logo {
-  font-family: 'snap itc';
-  background-color: #38a5ff;
-  color: white;
-  font-size: 2.2em;
-  padding: 15px 20px;
-  width: 100%;
-  text-align: left;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-}
-
-    .logo img {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
+      padding: 60px 40px;
+      height: 100vh;
     }
 
     h1 {
@@ -125,26 +126,20 @@
       background-color: #0056b3;
     }
 
-    @font-face {
-  font-family: 'Ame Chan Pop Maru';
-  src: url('fonts/AmeChanPopMaru.woff2') format('woff2'),
-       url('fonts/AmeChanPopMaru.woff') format('woff'),
-       url('fonts/AmeChanPopMaru.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
   </style>
 </head>
 <body>
+  <!-- Cabeçalho fixo -->
+  <div class="logo">
+    FOAG
+  </div>
+
+  <!-- Página de login -->
   <div class="login-page">
     <div class="left-section">
-      <img src="../index/img/livro.png" alt="Inspirational image" style="width: 100%; height: auto;">
+      <img src="../index/img/livro.png" alt="Inspirational image" style="width: 100%; height: 100%; object-fit: cover;">
     </div>
     <div class="right-section">
-      <div class="logo">
-       FOAG
-      </div>
       <h1>Login</h1>
       <form id="loginForm">
         <input type="email" id="email" name="email" placeholder="E-mail">
