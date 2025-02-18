@@ -86,22 +86,14 @@ nav.menu a:hover {
     padding: 20px;
 }
 
-.calendario-expandido {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-}
-
-
 /* Estilo dos meses */
 .mes {
     width: auto;
-    height: auto; /* Altura ajustada para caber os dias */
+    height: auto;
     background-color: #f1f1f1;
     color: rgb(60, 60, 60);
     display: flex;
-    flex-direction: column; /* Flex para alinhar o mês e os dias */
+    flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     cursor: pointer;
@@ -122,8 +114,9 @@ nav.menu a:hover {
     height: 60%;
     z-index: 999;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    transform: scale(1);
-    border: 10px solid #38a5ff;
+    border: 5px solid #38a5ff;
+    border-top: 35px solid #38a5ff;
+    border-bottom: 7px solid #38a5ff;
     padding-top: 20px;
     background-color: white;
     border-radius: 10px;
@@ -153,7 +146,7 @@ nav.menu a:hover {
 /* Layout dos dias da semana */
 .dias {
     display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 colunas, uma para cada dia da semana */
+    grid-template-columns: repeat(7, 1fr); /* 7 colunas */
     gap: 5px;
     width: 100%;
     padding: 5px;
@@ -197,7 +190,7 @@ nav.menu a:hover {
 
 @media (max-width: 480px) {
     .calendario {
-        grid-template-columns: 1fr; /* 1 coluna para telas muito pequenas */
+        grid-template-columns: 1fr; /* 1 coluna para telas pequenas */
     }
 
     .mes {
