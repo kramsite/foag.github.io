@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+}
+
+body {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Cabeçalho fixo no topo */
+.logo {
+    font-family: 'snap itc';
+    background-color: #38a5ff;
+    color: white;
+    font-size: 2.2em;
+    padding: 15px 20px;
+    width: 100%;
+    text-align: left;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0;
+}
+
+/* Main */
+main {
+    padding: 1rem 3vw;
+    text-align: center;
+    min-height: calc(100vh - 120px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+/* Section do cadastro */
+.cadastro {
+    width: 700px;
+    height: auto;
+    padding: 40px;
+    margin: 30px auto;
+    background-color: #38a5ff;
+    border-radius: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Título h2 */
+.cadastro h2 {
+    background-color: #38a5ff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #f8f8f8;
+}
+
+/* Estilos para o formulário */
+.cadastro form {
+    display: block; /* Alinha os elementos do formulário em linha */
+    flex-direction: column; /* Coloca os elementos em coluna */
+    align-items: flex-start; /* Alinha os elementos à esquerda */
+}
+
+/* Labels */
+.cadastro label {
+    width: 150px;
+    text-align: left;
+    display: block;
+    margin-bottom: 5px;
+    color: white; /* Letras brancas */
+}
+
+/* Inputs */
+.cadastro input[type="text"],
+.cadastro input[type="email"],
+.cadastro input[type="tel"],
+.cadastro input[type="password"] {
+    width: calc(100% - 160px);
+    display: block;
+    padding: 8px;
+    border: 1px solid #38a5ff;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    color: white; /* Letras brancas */
+}
+
+/* Botão */
+.cadastro button {
+    background-color: #f8f8f8;
+    color: #38a5ff; /* Cor do texto alterada para combinar com o design */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px; /* Adiciona um espaço acima do botão */
+    align-self: flex-end; /* Alinha o botão à direita */
+}
+
+.cadastro button:hover {
+    background-color: #1e70bf;
+    color: white; /* Cor do texto alterada para melhor contraste */
+}
+
+/* Footer */
+footer {
+    background-color: #232323;
+    color: #ffffff;
+    text-align: center;
+    padding: 0.5rem;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+    font-size: 0.9em;
+    margin-top: 20px;
+}
