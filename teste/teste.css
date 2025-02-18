@@ -166,6 +166,16 @@ nav.menu a:hover {
     width: 30px;
 }
 
+.calendario-expandido .header {
+    font-weight: bold;
+    font-size: 1.2em; /* Aumenta o tamanho da fonte dos dias da semana */
+    padding: 5px 0; /* Aumenta o espaçamento dos dias da semana */
+    text-align: center;
+    background-color: #38a5ff;
+    color: white;
+    border-radius: 2px;
+}
+
 /* Responsividade: Ajustes para telas menores */
 @media (max-width: 768px) {
     .container {
