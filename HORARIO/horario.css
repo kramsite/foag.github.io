@@ -15,9 +15,9 @@ body {
 
 /* Cabeçalho do site */
 header.cabecalho {
-    font-family: 'snap ITC', sans-serif ;
+    font-family: 'snap ITC', sans-serif;
     width: 100%;
-    background-color: #38a5ff ; /* Azul mais suave */
+    background-color: #38a5ff; /* Azul mais suave */
     color: white;
     text-align: left;
     padding: 20px;
@@ -68,27 +68,39 @@ nav.menu a:hover {
     overflow-x: auto;
 }
 
+/* Título da tabela */
+.titulo-tabela {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
 /* Estilos da tabela */
 table {
     width: 100%;
     margin: 20px 0;
-    border-collapse: collapse;
+    border-collapse: collapse; /* Para que as bordas internas fiquem finas */
     background: white;
-    border-radius: 10px;
+    border-radius: 10px; /* Borda externa arredondada */
+    border: 1px solid #ddd; /* Borda externa da tabela */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
+/* Borda interna fina para células */
 th, td {
-    border: 1px solid #ddd;
+    border: 1px solid #ddd; /* Borda fina interna */
     padding: 15px;
     text-align: center;
 }
 
+/* Cabeçalho */
 th {
     background: #38a5ff;
     color: white;
     font-weight: bold;
-    border-radius: 10px 10px 0 0;
+    border-radius: 10px 10px 0 0; /* Borda arredondada apenas na parte superior da tabela */
 }
 
 tr:nth-child(even) {
@@ -96,7 +108,7 @@ tr:nth-child(even) {
 }
 
 td[contenteditable="true"] {
-    background-color: #e6f4ff;
+    background-color: #ececec;
     cursor: text;
 }
 
