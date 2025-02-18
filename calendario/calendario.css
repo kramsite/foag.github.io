@@ -123,7 +123,7 @@ nav.menu a:hover {
     z-index: 999;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     transform: scale(1);
-    border: 3px solid #38a5ff;
+    border: 10px solid #38a5ff;
     padding-top: 20px;
     background-color: white;
     border-radius: 10px;
