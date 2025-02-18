@@ -35,3 +35,33 @@ function adicionarIntervalo() {
     celula.style.backgroundColor = "#ffcccb";
     celula.innerHTML = "Intervalo";
 }
+
+// Função para salvar a tabela como PDF
+function salvarComoPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Tabela
+    const tabela = document.getElementById("scheduleTable");
+    const rows = tabela.rows;
+
+    let yPosition = 10; // Posição vertical inicial no PDF
+
+    // Adicionando cabeçalho da tabela
+    doc.setFontSize(12);
+    for (let i = 0; i < rows[0].cells.length; i++) {
+        doc.text(rows[0].cells[i].textContent, 10 + (i * 40), yPosition);
+    }
+    yPosition += 10;
+
+    // Adicionando o conteúdo da tabela
+    for (let i = 1; i < rows.length; i++) {
+        for (let j = 0; j < rows[i].cells.length; j++) {
+            doc.text(rows[i].cells[j].textContent, 10 + (j * 40), yPosition);
+        }
+        yPosition += 10;
+    }
+
+    // Gerando o arquivo PDF
+    doc.save('horario_escolar.pdf');
+}

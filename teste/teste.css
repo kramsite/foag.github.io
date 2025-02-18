@@ -108,18 +108,20 @@ nav.menu a:hover {
 /* Estilo do mês expandido */
 .mes.expanded {
     position: fixed;
-    top: 15%;
-    left: 30%;
-    width: 40%;
-    height: 60%;
+    top: 50%; /* Centraliza verticalmente */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translate(-50%, -50%); /* Ajusta a posição para que o centro seja o ponto de referência */
+    width: 570px; /* Largura do quadro */
+    height: 490px; /* Ajustado para dar mais espaço */
     z-index: 999;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
     border: 5px solid #38a5ff;
-    border-top: 35px solid #38a5ff;
+    border-top: 45px solid #38a5ff;
     border-bottom: 7px solid #38a5ff;
     padding-top: 20px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
+    overflow: hidden;
 }
 
 /* Cabeçalho do mês */
@@ -128,6 +130,7 @@ nav.menu a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 15px; /* Espaçamento inferior */
 }
 
 /* Estilo do título do mês */
@@ -147,7 +150,7 @@ nav.menu a:hover {
 .dias {
     display: grid;
     grid-template-columns: repeat(7, 1fr); /* 7 colunas */
-    gap: 5px;
+    gap: 10px; /* Maior espaçamento entre os dias */
     width: 100%;
     padding: 5px;
 }
@@ -164,6 +167,54 @@ nav.menu a:hover {
     transition: background-color 0.3s ease;
     height: 35px;
     width: 30px;
+}
+
+/* Estilo do calendário expandido */
+.calendario-expandido {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ajustes para os dias no calendário expandido */
+.calendario-expandido .dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 colunas */
+    gap: 5px;
+    width: 80%;
+    height: 80%;
+    padding: 5px;
+}
+
+.calendario-expandido .dia {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+    border-radius: 8px;
+    font-size: 1.5em; /* Tamanho maior e mais legível */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    height: 50px; /* Aumenta o tamanho das células */
+    width: 50px; /* Aumenta o tamanho das células */
+}
+
+.calendario-expandido .dia:hover {
+    background-color: #38a5ff;
+    color: white;
+}
+
+.calendario-expandido .header {
+    font-weight: bold;
+    font-size: 1.3em; /* Ajusta o tamanho da fonte */
+    padding: 10px 5px;
+    text-align: center;
+    background-color: #38a5ff;
+    color: white;
+    border-radius: 5px;
+    margin-bottom: 5px; /* Distância entre os cabeçalhos e os dias */
 }
 
 /* Responsividade: Ajustes para telas menores */
