@@ -4,129 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
+  <link rel="stylesheet" href="index.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins';
-    }
 
-    body {
-      background-color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      flex-direction: column;
-      overflow: hidden; /* Impede rolagem na página */
-    }
-
-    /* Cabeçalho fixo no topo */
-    .logo {
-      font-family: 'snap itc';
-      background-color: #38a5ff;
-      color: white;
-      font-size: 2.2em;
-      padding: 15px 20px;
-      width: 100%;
-      text-align: left;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin: 0; /* Remove qualquer margem que poderia criar espaço */
-    }
-
-    /* Página de login */
-    .login-page {
-      width: 100vw;
-      height: 100vh;
-      background-color: white;
-      display: flex;
-      margin-top: 0; /* Remove qualquer margem entre o cabeçalho fixo e o conteúdo */
-    }
-
-    .left-section {
-      width: 50%;
-      height: 100vh; /* Garante que a imagem ocupe toda a altura da tela */
-      background: url('https://source.unsplash.com/1024x768/?nature') no-repeat center center/cover;
-      position: relative;
-    }
-
-    .left-section::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: -50px;
-      width: 50px;
-      height: 100%;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
-    }
-
-    .right-section {
-      width: 50%;
-      background-color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 60px 40px;
-      height: 100vh;
-    }
-
-    h1 {
-      font-size: 3em;
-      color: #007bff;
-      margin-bottom: 2em;
-      text-align: center;
-    }
-
-    form {
-      max-width: 400px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    input[type="email"], input[type="password"] {
-      width: 100%;
-      padding: 15px 18px;
-      border: 2px solid #ddd;
-      font-size: 1.2rem;
-      margin-bottom: 1.5em;
-    }
-
-    .action-links {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 1.5em;
-    }
-
-    .action-links a {
-      color: #007bff;
-      text-decoration: none;
-      font-size: 1em;
-    }
-
-    button {
-      background-color: #38a5ff;
-      color: white;
-      border: none;
-      padding: 15px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      width: 100%;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-  </style>
 </head>
 <body>
   <!-- Cabeçalho fixo -->
@@ -151,12 +31,7 @@
       </form>
     </div>
   </div>
+  <script src="index.js"></script>
 
-  <script>
-    document.getElementById("loginForm").addEventListener("submit", function(event) {
-      event.preventDefault(); // Evita o envio padrão do formulário
-      window.open("../calendario/calendario.html", "_blank"); // Abre a nova aba
-    });
-  </script>
 </body>
 </html>
