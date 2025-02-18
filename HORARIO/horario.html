@@ -4,140 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horário Escolar</title>
-    <link rel="stylesheet" href="styles.css">
-    <script>
-        function salvarEdicoes() {
-            const tabela = document.getElementById("scheduleTable");
-            localStorage.setItem("horarioEscolar", tabela.innerHTML);
-            alert("Horário salvo com sucesso!");
-        }
+    <link rel="stylesheet" href="horario.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
-        function carregarEdicoes() {
-            const tabela = document.getElementById("scheduleTable");
-            const dadosSalvos = localStorage.getItem("horarioEscolar");
-            if (dadosSalvos) {
-                tabela.innerHTML = dadosSalvos;
-            }
-        }
-
-        function adicionarLinha() {
-            const tabela = document.getElementById("scheduleTable");
-            const novaLinha = tabela.insertRow(tabela.rows.length);
-            for (let i = 0; i < 6; i++) {
-                const celula = novaLinha.insertCell(i);
-                celula.contentEditable = true;
-                celula.style.backgroundColor = i === 0 ? "#007BFF" : "#e3f2fd";
-                celula.style.color = i === 0 ? "white" : "black";
-                if (i === 0) {
-                    celula.innerHTML = "Novo Horário";
-                }
-            }
-        }
-
-        function adicionarIntervalo() {
-            const tabela = document.getElementById("scheduleTable");
-            const novaLinha = tabela.insertRow(tabela.rows.length);
-            const celula = novaLinha.insertCell(0);
-            celula.colSpan = 6;
-            celula.contentEditable = true;
-            celula.style.backgroundColor = "#ffcccb";
-            celula.innerHTML = "Intervalo";
-        }
-
-        function toggleMenu() {
-            const menu = document.getElementById("menuLateral");
-            menu.style.width = menu.style.width === "250px" ? "0" : "250px";
-        }
-    </script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .header {
-            background: #38a5ff;
-            padding: 15px;
-            text-align: left;
-            position: relative;
-        }
-        
-        .menu-button {
-            background: transparent;
-            color: white;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-            font-size: 30px;
-        }
-        
-        .menu-lateral {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #38a5ff;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-        }
-        
-        .menu-lateral a {
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 18px;
-            color: white;
-            display: block;
-            transition: 0.3s;
-        }
-        
-        .menu-lateral a:hover {
-            background-color: #575757;
-        }
-        
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background: white;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background: #007BFF;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-        td[contenteditable="true"] {
-            background-color: #e3f2fd;
-            cursor: text;
-        }
-        td:first-child {
-            background-color: #007BFF;
-            color: white;
-            contenteditable: true;
-        }
-        button {
-            margin: 10px;
-            padding: 10px;
-            background-color: #38a5ff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-    </style>
 </head>
 <body onload="carregarEdicoes()">
     <div class="header">
@@ -180,5 +49,9 @@
     <button onclick="salvarEdicoes()">Salvar Edições</button>
     <button onclick="adicionarLinha()">Adicionar Linha</button>
     <button onclick="adicionarIntervalo()">Adicionar Intervalo</button>
+
+    <script src="horario.js"></script>
+    
+
 </body>
 </html>
