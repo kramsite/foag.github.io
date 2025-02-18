@@ -6,44 +6,61 @@ function expandirMes(elemento, mes) {
         expanded.classList.remove('expanded');
         expanded.innerHTML = expanded.getAttribute('data-month');
     }
-  
+
     // Alterna a classe 'expanded' para expandir/recolher o mês
     elemento.classList.toggle('expanded');
     
-    // Se o mês foi expandido, substituímos seu conteúdo com o calendário
+    // Se o mês foi expandido, substituímos seu conteúdo com o calendário completo
     if (elemento.classList.contains('expanded')) {
         elemento.setAttribute('data-month', elemento.innerHTML); // Armazena o nome do mês original
-        elemento.innerHTML = criarCalendario(mes); // Cria o calendário do mês
+        elemento.innerHTML = criarCalendario(mes); // Cria o calendário expandido do mês
     } else {
         elemento.innerHTML = elemento.getAttribute('data-month'); // Retorna ao nome do mês
     }
-  }
-  
-  // Função para criar o calendário de um mês (com dias da semana)
-  function criarCalendario(mes) {
+}
+
+// Função para preencher os dias do mês no formato não expandido
+function preencherDiasDoMes(mes) {
+    const diasDoMes = obterDiasDoMes(mes);
+    const diasContainer = document.querySelector(`.mes[data-month="${mes}"] .dias`);
+    
+    // Limpa os dias anteriores
+    diasContainer.innerHTML = '';
+    
+    // Preenche os dias do mês
+    diasDoMes.forEach(dia => {
+        const diaElement = document.createElement('div');
+        diaElement.classList.add('dia');
+        diaElement.textContent = dia || ''; // Adiciona um dia ou espaço vazio
+        diasContainer.appendChild(diaElement);
+    });
+}
+
+// Função para criar o calendário de um mês (com dias da semana) no modo expandido
+function criarCalendario(mes) {
     const diasDoMes = obterDiasDoMes(mes);
     const diasDaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
     
     let calendarioHTML = `
       <div class="calendario-expandido">
         <div class="dias">`;
-  
+
     // Adiciona os dias da semana como cabeçalho
     diasDaSemana.forEach(dia => {
         calendarioHTML += `<div class="header">${dia}</div>`;
     });
-  
+
     // Preenche os dias do mês, respeitando o primeiro dia da semana
     diasDoMes.forEach(dia => {
-        calendarioHTML += `<div class="day">${dia}</div>`;
+        calendarioHTML += `<div class="dia">${dia}</div>`;
     });
-  
+
     calendarioHTML += `</div></div>`; // Fecha o contêiner do calendário
     return calendarioHTML;
-  }
-  
-  // Função para obter os dias no mês, considerando anos bissextos
-  function obterDiasDoMes(mes) {
+}
+
+// Função para obter os dias no mês, considerando anos bissextos
+function obterDiasDoMes(mes) {
     const anoAtual = new Date().getFullYear();
     const isBissexto = (anoAtual % 4 === 0 && anoAtual % 100 !== 0) || (anoAtual % 400 === 0);
   
@@ -76,5 +93,10 @@ function expandirMes(elemento, mes) {
     }
   
     return dias;
-  }
-  
+}
+
+// Inicializa o calendário preenchendo os dias
+document.addEventListener('DOMContentLoaded', () => {
+    const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    meses.forEach(mes => preencherDiasDoMes(mes)); // Preenche todos os meses
+});
