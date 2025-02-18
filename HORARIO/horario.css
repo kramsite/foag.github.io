@@ -1,27 +1,139 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f4f4f4;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
+
+/* Corpo da página */
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #f5f7fa; /* Cor suave de fundo */
+}
+
+/* Cabeçalho do site */
+header.cabecalho {
+    font-family: 'snap ITC', sans-serif ;
+    width: 100%;
+    background-color: #38a5ff ; /* Azul mais suave */
+    color: white;
+    text-align: left;
+    padding: 20px;
+    font-size: 28px;
+    font-weight: 700;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+/* Container geral (menu e conteúdo principal) */
+.container {
+    display: flex;
+    flex: 1;
+}
+
+/* Menu lateral */
+nav.menu {
+    width: 250px;
+    background-color: #38a5ff; /* Azul */
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1); /* Sombra suave à direita */
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* Links do menu */
+nav.menu a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
+}
+
+/* Hover dos links */
+nav.menu a:hover {
+    background-color: #38a5ff;
+    transform: translateX(5px); /* Efeito de deslizar */
+}
+
+/* Área principal para o conteúdo da tabela */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-x: auto;
+}
+
+/* Estilos da tabela */
 table {
-    width: 80%;
-    margin: 20px auto;
+    width: 100%;
+    margin: 20px 0;
     border-collapse: collapse;
     background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
+
 th, td {
-    border: 1px solid #ccc;
-    padding: 10px;
+    border: 1px solid #ddd;
+    padding: 15px;
     text-align: center;
 }
+
 th {
-    background: #007BFF;
+    background: #38a5ff;
     color: white;
+    font-weight: bold;
+    border-radius: 10px 10px 0 0;
 }
+
 tr:nth-child(even) {
-    background: #f9f9f9;
+    background: #f1f1f1;
 }
+
 td[contenteditable="true"] {
-    background-color: #e3f2fd;
+    background-color: #e6f4ff;
     cursor: text;
+}
+
+td:first-child {
+    background-color: #38a5ff;
+    color: white;
+    font-weight: bold;
+}
+
+/* Botões */
+button {
+    margin: 15px 0;
+    padding: 12px 18px;
+    background-color: #38a5ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Efeito de aumento */
+}
+
+/* Adicionando animações */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+body {
+    animation: fadeIn 1s ease-in;
 }
