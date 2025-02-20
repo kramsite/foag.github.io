@@ -16,6 +16,20 @@ body {
     height: 100vh;
     flex-direction: column;
 }
+header.cabecalho {
+    font-family: 'Snap ITC', sans-serif;
+    width: 100%;
+    background-color: #38a5ff;
+    color: white;
+    text-align: left;
+    padding: 15px;
+    font-size: 24px;
+    font-weight: bold;
+}
+.cabecalho {
+    margin-top: 0;
+}
+
 
 /* Barra de navegação fixa no topo */
 nav {
