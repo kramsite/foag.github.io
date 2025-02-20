@@ -70,12 +70,14 @@ nav.menu a:hover {
 
 /* Título da tabela */
 .titulo-tabela {
-    font-size: 24px;
+    font-family: 'snap ITC', sans-serif;
+    font-size: 60px;
     font-weight: bold;
-    color: #333;
+    color: #2e8fde;
     margin-bottom: 20px;
     text-align: center;
 }
+
 
 /* Estilos da tabela */
 table {
@@ -133,7 +135,7 @@ button {
 
 button:hover {
     background-color: #0056b3;
-    transform: scale(1.05); /* Efeito de aumento */
+    transform: scale(1.02); /* Efeito de aumento */
 }
 
 /* Adicionando animações */
