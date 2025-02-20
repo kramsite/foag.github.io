@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horário Escolar</title>
-    <link rel="stylesheet" href="horario.css">
+    <link rel="stylesheet" href="../kezia teste/horario.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Importando a biblioteca jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Importando a biblioteca jsPDF AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.24/jspdf.plugin.autotable.min.js"></script>
 </head>
 
 <body>
@@ -13,9 +18,11 @@
     <div class="container">
         <!-- Menu lateral -->
         <nav class="menu">
-            <a href="#">Início</a>
+            <a href="../index/index.html">Início</a>
+            <a href="#">Agenda</a>
+            <a href="../calendario/calendario.html">calendario</a>
+            <a href="#">Perfil</a>
             <a href="#">Sobre</a>
-            <a href="#">Serviços</a>
             <a href="#">Contato</a>
         </nav>
 
@@ -36,7 +43,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- As células são editáveis para que o usuário possa marcar os horários -->
                     <tr>
                         <td contenteditable="true"></td>
                         <td contenteditable="true"></td>
@@ -45,7 +51,6 @@
                         <td contenteditable="true"></td>
                         <td contenteditable="true"></td>
                     </tr>
-
                     <tr>
                         <td contenteditable="true"></td>
                         <td contenteditable="true"></td>
@@ -54,7 +59,6 @@
                         <td contenteditable="true"></td>
                         <td contenteditable="true"></td>
                     </tr>
-
                     <tr>
                         <td contenteditable="true"></td>
                         <td contenteditable="true"></td>
@@ -63,54 +67,17 @@
                         <td contenteditable="true"></td>
                         <td contenteditable="true"></td>
                     </tr>
-
-                    <tr>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-
-                    <tr>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-
-                    <tr>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-
-                    <tr>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                        <td contenteditable="true"></td>
-                    </tr>
-                    <!-- Adicione mais linhas conforme necessário -->
                 </tbody>
             </table>
 
             <!-- Botões de ação -->
             <button onclick="salvarEdicoes()">Salvar Edições</button>
             <button onclick="adicionarLinha()">Adicionar Linha</button>
+            <button onclick="removerLinha()">Remover Linha</button> <!-- Botão de remover linha -->
             <button onclick="adicionarIntervalo()">Adicionar Intervalo</button>
-            <button onclick="salvarComoArquivo()">Salvar como Arquivo</button>
+            <button onclick="salvarComoPDF()">Salvar como PDF</button>
         </div>
     </div>
-
-    <script src="horario.js"></script>
+    <script src="../kezia teste/horario.js"></script>
 </body>
 </html>

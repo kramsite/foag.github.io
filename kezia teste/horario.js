@@ -70,7 +70,7 @@ function salvarComoPDF() {
     }
 
     // Adicionar o nome do site "FOAG" no canto superior esquerdo com uma fonte bonita
-    doc.setFont("courier"); // Fonte padrão, pois jsPDF não tem Snap ITC embutida
+    doc.setFont("snap ITC', sans-serif"); // Fonte padrão, pois jsPDF não tem Snap ITC embutida
     doc.setFontSize(24);
     doc.text("FOAG", 10, 10); // Posição (10, 10) coloca "FOAG" no canto superior esquerdo
 

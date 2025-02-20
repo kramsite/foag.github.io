@@ -1,0 +1,144 @@
+/* Reset de margens e padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Cor de fundo da página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+header.cabecalho {
+    font-family: 'Snap ITC', sans-serif;
+    width: 100%;
+    background-color: #38a5ff;
+    color: white;
+    text-align: left;
+    padding: 15px;
+    font-size: 24px;
+    font-weight: bold;
+}
+.cabecalho {
+    margin-top: 0;
+}
+
+
+/* Barra de navegação fixa no topo */
+nav {
+    width: 100%;
+    background-color: #38a5ff;
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10; /* Garante que a barra fique acima do conteúdo */
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #005bb5;
+}
+
+/* Container centralizado para os links */
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Disposição flexível para diferentes tamanhos de tela */
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+    padding-top: 120px; /* Ajustado para compensar a barra de navegação fixa */
+    text-align: center;
+}
+
+/* Estilo das caixas (boxes) */
+.box {
+    background-color: #38a5ff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.box a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    display: block;
+}
+
+.box:hover {
+    transform: translateY(-5px); /* Efeito de elevação ao passar o mouse */
+    background-color: #005bb5; /* Cor mais escura ao passar o mouse */
+}
+
+/* Estilo do título e parágrafo de introdução */
+.intro-text {
+    text-align: center;
+    margin-top: 40px; /* Espaço entre as caixas e o título */
+}
+
+.intro-text h1 {
+    color: #38a5ff;
+    font-size: 36px;
+}
+
+.intro-text p {
+    font-size: 18px;
+    color: #555;
+}
+
+/* Responsividade: Ajuste para telas menores */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .container {
+        grid-template-columns: 1fr 1fr; /* Duas colunas em telas menores */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        grid-template-columns: 1fr; /* Uma coluna em telas muito pequenas */
+    }
+}
