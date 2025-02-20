@@ -12,15 +12,16 @@ body {
     align-items: center;
     min-height: 100vh;
     flex-direction: column;
+    overflow: hidden; /* Impede rolagem */
 }
 
-/* Cabeçalho fixo no topo */
+/* Cabeçalho fixo */
 .logo {
-    font-family: 'snap itc';
+    font-family: 'Snap ITC', sans-serif;
     background-color: #38a5ff;
     color: white;
-    font-size: 2em; /* Corrigido: usei 'em' ao invés de '%' */
-    padding: 20px;
+    font-size: 2.2em;
+    padding: 15px 20px;
     width: 100%;
     text-align: left;
     position: fixed;
@@ -29,61 +30,76 @@ body {
     z-index: 10;
     display: flex;
     align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Cadastro */
+/* Estilo do formulário de cadastro */
 .cadastro {
-    max-width: 50%;
-    margin: 80px auto 20px; /* Ajustei a margem para evitar sobreposição */
+    max-width: 500px;
+    width: 90%;
     background-color: #ffffff;
     padding: 2rem;
     border-radius: 0.8rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 80px auto 20px; /* Ajusta para não ficar escondido sob o cabeçalho */
 }
 
 .cadastro h2 {
-    font-size: 1.8em; /* Corrigido para um tamanho visível */
+    font-size: 1.8em;
     margin-bottom: 0.5rem;
     text-align: center;
 }
 
 .cadastro label {
     font-weight: bold;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
     display: block;
-    font-size: 1.2em;
 }
 
 .cadastro input {
     width: 100%;
-    max-width: 500px;
-    padding: 0.8rem;
+    padding: 0.5rem;
     margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1.2em; /* Corrigido para um tamanho adequado */
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
 }
 
 .cadastro button {
     background-color: #ff0000;
     color: #ffffff;
     border: none;
-    padding: 1rem 2.5vw;
+    padding: 0.8rem;
     cursor: pointer;
-    border-radius: 0.6rem;
-    margin-top: 1rem;
-    font-size: 1.3em; /* Tamanho do botão ajustado */
-    transition: background 0.3s ease;
+    border-radius: 0.5rem;
+    width: 100%;
+    font-size: 1rem;
 }
 
 .cadastro button:hover {
     background-color: #cc0000;
 }
 
+/* Corrigindo erro de digitação na classe */
+.cadastro a {
+    color: #ff0000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.cadastro a:hover {
+    text-decoration: underline;
+}
+
+/* Rodapé */
 footer {
     background-color: #232323;
     color: #ffffff;
     text-align: center;
-    padding: 1rem;
-    font-size: 1em; /* Corrigido para tamanho legível */
+    padding: 0.5rem;
+    width: 100%;
+    position: relative;
+    font-size: 0.9em;
+    margin-top: 20px;
 }
