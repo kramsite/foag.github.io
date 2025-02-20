@@ -1,0 +1,105 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+    overflow: hidden; /* Impede rolagem */
+}
+
+/* Cabeçalho fixo */
+.logo {
+    font-family: 'Snap ITC', sans-serif;
+    background-color: #38a5ff;
+    color: white;
+    font-size: 2.2em;
+    padding: 15px 20px;
+    width: 100%;
+    text-align: left;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo do formulário de cadastro */
+.cadastro {
+    max-width: 500px;
+    width: 90%;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.8rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 80px auto 20px; /* Ajusta para não ficar escondido sob o cabeçalho */
+}
+
+.cadastro h2 {
+    font-size: 1.8em;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.cadastro label {
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+    display: block;
+}
+
+.cadastro input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.cadastro button {
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none;
+    padding: 0.8rem;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.cadastro button:hover {
+    background-color: #cc0000;
+}
+
+/* Corrigindo erro de digitação na classe */
+.cadastro a {
+    color: #ff0000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.cadastro a:hover {
+    text-decoration: underline;
+}
+
+/* Rodapé */
+footer {
+    background-color: #232323;
+    color: #ffffff;
+    text-align: center;
+    padding: 0.5rem;
+    width: 100%;
+    position: relative;
+    font-size: 0.9em;
+    margin-top: 20px;
+}
