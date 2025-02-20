@@ -76,7 +76,7 @@ main {
     text-align: left;
     display: block;
     margin-bottom: 5px;
-    color: white; /* Letras brancas */
+    color: #f8f8f8; /* Letras brancas */
 }
 
 /* Inputs */
@@ -84,31 +84,32 @@ main {
 .cadastro input[type="email"],
 .cadastro input[type="tel"],
 .cadastro input[type="password"] {
-    width: calc(100% - 160px);
+    width: calc(100% - 260px);
     display: block;
     padding: 8px;
     border: 1px solid #38a5ff;
     border-radius: 5px;
     margin-bottom: 10px;
     box-sizing: border-box;
-    color: white; /* Letras brancas */
+    color: #232323;
 }
 
 /* Botão */
 .cadastro button {
-    background-color: #f8f8f8;
-    color: #38a5ff; /* Cor do texto alterada para combinar com o design */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px; /* Adiciona um espaço acima do botão */
-    align-self: flex-end; /* Alinha o botão à direita */
-}
+        background-color: #f8f8f8;
+        color: #38a5ff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        justify-self: flex-end;
+        width: auto; /* Largura automática */
+    }
 
 .cadastro button:hover {
-    background-color: #1e70bf;
-    color: white; /* Cor do texto alterada para melhor contraste */
+    background-color: rgb(240, 240, 240);
+    color: #38a5ff; /* Cor do texto alterada para melhor contraste */
 }
 
 /* Footer */
