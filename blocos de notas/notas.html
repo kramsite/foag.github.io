@@ -1,60 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bloco de Notas</title>
     <link rel="stylesheet" href="notas.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <script>
-        function salvar() {
-            const texto = document.getElementById('notas').value;
-            const title = prompt('Digite um título para a nota:');
-
-            if (title) {
-                localStorage.setItem('nota-' + title, texto);
-                carregarNotas();
-            }
-        }
-
-        function carregarNotas() {
-            const noteList = document.getElementById('noteList');
-            noteList.innerHTML = '';
-
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('nota-')) {
-                    const title = key.substring(5);
-                    const listItem = document.createElement('li');
-                    listItem.textContent = title;
-                    listItem.addEventListener('click', () => {
-                        document.getElementById('notas').value = localStorage.getItem(key);
-                    });
-                    noteList.appendChild(listItem);
-                }
-            }
-        }
-
-        window.onload = carregarNotas;
-    </script>
 </head>
-
 <body>
-    <div id="header">
-        <h1>Bloco de Notas</h1>
-    </div>
-    <div id="container">
-        <div id="sidebar">
-            <h2>Notas Salvas</h2>
-            <ul id="noteList">
-            </ul>
-        </div>
-        <div id="main-content">
-            <textarea id="notas" rows="10" cols="130"></textarea><br>
-            <button onclick="salvar()">Salvar</button>
+    <header class="cabecalho">FOAG</header>
+
+    <div class="container">
+        <!-- Menu lateral -->
+        <nav class="menu">
+            <a href="../index/index.html">Início</a>
+            <a href="#">Agenda</a>
+            <a href="../calendario/calendario.html">Calendário</a>
+            <a href="#">Perfil</a>
+            <a href="#">Sobre</a>
+            <a href="#">Contato</a>
+        </nav>
+
+        <div class="main-content">
+            <div id="header">
+                <h1>Bloco de Notas</h1>
+            </div>
+
+            <div id="container">
+                <div id="sidebar">
+                    <h2>Notas Salvas</h2>
+                </div>
+
+                <div id="main-content">
+                    <textarea id="notas" placeholder="Escreva suas notas aqui..."></textarea>
+                    <button onclick="salvar()">Salvar Nota</button>
+
+                    <div id="saved-notes">
+                        <h2>Notas Salvas</h2>
+                        <ul id="noteList">
+                            <!-- Lista de notas será carregada aqui -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
