@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizador</title>
+    <link rel="stylesheet" href="aa.css">
+</head>
+
+<body>
+    <header class="cabecalho">
+        <h1>Organizador</h1>
+    </header>
+    <div class="container">
+        <nav class="menu">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+        </nav>
+        <main class="main-content">
+            <div class="titulo-tabela">TAREFAS</div>
+            <table id="tabela-tarefas">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tarefa</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-tarefas" contenteditable="true">
+                    <tr>
+                        <td>1</td>
+                        <td>Tarefa 1</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Tarefa 2</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Tarefa 3</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="add-tarefa">Adicionar Tarefa</button>
+
+            <div class="titulo-tabela">NÃO ESQUECER</div>
+            <table id="tabela-nao-esquecer">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Item</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-nao-esquecer" contenteditable="true">
+                    <tr>
+                        <td>1</td>
+                        <td>Item 1</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Item 2</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Item 3</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="add-nao-esquecer">Adicionar Item</button>
+
+            <button id="salvar">Salvar</button>
+        </main>
+    </div>
+    <script src="aa.js"></script>
+</body>
+
+</html>
