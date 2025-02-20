@@ -2,37 +2,35 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif; /* Ou a fonte que você preferir */
 }
 
-/* Corpo da página */
 body {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    background-color: #f5f7fa; /* Cor suave de fundo */
+    min-height: 100vh;
+    background-color: #f5f7fa; /* Cor de fundo suave */
 }
 
-/* Cabeçalho do site */
 header.cabecalho {
-    font-family: 'snap ITC', sans-serif;
+    font-family: 'snap ITC', sans-serif; /* Ou a fonte que você preferir */
     width: 100%;
     background-color: #38a5ff; /* Azul mais suave */
     color: white;
-    text-align: left;
+    text-align: center; /* Centralizado */
     padding: 20px;
     font-size: 28px;
     font-weight: 700;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Container geral (menu e conteúdo principal) */
 .container {
     display: flex;
     flex: 1;
+    width: 80%;
+    margin: 20px auto;
 }
 
-/* Menu lateral */
 nav.menu {
     width: 250px;
     background-color: #38a5ff; /* Azul */
@@ -40,12 +38,11 @@ nav.menu {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1); /* Sombra suave à direita */
+    box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
 }
 
-/* Links do menu */
 nav.menu a {
     text-decoration: none;
     color: white;
@@ -55,54 +52,49 @@ nav.menu a {
     transition: background-color 0.3s, transform 0.2s ease-in-out;
 }
 
-/* Hover dos links */
 nav.menu a:hover {
-    background-color: #38a5ff;
-    transform: translateX(5px); /* Efeito de deslizar */
+    background-color: #0056b3;
+    transform: translateX(5px);
 }
 
-/* Área principal para o conteúdo da tabela */
 .main-content {
     flex: 1;
     padding: 30px;
-    overflow-x: auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Título da tabela */
 .titulo-tabela {
     font-family: 'snap ITC', sans-serif;
-    font-size: 60px;
+    font-size: 2em; /* Ajustado */
     font-weight: bold;
     color: #2e8fde;
     margin-bottom: 20px;
     text-align: center;
 }
 
-
-/* Estilos da tabela */
 table {
     width: 100%;
-    margin: 20px 0;
-    border-collapse: collapse; /* Para que as bordas internas fiquem finas */
+    border-collapse: collapse;
     background: white;
-    border-radius: 10px; /* Borda externa arredondada */
-    border: 1px solid #ddd; /* Borda externa da tabela */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Espaço abaixo da tabela */
 }
 
-/* Borda interna fina para células */
-th, td {
-    border: 1px solid #ddd; /* Borda fina interna */
+th,
+td {
+    border: 1px solid #ddd;
     padding: 15px;
-    text-align: center;
+    text-align: left;
 }
 
-/* Cabeçalho */
 th {
     background: #38a5ff;
     color: white;
     font-weight: bold;
-    border-radius: 10px 10px 0 0; /* Borda arredondada apenas na parte superior da tabela */
 }
 
 tr:nth-child(even) {
@@ -120,7 +112,6 @@ td:first-child {
     font-weight: bold;
 }
 
-/* Botões */
 button {
     margin: 15px 0;
     padding: 12px 18px;
@@ -135,10 +126,13 @@ button {
 
 button:hover {
     background-color: #0056b3;
-    transform: scale(1.02); /* Efeito de aumento */
+    transform: scale(1.02);
 }
 
-/* Adicionando animações */
+body {
+    animation: fadeIn 1s ease-in;
+}
+
 @keyframes fadeIn {
     0% {
         opacity: 0;
@@ -148,6 +142,21 @@ button:hover {
     }
 }
 
-body {
-    animation: fadeIn 1s ease-in;
+/* Estilos para os botões de adicionar */
+#add-tarefa,
+#add-nao-esquecer {
+    margin: 10px 0;
+    padding: 10px 15px; /* Ajustado */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+#add-tarefa:hover,
+#add-nao-esquecer:hover {
+    background-color: #0056b3;
 }
