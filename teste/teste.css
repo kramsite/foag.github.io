@@ -130,7 +130,6 @@ nav.menu a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 15px; /* Espaçamento inferior */
 }
 
 /* Estilo do título do mês */
@@ -150,7 +149,7 @@ nav.menu a:hover {
 .dias {
     display: grid;
     grid-template-columns: repeat(7, 1fr); /* 7 colunas */
-    gap: 10px; /* Maior espaçamento entre os dias */
+    gap: 5px; /* Maior espaçamento entre os dias */
     width: 100%;
     padding: 5px;
 }
