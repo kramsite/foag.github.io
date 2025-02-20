@@ -69,14 +69,44 @@ function salvarComoPDF() {
         data.push(row);
     }
 
+    // Adicionar o nome do site "FOAG" no canto superior esquerdo com uma fonte bonita
+    doc.setFont("courier"); // Fonte padrão, pois jsPDF não tem Snap ITC embutida
+    doc.setFontSize(24);
+    doc.text("FOAG", 10, 10); // Posição (10, 10) coloca "FOAG" no canto superior esquerdo
+
+    // Adicionar a data no topo
+    const dataAtual = new Date();
+    const dataFormatada = dataAtual.toLocaleDateString('pt-BR', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+
+    doc.setFontSize(12);
+    doc.text(`Gerado em: ${dataFormatada}`, 10, 20); // Posição (10, 20) coloca a data logo abaixo de "FOAG"
+
     // Gerando a tabela no PDF usando autoTable
     doc.autoTable({
         head: [headers],
         body: data,
-        startY: 20,
+        startY: 30,  // Ajuste para não sobrepor o nome do site e a data
         theme: 'grid',
         margin: { top: 10 },
-        tableWidth: 'auto'
+        tableWidth: 'auto',
+        headStyles: {
+            fillColor: [56, 165, 255], // Cor de fundo do cabeçalho
+            textColor: [255, 255, 255], // Cor do texto do cabeçalho (branco)
+            fontSize: 12,
+            fontStyle: 'bold',
+        },
+        bodyStyles: {
+            fillColor: [255, 255, 255], // Cor de fundo das células (branco)
+            textColor: [56, 165, 255],  // Cor do texto das células (cor 38a5ff)
+            fontSize: 10,
+            fontStyle: 'normal',
+        },
+        alternateRowStyles: {
+            fillColor: [240, 240, 240]  // Cor alternada para as linhas
+        }
     });
 
     // Gerando o arquivo PDF
