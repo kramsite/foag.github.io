@@ -22,13 +22,16 @@ header.cabecalho {
     background-color: #38a5ff;
     color: white;
     text-align: left;
-    padding: 15px;
+    padding: 20px;
     font-size: 24px;
     font-weight: bold;
+    position: fixed; /* Fixa o header */
+    top: 1px; /* Altura do nav */
+    left: 0;
+    z-index: 10; /* Certifique-se que está acima do nav */
 }
-.cabecalho {
-    margin-top: 0;
-}
+
+
 
 
 /* Barra de navegação fixa no topo */
@@ -72,7 +75,7 @@ nav ul li a:hover {
     gap: 20px;
     width: 100%;
     max-width: 800px;
-    padding-top: 120px; /* Ajustado para compensar a barra de navegação fixa */
+    padding-top: 135px; /* Ajustado para compensar a barra de navegação fixa */
     text-align: center;
 }
 
