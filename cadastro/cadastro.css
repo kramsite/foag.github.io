@@ -33,7 +33,7 @@ body {
 
 /* Cadastro */
 .cadastro {
-    max-width: 50%;
+    width: 700px;
     margin: 80px auto 20px; /* Ajustei a margem para evitar sobreposição */
     background-color: #ffffff;
     padding: 2rem;
@@ -84,6 +84,6 @@ footer {
     background-color: #232323;
     color: #ffffff;
     text-align: center;
-    padding: 1rem;
+    padding: 5px;
     font-size: 1em; /* Corrigido para tamanho legível */
 }
