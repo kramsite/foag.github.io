@@ -4,7 +4,7 @@ function salvar() {
 
     if (title && title.trim() !== '') {
         localStorage.setItem('nota-' + title, texto);
-        carregarNotas();
+        carregarNotas(); // Atualiza a lista após salvar
         alert('Nota salva com sucesso!');
     } else {
         alert('O título da nota não pode estar vazio!');
@@ -12,16 +12,14 @@ function salvar() {
 }
 
 function excluirNota(title) {
-    // Remove a nota do localStorage
     localStorage.removeItem('nota-' + title);
-    carregarNotas(); // Atualiza a lista de notas
+    carregarNotas();
 }
 
 function carregarNotas() {
     const noteList = document.getElementById('noteList');
-    noteList.innerHTML = ''; // Limpa a lista antes de adicionar as notas
+    noteList.innerHTML = ''; // Clear the list
 
-    // Itera por todas as notas no localStorage
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key.startsWith('nota-')) {
@@ -29,7 +27,12 @@ function carregarNotas() {
             const listItem = document.createElement('li');
             listItem.textContent = title;
 
-            // Adiciona o botão de excluir à nota
+            // Add click event listener to open the note
+            listItem.addEventListener('click', () => {
+                const noteContent = localStorage.getItem('nota-' + title);
+                document.getElementById('notas').value = noteContent;
+            });
+
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Excluir';
             deleteButton.onclick = () => excluirNota(title);
@@ -40,4 +43,5 @@ function carregarNotas() {
     }
 }
 
-window.onload = carregarNotas;
+// Chama carregarNotas() quando a página carrega
+window.addEventListener('DOMContentLoaded', carregarNotas);

@@ -65,7 +65,7 @@ body {
 }
 
 .cadastro button {
-    background-color: #ff0000;
+    background-color: #38a5ff;
     color: #ffffff;
     border: none;
     padding: 1rem 2.5vw;
@@ -77,7 +77,7 @@ body {
 }
 
 .cadastro button:hover {
-    background-color: #cc0000;
+    background-color: #38a5ff;
 }
 
 footer {
