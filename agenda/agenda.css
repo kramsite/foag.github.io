@@ -31,31 +31,32 @@ header.cabecalho {
     margin: 20px auto;
 }
 
+/* Menu lateral */
 nav.menu {
-    width: 250px;
-    background-color: #38a5ff; /* Azul */
-    padding: 25px 20px;
+    width: 15%;
+    background-color: #38a5ff;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    gap: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Links do menu */
 nav.menu a {
     text-decoration: none;
     color: white;
     font-size: 18px;
-    padding: 12px 20px;
-    border-radius: 8px;
-    transition: background-color 0.3s, transform 0.2s ease-in-out;
+    padding: 10px;
+    transition: background-color 0.3s, border-radius 0.3s;
 }
 
+/* Hover dos links */
 nav.menu a:hover {
-    background-color: #0056b3;
-    transform: translateX(5px);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
 }
+
 
 .main-content {
     flex: 1;

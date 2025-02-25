@@ -1,29 +1,32 @@
+/* Geral */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif; /* Ou a fonte que você preferir */
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #f5f7fa; /* Cor de fundo suave */
+    background-color: #f5f7fa;
 }
 
+/* Cabeçalho */
 header.cabecalho {
-    font-family: 'snap ITC', sans-serif; /* Ou a fonte que você preferir */
+    font-family: 'snap ITC', sans-serif;
     width: 100%;
-    background-color: #38a5ff; /* Azul mais suave */
+    background-color: #38a5ff;
     color: white;
-    text-align: center; /* Centralizado */
+    text-align: center;
     padding: 20px;
     font-size: 28px;
     font-weight: 700;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Container principal */
 .container {
     display: flex;
     flex: 1;
@@ -31,9 +34,10 @@ header.cabecalho {
     margin: 20px auto;
 }
 
+/* Menu lateral */
 nav.menu {
     width: 250px;
-    background-color: #38a5ff; /* Azul */
+    background-color: #38a5ff;
     padding: 25px 20px;
     display: flex;
     flex-direction: column;
@@ -50,113 +54,99 @@ nav.menu a {
     padding: 12px 20px;
     border-radius: 8px;
     transition: background-color 0.3s, transform 0.2s ease-in-out;
+    text-align: left;
+    display: block;
 }
 
 nav.menu a:hover {
-    background-color: #0056b3;
+    background-color: #38a5ff;
     transform: translateX(5px);
 }
 
+/* Conteúdo principal */
 .main-content {
     flex: 1;
     padding: 30px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+/* Bloco de notas */
+#container-notas {
+    flex: 1;
+    padding-right: 20px;
+}
+
+#notas {
+    width: 100%;
+    height: 200px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1.1em;
+    resize: vertical;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
+}
+
+#notas:focus {
+    border-color: #38a5ff;
+}
+
+#saved-notes {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+#noteList li {
+    font-size: 1.2em;
+    padding: 10px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+#noteList li:hover {
+    background-color: #e0e0e0;
+}
+
+#noteList button {
+    background-color: #ff4040;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+#noteList button:hover {
+    background-color: #e33d3d;
+}
+
+/* Bloco de tarefas */
+#tarefas {
+    flex: 1;
 }
 
 .titulo-tabela {
     font-family: 'snap ITC', sans-serif;
-    font-size: 2em; /* Ajustado */
+    font-size: 2em;
     font-weight: bold;
     color: #2e8fde;
     margin-bottom: 20px;
     text-align: center;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px; /* Espaço abaixo da tabela */
-}
-
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 15px;
-    text-align: left;
-}
-
-th {
-    background: #38a5ff;
-    color: white;
-    font-weight: bold;
-}
-
-tr:nth-child(even) {
-    background: #f1f1f1;
-}
-
-td[contenteditable="true"] {
-    background-color: #ececec;
-    cursor: text;
-}
-
-td:first-child {
-    background-color: #38a5ff;
-    color: white;
-    font-weight: bold;
-}
-
-button {
-    margin: 15px 0;
-    padding: 12px 18px;
-    background-color: #38a5ff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s ease-in-out;
-}
-
-button:hover {
-    background-color: #0056b3;
-    transform: scale(1.02);
-}
-
-body {
-    animation: fadeIn 1s ease-in;
-}
-
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-/* Estilos para os botões de adicionar */
-#add-tarefa,
-#add-nao-esquecer {
-    margin: 10px 0;
-    padding: 10px 15px; /* Ajustado */
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-}
-
-#add-tarefa:hover,
-#add-nao-esquecer:hover {
-    background-color: #0056b3;
 }
