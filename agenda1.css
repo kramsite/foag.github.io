@@ -1,0 +1,204 @@
+/* Reset de margens, paddings e box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Corpo da página */
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: white;
+}
+
+/* Cabeçalho do site */
+header.cabecalho {
+    font-family: 'Snap ITC', sans-serif;
+    width: 100%;
+    background-color: #38a5ff;
+    color: white;
+    text-align: left;
+    padding: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    position: sticky; /* Fixa o cabeçalho no topo ao rolar */
+    top: 0; /* Alinha ao topo da página */
+    z-index: 10;
+}
+
+/* Container geral (menu e conteúdo principal) */
+.container {
+    display: flex;
+    flex: 1;
+}
+
+/* Menu lateral */
+nav.menu {
+    width: 15%;
+    background-color: #38a5ff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Links do menu */
+nav.menu a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    transition: background-color 0.3s, border-radius 0.3s;
+}
+
+/* Hover dos links */
+nav.menu a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+
+/* Conteúdo principal */
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Contêiner das notas e tarefas */
+#container-notas {
+    display: flex;
+    gap: 20px;
+}
+
+/* Estilo das notas */
+#notas {
+    width: 50%;
+}
+
+#notas textarea {
+    width: 100%;
+    height: 200px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#saved-notes {
+    margin-top: 20px;
+}
+
+/* Estilo das tabelas de tarefas e itens */
+#tarefas {
+    width: 50%;
+}
+
+/* Título das tabelas */
+.titulo-tabela {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #38a5ff;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+table th {
+    background-color: #38a5ff;
+    color: white;
+}
+
+/* Botões de ação */
+button {
+    padding: 10px 20px;
+    background-color: #38a5ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #2691c8;
+}
+
+/* Estilo do botão "Salvar" */
+#salvar {
+    margin-top: 30px;
+}
+
+/* Estilo do footer */
+footer {
+    background-color: #232323;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    font-size: 1em;
+}
+
+/* Responsividade: Ajustes para telas menores */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    nav.menu {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    #container-notas {
+        flex-direction: column;
+    }
+
+    table {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .cabecalho {
+        font-size: 20px;
+        padding: 10px;
+    }
+
+    nav.menu a {
+        font-size: 16px;
+    }
+
+    #notas textarea {
+        height: 150px;
+    }
+
+    #tarefas, #notas {
+        width: 100%;
+    }
+
+    button {
+        width: 100%;
+    }
+}
