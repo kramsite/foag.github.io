@@ -167,6 +167,15 @@ nav.menu a:hover {
     width: 30px;
 }
 
+footer {
+    background-color: #232323;
+    color: #ffffff;
+    text-align: center;
+    padding: 5px;
+    width: 100%;
+    font-size: 1em; /* Corrigido para tamanho legível */
+}
+
 /* Responsividade: Ajustes para telas menores */
 @media (max-width: 768px) {
     .container {
