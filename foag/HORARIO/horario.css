@@ -138,6 +138,15 @@ button:hover {
     transform: scale(1.02); /* Efeito de aumento */
 }
 
+footer {
+    background-color: #232323;
+    color: #ffffff;
+    text-align: center;
+    padding: 5px;
+    width: 100%;
+    font-size: 1em; /* Corrigido para tamanho legível */
+}
+
 /* Adicionando animações */
 @keyframes fadeIn {
     0% {
