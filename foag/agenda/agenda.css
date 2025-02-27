@@ -161,3 +161,12 @@ body {
 #add-nao-esquecer:hover {
     background-color: #0056b3;
 }
+
+footer {
+    background-color: #232323;
+    color: #ffffff;
+    text-align: center;
+    padding: 5px;
+    width: 100%;
+    font-size: 1em; /* Corrigido para tamanho legível */
+}

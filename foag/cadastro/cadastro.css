@@ -85,5 +85,6 @@ footer {
     color: #ffffff;
     text-align: center;
     padding: 5px;
+    width: 100%;
     font-size: 1em; /* Corrigido para tamanho legível */
 }
