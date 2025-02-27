@@ -18,10 +18,10 @@ body {
 
 /* Cabeçalho fixo no topo */
 .logo {
-    font-family: 'Poppins', sans-serif; /* Corrigido para fonte disponível */
+    font-family: 'Snap ITC', sans-serif; /* Corrigido: Definido a fonte corretamente */
     background-color: #38a5ff;
     color: white;
-    font-size: 2.2em;
+    font-size: 2.2em; /* Ajuste para maior destaque */
     padding: 20px;
     width: 100%;
     text-align: left;
@@ -30,7 +30,7 @@ body {
     left: 0;
     z-index: 10;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -39,11 +39,16 @@ body {
     font-weight: bold;
 }
 
+.logo .menu-icon {
+    font-size: 1.8em;
+    cursor: pointer;
+}
+
 /* Cadastro */
 .cadastro {
     width: 100%;
     max-width: 700px;
-    margin: 120px auto 20px; /* Ajustado para dar espaço suficiente abaixo do cabeçalho fixo */
+    margin: 100px auto 20px; /* Ajustado para melhor espaçamento com o cabeçalho */
     background-color: #ffffff;
     padding: 2rem;
     border-radius: 0.8rem;
