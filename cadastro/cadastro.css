@@ -1,0 +1,137 @@
+/* Resetando margens e fontes */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #f7f7f7; /* Suave e moderno */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+    padding: 0 20px; /* Adiciona espaçamento nas laterais */
+}
+
+/* Cabeçalho fixo no topo */
+.logo {
+    font-family: 'Snap ITC', sans-serif; /* Corrigido: Definido a fonte corretamente */
+    background-color: #38a5ff;
+    color: white;
+    font-size: 2.2em; /* Ajuste para maior destaque */
+    padding: 20px;
+    width: 100%;
+    text-align: left;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo .logo-text {
+    font-size: 2.2em;
+    font-weight: bold;
+}
+
+.logo .menu-icon {
+    font-size: 1.8em;
+    cursor: pointer;
+}
+
+/* Cadastro */
+.cadastro {
+    width: 100%;
+    max-width: 700px;
+    margin: 100px auto 20px; /* Ajustado para melhor espaçamento com o cabeçalho */
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.8rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cadastro h2 {
+    font-size: 2em; /* Tamanho maior para melhor leitura */
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #333;
+}
+
+.cadastro label {
+    font-weight: bold;
+    margin-bottom: 0.6rem;
+    display: block;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.cadastro input {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1.5rem; /* Aumento do espaçamento para um visual mais limpo */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1.2em;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cadastro input:focus {
+    border-color: #38a5ff;
+    box-shadow: 0 0 5px rgba(56, 165, 255, 0.5);
+}
+
+.cadastro button {
+    background-color: #38a5ff;
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    border-radius: 0.6rem;
+    margin-top: 1rem;
+    font-size: 1.3em;
+    transition: background-color 0.3s ease;
+}
+
+.cadastro button:hover {
+    background-color: #0066cc; /* Mudança de cor mais visível */
+}
+
+footer {
+    background-color: #232323;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 1em;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .logo {
+        font-size: 1.8em;
+        padding: 10px;
+    }
+    .cadastro {
+        width: 100%;
+        padding: 1.5rem;
+    }
+    .cadastro h2 {
+        font-size: 1.5em;
+    }
+    .cadastro input {
+        font-size: 1.1em;
+        padding: 0.9rem;
+    }
+    .cadastro button {
+        font-size: 1.2em;
+        padding: 1rem 2rem;
+    }
+}
