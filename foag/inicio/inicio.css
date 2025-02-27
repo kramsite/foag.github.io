@@ -7,7 +7,10 @@
 
 /* Cor de fundo da página */
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Poppins", sans-serif;
+    background-image: url('caminho-da-imagem.jpg'); /* Altere 'caminho-da-imagem.jpg' pelo caminho correto da imagem */
+    background-size: cover; /* Ajusta o tamanho da imagem para cobrir toda a tela */
+    background-position: center;
     background-color: #f4f4f9;
     color: #333;
     display: flex;
@@ -30,9 +33,6 @@ header.cabecalho {
     left: 0;
     z-index: 10; /* Certifique-se que está acima do nav */
 }
-
-
-
 
 /* Barra de navegação fixa no topo */
 nav {
