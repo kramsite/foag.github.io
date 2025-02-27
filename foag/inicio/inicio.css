@@ -8,7 +8,7 @@
 /* Cor de fundo da página */
 body {
     font-family: "Poppins", sans-serif;
-    background-image: url('../../maoestudando.jpg'); /* Altere 'caminho-da-imagem.jpg' pelo caminho correto da imagem */
+    background-image: url('../../mao.jpg'); /* Altere 'caminho-da-imagem.jpg' pelo caminho correto da imagem */
     background-size: cover; /* Ajusta o tamanho da imagem para cobrir toda a tela */
     background-position: center;
     background-color: #f4f4f9;
