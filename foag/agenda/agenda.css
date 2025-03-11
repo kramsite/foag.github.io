@@ -1,4 +1,3 @@
-/* Reset de margens, paddings e box-sizing */
 * {
     margin: 0;
     padding: 0;
@@ -6,15 +5,13 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Corpo da página */
 body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    background-color: #f9f9f9; /* Leve tom de fundo */
+    background-color: #f9f9f9;
 }
 
-/* Cabeçalho do site */
 header.cabecalho {
     font-family: 'Snap ITC', sans-serif;
     width: 100%;
@@ -26,13 +23,11 @@ header.cabecalho {
     font-weight: bold;
 }
 
-/* Container geral (menu e conteúdo principal) */
 .container {
     display: flex;
     flex: 1;
 }
 
-/* Menu lateral */
 nav.menu {
     width: 15%;
     background-color: #38a5ff;
@@ -41,10 +36,9 @@ nav.menu {
     flex-direction: column;
     gap: 15px;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-    position: relative; /* Garante que a barra lateral se mova normalmente */
+    position: relative;
 }
 
-/* Links do menu */
 nav.menu a {
     text-decoration: none;
     color: white;
@@ -53,13 +47,11 @@ nav.menu a {
     transition: background-color 0.3s, border-radius 0.3s;
 }
 
-/* Hover dos links */
 nav.menu a:hover {
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 8px;
 }
 
-/* Conteúdo principal */
 .main-content {
     flex: 1;
     display: flex;
@@ -70,7 +62,6 @@ nav.menu a:hover {
     gap: 40px;
 }
 
-/* Contêiner das notas e tarefas */
 #container-notas {
     display: flex;
     gap: 30px;
@@ -78,7 +69,6 @@ nav.menu a:hover {
     width: 100%;
 }
 
-/* Estilo das notas */
 #notas {
     width: 48%;
     background-color: white;
@@ -102,7 +92,6 @@ nav.menu a:hover {
     margin-top: 20px;
 }
 
-/* Estilo das tabelas de tarefas e itens */
 #tarefas {
     width: 48%;
     background-color: white;
@@ -111,7 +100,6 @@ nav.menu a:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Título das tabelas */
 .titulo-tabela {
     font-size: 20px;
     font-weight: bold;
@@ -120,7 +108,6 @@ nav.menu a:hover {
     text-align: center;
 }
 
-/* Estilo das tabelas */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -138,7 +125,15 @@ table th {
     color: white;
 }
 
-/* Botões de ação */
+table th:nth-child(2), table td:nth-child(2) {
+    width: 80%;
+    word-break: break-word;
+}
+
+table th:nth-child(1), table td:nth-child(1) {
+    width: 20%;
+}
+
 button {
     padding: 12px 25px;
     background-color: #38a5ff;
@@ -156,12 +151,10 @@ button:hover {
     background-color: #2691c8;
 }
 
-/* Estilo do botão "Salvar" */
 #salvar {
     margin-top: 30px;
 }
 
-/* Estilo do footer */
 footer {
     background-color: #232323;
     color: #ffffff;
@@ -190,6 +183,10 @@ footer {
         flex-direction: column;
     }
 
+    #notas, #tarefas {
+        width: 100%;
+    }
+
     table {
         width: 100%;
     }
@@ -207,10 +204,6 @@ footer {
 
     #notas textarea {
         height: 150px;
-    }
-
-    #tarefas, #notas {
-        width: 100%;
     }
 
     button {
