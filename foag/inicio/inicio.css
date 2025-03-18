@@ -97,8 +97,8 @@ nav ul li a:hover {
 }
 
 .box:hover {
-    transform: translateY(-5px); /* Efeito de elevação ao passar o mouse */
-    background-color: #005bb5; /* Cor mais escura ao passar o mouse */
+    transform: translateY(-3px); /* Efeito de elevação ao passar o mouse */
+    background-color: #3099ef; /* Cor mais escura ao passar o mouse */
 }
 
 /* Estilo do título e parágrafo de introdução */
@@ -120,14 +120,10 @@ nav ul li a:hover {
 footer {
     background-color: #232323;
     color: #ffffff;
-    text-align:center;
-    padding: 5px;
-    position: absolute;
+    text-align: center;
+    padding: 3px;
     width: 100%;
-    bottom: 0;
     font-size: 0.9em;
-    margin-top: 200px;
-    font-size: 1em; /* Corrigido para tamanho legível */
 }
 
 /* Responsividade: Ajuste para telas menores */
