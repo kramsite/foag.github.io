@@ -1,122 +1,141 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins';
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 
-  body {
-    background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    flex-direction: column;
-    overflow: hidden; /* Impede rolagem na página */
-  }
+body {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+  overflow: hidden; /* Impede rolagem na página */
+}
 
-  /* Cabeçalho fixo no topo */
-  .logo {
-    font-family: 'snap itc';
-    background-color: #38a5ff;
-    color: white;
-    font-size: 2.2em;
-    padding: 15px 20px;
-    width: 100%;
-    text-align: left;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 0; /* Remove qualquer margem que poderia criar espaço */
-  }
+.logo {
+  font-family: 'Snap ITC', sans-serif; /* Mantendo a fonte da logo */
+  background-color: #38a5ff;
+  color: white;
+  font-size: 2.2em;
+  padding: 15px 20px;
+  width: 100%;
+  text-align: left;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-  /* Página de login */
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  display: flex;
+  margin-top: 60px; /* Espaço abaixo do cabeçalho fixo */
+}
+
+.left-section {
+  width: 50%;
+  height: 100vh;
+  background: url('https://source.unsplash.com/1024x768/?nature') no-repeat center center/cover;
+  position: relative;
+}
+
+.left-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -50px;
+  width: 50px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+.right-section {
+  width: 50%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 40px;
+  height: 100vh;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra para separar as seções */
+}
+
+h1 {
+  font-size: 3em;
+  color: #007bff;
+  margin-bottom: 2em;
+  text-align: center;
+}
+
+form {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+input[type="email"], input[type="password"] {
+  width: 100%;
+  padding: 15px 18px;
+  border: 2px solid #ddd;
+  font-size: 1.2rem;
+  margin-bottom: 1.5em;
+  border-radius: 5px; /* Bordas mais suaves */
+  transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus, input[type="password"]:focus {
+  border-color: #38a5ff; /* Cor de destaque ao focar nos campos */
+}
+
+.action-links {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5em;
+}
+
+.action-links a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 1em;
+}
+
+button {
+  background-color: #38a5ff;
+  color: white;
+  border: none;
+  padding: 14px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+button:hover {
+  background-color: #3099ef;
+  transform: translateY(-2px); /* Efeito de levitação ao passar o mouse */
+}
+
+button:active {
+  transform: translateY(1px); /* Efeito ao clicar no botão */
+}
+
+@media (max-width: 768px) {
   .login-page {
-    width: 100vw;
-    height: 100vh;
-    background-color: white;
-    display: flex;
-    margin-top: 0; /* Remove qualquer margem entre o cabeçalho fixo e o conteúdo */
+      flex-direction: column;
   }
-
-  .left-section {
-    width: 50%;
-    height: 100vh; /* Garante que a imagem ocupe toda a altura da tela */
-    background: url('https://source.unsplash.com/1024x768/?nature') no-repeat center center/cover;
-    position: relative;
+  .left-section, .right-section {
+      width: 100%;
+      height: auto;
   }
-
-  .left-section::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -50px;
-    width: 50px;
-    height: 100%;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
-  }
-
-  .right-section {
-    width: 50%;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px 40px;
-    height: 100vh;
-  }
-
-  h1 {
-    font-size: 3em;
-    color: #007bff;
-    margin-bottom: 2em;
-    text-align: center;
-  }
-
-  form {
-    max-width: 400px;
-    width: 100%;
-    margin: 0 auto;
-  }
-
-  input[type="email"], input[type="password"] {
-    width: 100%;
-    padding: 15px 18px;
-    border: 2px solid #ddd;
-    font-size: 1.2rem;
-    margin-bottom: 1.5em;
-  }
-
-  .action-links {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 1.5em;
-  }
-
-  .action-links a {
-    color: #007bff;
-    text-decoration: none;
-    font-size: 1em;
-  }
-
-  button {
-    background-color: #38a5ff;
-    color: white;
-    border: none;
-    padding: 15px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s;
-    text-decoration: none;
-  }
-
-  button:hover {
-    background-color: #0056b3;
-  }
-
-  
+}
