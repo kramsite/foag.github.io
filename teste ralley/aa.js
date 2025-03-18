@@ -12,6 +12,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const cell2 = newRow.insertCell();
             cell1.textContent = listaTarefas.rows.length;
             cell2.setAttribute('contenteditable', 'true');
+
+            // Adiciona um ouvinte de evento para limpar o conteúdo ao começar a digitar
+            cell2.addEventListener('focus', () => {
+                if (cell2.textContent === 'Tarefa ' + (listaTarefas.rows.length - 1)) {
+                    cell2.textContent = '';
+                }
+            });
         });
     }
 
@@ -22,8 +29,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const cell2 = newRow.insertCell();
             cell1.textContent = listaNaoEsquecer.rows.length;
             cell2.setAttribute('contenteditable', 'true');
+
+            // Adiciona um ouvinte de evento para limpar o conteúdo ao começar a digitar
+            cell2.addEventListener('focus', () => {
+                if (cell2.textContent === 'Item ' + (listaNaoEsquecer.rows.length - 1)) {
+                    cell2.textContent = '';
+                }
+            });
         });
     }
+
+    // Adiciona ouvintes de evento para limpar o conteúdo existente nas células iniciais
+    const tarefasIniciais = listaTarefas.querySelectorAll('td[contenteditable="true"]');
+    tarefasIniciais.forEach(cell => {
+        cell.addEventListener('focus', () => {
+            if (cell.textContent.startsWith('Tarefa ')) {
+                cell.textContent = '';
+            }
+        });
+    });
+
+    const itensIniciais = listaNaoEsquecer.querySelectorAll('td[contenteditable="true"]');
+    itensIniciais.forEach(cell => {
+        cell.addEventListener('focus', () => {
+            if (cell.textContent.startsWith('Item ')) {
+                cell.textContent = '';
+            }
+        });
+    });
 
     // Funções para gerenciar as notas
     function salvar() {
