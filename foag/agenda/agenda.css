@@ -1,4 +1,5 @@
-* {
+*
+{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -92,6 +93,23 @@ nav.menu a:hover {
     margin-top: 20px;
 }
 
+#saved-notes ul {
+    list-style-type: none; /* Remove os marcadores de lista */
+    padding: 0;
+}
+
+#saved-notes ul li {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#saved-notes ul li:hover {
+    background-color: #f0f0f0;
+}
+
 #tarefas {
     width: 48%;
     background-color: white;
@@ -103,6 +121,7 @@ nav.menu a:hover {
 .titulo-tabela {
     font-size: 20px;
     font-weight: bold;
+    margin-top: 25px;
     margin-bottom: 15px;
     color: #38a5ff;
     text-align: center;
