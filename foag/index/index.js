@@ -5,16 +5,29 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    // Verifique se os campos estão vazios
+    // Verifique se algum dos campos está vazio
     if (email === "" || password === "") {
-        alert("Por favor, preencha todos os campos.");
-        return;
+      alert("Por favor, preencha todos os campos.");
+      return;
     }
 
-    // Simulação de validação (substitua com sua lógica real, como uma API)
-    if (email === "teste@exemplo.com" && password === "123456") {
-        window.location.href = "../calendario/calendario.html"; // Redireciona para o calendário
-    } else {
-        alert("E-mail ou senha incorretos!"); // Exibe um alerta caso os dados sejam inválidos
-    }
-});
+    // Desabilitar o botão enquanto o formulário é processado
+    const submitButton = document.querySelector("button[type='submit']");
+    submitButton.disabled = true;
+
+    // Simulação de tempo de resposta (substitua com sua lógica real)
+    setTimeout(() => {  // Simulando tempo de resposta do servidor
+      window.location.href = "../calendario/calendario.html"; // Redireciona para o calendário
+      submitButton.disabled = false; // Habilitar o botão novamente
+    }, 1000);  // Simula um delay de 1 segundo
+  });
+
+  // Função para alternar a visibilidade da senha
+  document.getElementById("togglePassword").addEventListener("click", function() {
+    const passwordField = document.getElementById("password");
+    const passwordFieldType = passwordField.type === "password" ? "text" : "password";
+    passwordField.type = passwordFieldType;
+
+    // Mudar o texto do botão conforme o estado
+    this.textContent = passwordFieldType === "password" ? "Mostrar Senha" : "Ocultar Senha";
+  });

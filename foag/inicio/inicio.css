@@ -120,10 +120,13 @@ nav ul li a:hover {
 footer {
     background-color: #232323;
     color: #ffffff;
-    text-align: center;
+    text-align:center;
     padding: 3px;
+    position: absolute;
     width: 100%;
+    bottom: 0;
     font-size: 0.9em;
+    margin-top: 200px;
 }
 
 /* Responsividade: Ajuste para telas menores */
