@@ -1,3 +1,4 @@
+/* Reset de margens, paddings e box-sizing */
 * {
     margin: 0;
     padding: 0;
@@ -10,20 +11,20 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    background-color: #f5f7fa; /* Cor suave de fundo */
+    background-color: white;
 }
 
 /* Cabeçalho do site */
 header.cabecalho {
-    font-family: 'snap ITC', sans-serif;
+    font-family: 'Snap ITC', sans-serif;
     width: 100%;
-    background-color: #38a5ff; /* Azul mais suave */
+    background-color: #38a5ff;
     color: white;
     text-align: left;
-    padding: 20px;
-    font-size: 28px;
-    font-weight: 700;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    padding: 15px;
+    font-size: 24px;
+    font-weight: bold;
+
 }
 
 /* Container geral (menu e conteúdo principal) */
@@ -34,15 +35,13 @@ header.cabecalho {
 
 /* Menu lateral */
 nav.menu {
-    width: 250px;
-    background-color: #38a5ff; /* Azul */
-    padding: 25px 20px;
+    width: 15%;
+    background-color: #38a5ff;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1); /* Sombra suave à direita */
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    gap: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Links do menu */
@@ -50,15 +49,14 @@ nav.menu a {
     text-decoration: none;
     color: white;
     font-size: 18px;
-    padding: 12px 20px;
-    border-radius: 8px;
-    transition: background-color 0.3s, transform 0.2s ease-in-out;
+    padding: 10px;
+    transition: background-color 0.3s, border-radius 0.3s;
 }
 
 /* Hover dos links */
 nav.menu a:hover {
-    background-color: #38a5ff;
-    transform: translateX(5px); /* Efeito de deslizar */
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
 }
 
 /* Área principal para o conteúdo da tabela */
@@ -142,21 +140,7 @@ footer {
     background-color: #232323;
     color: #ffffff;
     text-align: center;
-    padding: 5px;
+    padding: 3px;
     width: 100%;
-    font-size: 1em; /* Corrigido para tamanho legível */
-}
-
-/* Adicionando animações */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-body {
-    animation: fadeIn 1s ease-in;
+    font-size: 0.9em; /* Corrigido para tamanho legível */
 }
