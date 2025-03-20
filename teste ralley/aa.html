@@ -1,12 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Teste localStorage</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="aa.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <textarea id="testeNotas"></textarea>
-    <button onclick="salvarTeste()">Salvar</button>
-    <button onclick="carregarTeste()">Carregar</button>
-    <script src="teste.js"></script>
+  <!-- Cabeçalho fixo -->
+  <div class="logo">
+    FOAG
+  </div>
+
+  <!-- Página de login -->
+  <div class="login-page">
+    <div class="left-section">
+      <img src="../index/img/livro.png" alt="Inspirational image" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    <div class="right-section">
+      <h1>Login</h1>
+      <form id="loginForm">
+        <input type="email" id="email" name="email" placeholder="E-mail">
+        <input type="password" id="password" name="password" placeholder="Senha">
+        <div class="action-links">
+          <a href="../cadastro/cadasto.html">CADASTRE-SE</a>
+        </div>
+        <button type="submit">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="aa.js"></script>
+
 </body>
 </html>
