@@ -5,86 +5,101 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* Corpo da página */
 body {
-    background-color: #ffffff;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
     flex-direction: column;
+    height: 100vh;
+    background-color: #f9f9f9;
 }
 
-/* Cabeçalho fixo no topo */
-.logo {
-    font-family: 'snap itc';
+/* Cabeçalho do site */
+header.header {
+    width: 100%;
     background-color: #38a5ff;
     color: white;
-    font-size: 2em; /* Corrigido: usei 'em' ao invés de '%' */
+    text-align: center;
     padding: 20px;
-    width: 100%;
-    text-align: left;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    display: flex;
-    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Cadastro */
+/* Formulário de Cadastro */
 .cadastro {
-    width: 690px;
-    margin: 80px auto 20px; /* Ajustei a margem para evitar sobreposição */
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 0.8rem;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    padding: 40px;
+    max-width: 600px;
+    margin: 50px auto;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .cadastro h2 {
-    font-size: 1.6em; /* Corrigido para um tamanho visível */
-    margin-bottom: 0.5rem;
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 20px;
     text-align: center;
 }
 
-.cadastro label {
-    font-weight: bold;
-    margin-bottom: 0.3rem;
+label {
     display: block;
-    font-size: 1em;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #555;
 }
 
-.cadastro input {
+input {
     width: 100%;
-    max-width: 550px;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1.2em; /* Corrigido para um tamanho adequado */
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f4f4f4;
+    transition: border 0.3s ease;
 }
 
-.cadastro button {
+input:focus {
+    border-color: #38a5ff;
+    outline: none;
+    background-color: #fff;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
     background-color: #38a5ff;
-    color: #ffffff;
+    color: white;
     border: none;
-    padding: 0.5rem 2vw;
+    border-radius: 8px;
+    font-size: 18px;
     cursor: pointer;
-    border-radius: 0.6rem;
-    margin-top: 1rem;
-    font-size: 1em; /* Tamanho do botão ajustado */
-    transition: background 0.3s ease;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
 }
 
-.cadastro button:hover {
-    background-color: #3099ef;
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
 }
 
-footer {
+/* Rodapé */
+footer.footer {
     background-color: #232323;
     color: #ffffff;
     text-align: center;
-    padding: 3px;
+    padding: 15px;
     width: 100%;
-    font-size: 0.9em; /* Corrigido para tamanho legível */
+    font-size: 1em;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .cadastro {
+        padding: 20px;
+    }
+
+    header.header {
+        font-size: 24px;
+    }
 }
