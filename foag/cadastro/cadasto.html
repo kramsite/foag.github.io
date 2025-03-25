@@ -10,9 +10,9 @@
 <body>
 
   <!-- Cabeçalho fixo -->
-  <div class="logo">
-    FOAG
-  </div>
+  <header class="header">
+    <div class="logo">FOAG</div>
+  </header>
 
   <main>
     <section class="cadastro">
@@ -20,27 +20,27 @@
       <form id="cadastro-form" action="../login/Loginkram.html" method="POST">
         
         <label for="username">Nome de Usuário:</label>
-        <input type="text" id="username" name="username" required autocomplete="username"><br>
+        <input type="text" id="username" name="username" required autocomplete="username">
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required autocomplete="email"><br>
+        <input type="email" id="email" name="email" required autocomplete="email">
 
+        <label for="telefone">Telefone:</label>
         <input type="tel" id="telefone" name="telefone" required placeholder="(XX) XXXXX-XXXX" 
-        oninput="aplicarMascaraTelefone(this)" maxlength="15" autocomplete="tel">
+               oninput="aplicarMascaraTelefone(this)" maxlength="15" autocomplete="tel">
 
         <label for="password">Senha:</label>
-        <input type="password" id="password" name="password" required minlength="6" autocomplete="new-password"><br>
+        <input type="password" id="password" name="password" required minlength="6" autocomplete="new-password">
 
         <label for="confirm_password">Confirmar senha:</label>
-        <input type="password" id="confirm_password" name="confirm_password" required minlength="6" autocomplete="new-password"><br>
-
+        <input type="password" id="confirm_password" name="confirm_password" required minlength="6" autocomplete="new-password">
 
         <button type="submit">Confirmar</button>
       </form>
     </section>
   </main>
 
-  <footer>
+  <footer class="footer">
     &copy; 2025 FOAG. Todos os direitos reservados.
   </footer>
 
