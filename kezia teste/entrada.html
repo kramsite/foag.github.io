@@ -26,12 +26,11 @@
 
         /* Configurações para o slider */
         .slider-container {
-            width: 100%; /* Pode ser alterado para outro valor como 80% ou 90% */
+            width: 100%;
             max-width: 100%; /* Largura máxima de 100% */
             overflow: hidden;
             margin: 20px 0;
             position: relative;
-            /* Aqui você pode ajustar a largura do slider */
         }
 
         .slider {
@@ -50,7 +49,8 @@
         .slide img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Garante que a imagem não será cortada */
+            object-fit: contain; /* Ajuste para evitar corte da imagem */
+            object-position: center; /* Centraliza a imagem no contêiner */
         }
     </style>
 </head>
@@ -63,7 +63,7 @@
 <div class="slider-container">
     <div class="slider">
         <div class="slide">
-            <img id="slideImage" src="../SAOQ.png" alt="Estudo 1" />
+            <img id="slideImage" src="../kezia teste/1.jpg" alt="Estudo 1" />
         </div>
         <div class="slide" style="background-color: #4682B4;">Slide 2</div>
         <div class="slide" style="background-color: #32CD32;">Slide 3</div>
@@ -96,7 +96,7 @@
             const adjustedHeight = slideHeight *  slideHeightFactor; // Controla o tamanho vertical
 
             // Ajusta a altura do slide conforme a proporção da imagem
-            img.closest('.slide').style.height = `${adjustedHeight}54px`;
+            img.closest('.slide').style.height = `${adjustedHeight}px`;
         } else {
             img.onload = adjustSlideHeight;
         }
