@@ -1,0 +1,32 @@
+/* Reset de margens e padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Cor de fundo da página */
+body {
+    font-family: "Poppins", sans-serif;
+    background-image: url('../img/foto.png'); /* Altere 'caminho-da-imagem.jpg' pelo caminho correto da imagem */
+    background-size: cover; /* Ajusta o tamanho da imagem para cobrir toda a tela */
+    background-position: center;
+    background-color: #38a5ff;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+h1 {
+    font-family: 'Snap ITC', sans-serif;
+    color: aliceblue;
+    font-size: 8em;
+}
+
+h2 {
+    color: aliceblue;
+    font-size: 2em;
+}
