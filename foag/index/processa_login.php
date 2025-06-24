@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $senhaHash = $partes[1];
             if ($email === $emailSalvo && password_verify($senha, $senhaHash)) {
                 $_SESSION['usuario'] = $email;
-                header('Location: ../entrada/entrada.php');
+                header('Location: ../calendario/calendario.html');
                 exit;
             }
         }

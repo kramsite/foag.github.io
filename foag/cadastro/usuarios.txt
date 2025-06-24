@@ -1,1 +1,4 @@
 rafa@gmail.com|$2y$10$iy76u9BYNxsQGPcnrqTEwOpvS4Ds8oTnzbMg//UaW7PTXRgi0hpjq|nome=rafaella|nascimento=2008-09-22|cadastrado_em=2025-06-24 16:25:46
+rafas02@gmail.com|$2y$10$pOSqoJbSv91/AS2gBwXZLuG.aIavhH.RjEsDmJ5NQPurB1OPaF9pW|nome=rafaella|nascimento=2008-09-22|cadastrado_em=2025-06-24 16:28:29
+higor@gmail.com|$2y$10$/e1fyIKMYij/5Alcs0aOuO01pu9/VLSVwjb8FUzJ9cgvd0SjDNJr.|nome=Higor|nascimento=1993-02-04|cadastrado_em=2025-06-24 16:39:35
+e2205713@edu.mt.gov.br|$2y$10$kFqoB2v.jbOxMnvUA5G.HeRcoojrsbkwHbMh1GvGTbO8pfY9j3bwi|nome=isabelly|nascimento=2008-12-26|cadastrado_em=2025-06-24 16:44:54
