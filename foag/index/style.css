@@ -71,7 +71,7 @@ body {
 h1 {
   font-size: 3em;
   color: #007bff;
-  margin-bottom: 2em;
+  margin-bottom: 0.2em;
   text-align: center;
 }
 
@@ -86,14 +86,24 @@ input[type="email"], input[type="password"] {
   width: 100%;
   padding: 15px 18px;
   border: 2px solid #ddd;
-  font-size: 1.2rem;
-  margin-bottom: 1.5em;
+  font-size: 1rem;
+  margin-bottom: 0.5em;
   border-radius: 5px; /* Bordas mais suaves */
   transition: border-color 0.3s ease;
 }
 
 input[type="email"]:focus, input[type="password"]:focus {
   border-color: #38a5ff; /* Cor de destaque ao focar nos campos */
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 .action-links {

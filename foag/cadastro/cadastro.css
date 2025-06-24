@@ -1,90 +1,129 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
-    background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    flex-direction: column;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+  overflow: hidden; /* Impede rolagem na página */
 }
 
-/* Cabeçalho fixo no topo */
 .logo {
-    font-family: 'snap itc';
-    background-color: #38a5ff;
-    color: white;
-    font-size: 2em; /* Corrigido: usei 'em' ao invés de '%' */
-    padding: 20px;
-    width: 100%;
-    text-align: left;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    display: flex;
-    align-items: center;
+  font-family: 'Snap ITC', sans-serif; /* Mantendo a fonte da logo */
+  background-color: #38a5ff;
+  color: white;
+  font-size: 2.2em;
+  padding: 15px 20px;
+  width: 100%;
+  text-align: left;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Cadastro */
-.cadastro {
-    width: 690px;
-    margin: 80px auto 20px; /* Ajustei a margem para evitar sobreposição */
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 0.8rem;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  display: flex;
+  margin-top: 60px; /* Espaço abaixo do cabeçalho fixo */
 }
 
-.cadastro h2 {
-    font-size: 1.6em; /* Corrigido para um tamanho visível */
-    margin-bottom: 0.5rem;
-    text-align: center;
+.left-section {
+  width: 50%;
+  height: 100vh;
+  background: url('https://source.unsplash.com/1024x768/?nature') no-repeat center center/cover;
+  position: relative;
 }
 
-.cadastro label {
-    font-weight: bold;
-    margin-bottom: 0.3rem;
-    display: block;
-    font-size: 1em;
+.left-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -50px;
+  width: 50px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
 }
 
-.cadastro input {
-    width: 100%;
-    max-width: 550px;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1.2em; /* Corrigido para um tamanho adequado */
+.right-section {
+  width: 50%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 40px;
+  height: 100vh;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra para separar as seções */
 }
 
-.cadastro button {
-    background-color: #38a5ff;
-    color: #ffffff;
-    border: none;
-    padding: 0.5rem 2vw;
-    cursor: pointer;
-    border-radius: 0.6rem;
-    margin-top: 1rem;
-    font-size: 1em; /* Tamanho do botão ajustado */
-    transition: background 0.3s ease;
+h2 {
+  font-size: 2em;
+  color: #007bff;
+  margin-bottom: 0.4em;
+  text-align: center;
 }
 
-.cadastro button:hover {
-    background-color: #3099ef;
+form {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-footer {
-    background-color: #232323;
-    color: #ffffff;
-    text-align: center;
-    padding: 3px;
-    width: 100%;
-    font-size: 0.9em; /* Corrigido para tamanho legível */
+input[type="email"], input[type="password"] {
+  width: 100%;
+  padding: 10px 18px;
+  border: 2px solid #ddd;
+  font-size: 1rem;
+  margin-bottom: 0.5em;
+  border-radius: 5px; /* Bordas mais suaves */
+  transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus, input[type="password"]:focus {
+  border-color: #38a5ff; /* Cor de destaque ao focar nos campos */
+}
+
+button {
+  background-color: #38a5ff;
+  color: white;
+  border: none;
+  padding: 14px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+button:hover {
+  background-color: #3099ef;
+  transform: translateY(-2px); /* Efeito de levitação ao passar o mouse */
+}
+
+button:active {
+  transform: translateY(1px); /* Efeito ao clicar no botão */
+}
+
+@media (max-width: 768px) {
+  .login-page {
+      flex-direction: column;
+  }
+  .left-section, .right-section {
+      width: 100%;
+      height: auto;
+  }
 }

@@ -4,25 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <style>
-    .g_id_signin {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: 15px;
-    }
-    .g_id_signin > div {
-      width: 100%;
-    }
-    .g_id_signin button {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-    }
-  </style>
 </head>
 <body>
   <!-- Cabeçalho fixo -->
@@ -37,14 +20,17 @@
     </div>
     <div class="right-section">
       <h1>Login</h1>
-      <form id="loginForm">
-        <input type="email" id="email" name="email" placeholder="E-mail" required>
-        <input type="password" id="password" name="password" placeholder="Senha" required>
-        <div class="action-links">
-          <a href="../cadastro/cadastro.html">CADASTRE-SE</a>
-        </div>
+      <form method="POST" action="processa_login.php">
+        <label for="email">E-mail:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="senha">Senha:</label><br>
+        <input type="password" id="senha" name="senha" required><br><br>
+
+        <a href="../cadastro/cadastro.php">CADASTRE-SE</a>
+
         <button type="submit">Entrar</button>
-      </form>
+    </form>
       <div id="g_id_onload"
            data-client_id="SEU_CLIENT_ID_AQUI"
            data-auto_prompt="false">
