@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <link rel="stylesheet" href="cadastro.css">
+  <link rel="stylesheet" href="cadaststyle.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -24,25 +24,25 @@
       <h2>Cadastro de Usuário</h2>
     <form method="POST" action="processa_cadastro.php">
          <label for="nome">Nome</label>
-  <input type="text" id="nome" name="nome" required>
+         <input type="text" id="nome" name="nome" required>
+         
+         <label for="email">E-mail</label>
+         <input type="email" id="email" name="email" required>
 
-  <label for="email">E-mail</label>
-  <input type="email" id="email" name="email" required>
+         <label for="senha">Senha</label>
+         <input type="password" id="senha" name="senha" required>
 
-  <label for="senha">Senha</label>
-  <input type="password" id="senha" name="senha" required>
+         <label for="data_nascimento">Data de Nascimento</label>
+         <input type="date" id="data_nascimento" name="data_nascimento" required>
 
-  <label for="data_nascimento">Data de Nascimento</label>
-  <input type="date" id="data_nascimento" name="data_nascimento" required>
-
-  <button type="submit">Cadastrar</button>
+         <button type="submit">Cadastrar</button>
     
-    </form>
-      <div id="g_id_onload"
+        </form>
+        <div id="g_id_onload"
            data-client_id="SEU_CLIENT_ID_AQUI"
            data-auto_prompt="false">
-      </div>
-      <div class="g_id_signin"
+          </div>
+          <div class="g_id_signin"
            data-type="standard"
            data-size="large"
            data-theme="outline"

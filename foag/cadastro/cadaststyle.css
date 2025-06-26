@@ -87,8 +87,8 @@ label {
   font-size: 1rem;
   color: #333;
   font-weight: 500;
-  margin-bottom: 13px;
-  margin-top: 5px;
+  margin-bottom: 0.6em;
+  margin-top: 0.7em;
 }
 
 input[type="email"], input[type="password"] {
@@ -96,7 +96,6 @@ input[type="email"], input[type="password"] {
   padding: 10px 18px;
   border: 2px solid #ddd;
   font-size: 1rem;
-  margin-bottom: 0.5em;
   border-radius: 5px; /* Bordas mais suaves */
   transition: border-color 0.3s ease;
 }
