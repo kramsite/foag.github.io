@@ -23,19 +23,19 @@
     <div class="right-section">
       <h2>Cadastro de Usuário</h2>
     <form method="POST" action="processa_cadastro.php">
-        <label for="nome">Nome:</label><br>
-        <input type="text" id="nome" name="nome" required><br><br>
+         <label for="nome">Nome</label>
+  <input type="text" id="nome" name="nome" required>
 
-        <label for="email">E-mail:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
+  <label for="email">E-mail</label>
+  <input type="email" id="email" name="email" required>
 
-        <label for="senha">Senha:</label><br>
-        <input type="password" id="senha" name="senha" required><br><br>
+  <label for="senha">Senha</label>
+  <input type="password" id="senha" name="senha" required>
 
-        <label for="data_nascimento">Data de Nascimento:</label><br>
-        <input type="date" id="data_nascimento" name="data_nascimento" required><br><br>
+  <label for="data_nascimento">Data de Nascimento</label>
+  <input type="date" id="data_nascimento" name="data_nascimento" required>
 
-        <button type="submit">Cadastrar</button>
+  <button type="submit">Cadastrar</button>
     </form>
     </form>
       <div id="g_id_onload"

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['usuario'])) {
-    header('Location: entrar.php');
+    header('Location: index.php');
     exit;
 }
 ?>
@@ -10,10 +10,15 @@ if (!isset($_SESSION['usuario'])) {
 <head>
     <meta charset="UTF-8">
     <title>Bem-vindo</title>
+    
+        
 </head>
 <body>
+    <h1>FOAG</h1>
+    <div class="mensagem">
     <h2>Bem-vindo, <?php echo $_SESSION['usuario']; ?>!</h2>
     <p>Você está logado com sucesso.</p>
-    <a href="logout.php">Sair</a>
+    <a href="../calendario/calendario.php">Entrar</a>
+    <div>
 </body>
 </html>
