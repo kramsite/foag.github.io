@@ -87,7 +87,7 @@ label {
   font-size: 1rem;
   color: #333;
   font-weight: 500;
-  margin-bottom: 15px;
+  margin-bottom: 13px;
   margin-top: 5px;
 }
 
@@ -116,6 +116,7 @@ button {
   width: 100%;
   transition: background-color 0.3s ease, transform 0.2s ease-in-out;
   text-decoration: none;
+  margin-top: 15px;
 }
 
 button:hover {
