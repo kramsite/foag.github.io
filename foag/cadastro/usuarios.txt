@@ -1,6 +1,2 @@
-rafa@gmail.com|$2y$10$iy76u9BYNxsQGPcnrqTEwOpvS4Ds8oTnzbMg//UaW7PTXRgi0hpjq|nome=rafaella|nascimento=2008-09-22|cadastrado_em=2025-06-24 16:25:46
-rafas02@gmail.com|$2y$10$pOSqoJbSv91/AS2gBwXZLuG.aIavhH.RjEsDmJ5NQPurB1OPaF9pW|nome=rafaella|nascimento=2008-09-22|cadastrado_em=2025-06-24 16:28:29
-higor@gmail.com|$2y$10$/e1fyIKMYij/5Alcs0aOuO01pu9/VLSVwjb8FUzJ9cgvd0SjDNJr.|nome=Higor|nascimento=1993-02-04|cadastrado_em=2025-06-24 16:39:35
-e2205713@edu.mt.gov.br|$2y$10$kFqoB2v.jbOxMnvUA5G.HeRcoojrsbkwHbMh1GvGTbO8pfY9j3bwi|nome=isabelly|nascimento=2008-12-26|cadastrado_em=2025-06-24 16:44:54
-vrvitorrosa@gmail.com|$2y$10$f1dojDtnhuTWJNO80RYKGuBovfJLxIRTscrQj08wz/i8rwgp8VPIW|nome=vitor rosa|nascimento=2007-05-04|cadastrado_em=2025-06-24 17:19:55
-rafaellagomes1314@gmail.com|$2y$10$WBqk2GKufda4E9Fe6NACj.RP34uHIKRsMVQ3OnZaO1wbJCLSEi39K|nome=rafaella gomes|nascimento=2008-09-22|cadastrado_em=2025-06-26 03:18:36
+rafa@gmail.com|$2y$10$Z8rESEj3lhiwZ/Ai/d49YOAFHPodfSHaY5915TCEPudhPfyCE/tMe|nome=rafaella gomes|nascimento=2008-09-22|cadastrado_em=2025-06-26 03:38:47
+rafaellagomes1314@gmail.com|$2y$10$GvWTIeFr0/pJRIwVwCuTzuRl2Zp6OtffsOYQ0zVo.2J7Dht6tLRqe|nome=rafaella gomes|nascimento=2008-09-22|cadastrado_em=2025-06-26 03:43:06
