@@ -36,7 +36,7 @@
   <input type="date" id="data_nascimento" name="data_nascimento" required>
 
   <button type="submit">Cadastrar</button>
-    </form>
+    
     </form>
       <div id="g_id_onload"
            data-client_id="SEU_CLIENT_ID_AQUI"
