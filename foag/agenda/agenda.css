@@ -1,5 +1,4 @@
-*
-{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -9,12 +8,12 @@
 body {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #f9f9f9;
 }
 
 header.cabecalho {
-    font-family: 'Snap ITC', sans-serif;
+    font-family: 'Snap ITC', cursive, sans-serif;
     width: 100%;
     background-color: #38a5ff;
     color: white;
@@ -37,7 +36,6 @@ nav.menu {
     flex-direction: column;
     gap: 15px;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-    position: relative;
 }
 
 nav.menu a {
@@ -68,9 +66,10 @@ nav.menu a:hover {
     gap: 30px;
     justify-content: space-between;
     width: 100%;
+    flex-wrap: wrap;
 }
 
-#notas {
+#notas, #tarefas {
     width: 48%;
     background-color: white;
     border-radius: 8px;
@@ -85,37 +84,81 @@ nav.menu a:hover {
     padding: 12px;
     border-radius: 8px;
     font-size: 16px;
-    resize: none;
+    resize: vertical;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 #saved-notes {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 #saved-notes ul {
-    list-style-type: none; /* Remove os marcadores de lista */
+    list-style: none;
     padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fafafa;
 }
 
 #saved-notes ul li {
-    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f5f5f5;
     padding: 10px;
-    margin-bottom: 5px;
-    cursor: pointer;
+    margin-bottom: 8px;
     border-radius: 5px;
+    cursor: default;
+    transition: background-color 0.2s;
 }
 
 #saved-notes ul li:hover {
     background-color: #f0f0f0;
 }
 
-#tarefas {
-    width: 48%;
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+#saved-notes ul li span {
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+/* Botões dentro da lista de notas */
+#saved-notes ul li button {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin-left: 8px;
+}
+
+/* Botão para baixar PDF na nota */
+.btn-pequeno {
+    background-color: #38a5ff;
+    color: white;
+}
+
+.btn-pequeno:hover {
+    background-color: #2691c8;
+}
+
+/* Botão de exclusão */
+.btn-excluir {
+    background-color: #ff5c5c;
+    color: white;
+}
+
+.btn-excluir:hover {
+    background-color: #e04444;
 }
 
 .titulo-tabela {
@@ -130,6 +173,7 @@ nav.menu a:hover {
 table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: auto;
 }
 
 table th, table td {
@@ -142,15 +186,6 @@ table th, table td {
 table th {
     background-color: #38a5ff;
     color: white;
-}
-
-table th:nth-child(2), table td:nth-child(2) {
-    width: 80%;
-    word-break: break-word;
-}
-
-table th:nth-child(1), table td:nth-child(1) {
-    width: 20%;
 }
 
 button {
@@ -170,10 +205,32 @@ button:hover {
     background-color: #2691c8;
 }
 
-#salvar {
-    margin-top: 30px;
+/* Botões de exclusão de tarefas/itens */
+.btn-excluir {
+    background-color: #ff5c5c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
 }
 
+.btn-excluir:hover {
+    background-color: #e04444;
+}
+
+/* Campo de data nas tabelas */
+td input[type="date"] {
+    width: 100%;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* Rodapé */
 footer {
     background-color: #232323;
     color: #ffffff;
@@ -183,7 +240,7 @@ footer {
     font-size: 1em;
 }
 
-/* Responsividade: Ajustes para telas menores */
+/* Responsividade */
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
@@ -207,22 +264,11 @@ footer {
     }
 
     table {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .cabecalho {
-        font-size: 20px;
-        padding: 10px;
+        font-size: 14px;
     }
 
-    nav.menu a {
-        font-size: 16px;
-    }
-
-    #notas textarea {
-        height: 150px;
+    table th, table td {
+        padding: 8px;
     }
 
     button {
