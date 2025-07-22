@@ -1,3 +1,5 @@
 kezialinda@gmail.com|$2y$10$07wK3YA.SD9CXpwqqYypcut/ItXxaBym5kVBE/v9GpzeJYy2XnP8O|nome=kezia linda|nascimento=2009-04-21|cadastrado_em=2025-07-22 14:12:54
 rafaellagomes@gmail.com|$2y$10$CSjn9SpeCsZdcbpCO9Av7e2h3OwzKYWPULpZY3R849mFW2xnjAMLa|nome=Rafaella|nascimento=2008-09-22|cadastrado_em=2025-07-22 14:29:00
 higor@gmail.com|$2y$10$1lQD.a/TlKx02SFu4n1oI.Fd1ZbQ9XF15svYFUJk3CNAar/q9/HJe|nome=Higor|nascimento=1993-02-04|cadastrado_em=2025-07-22 15:59:02
+keii@gmail.com|$2y$10$y8oaB0VY/lm3E/RrRrmh/.vhiwzsmPpv5oxHH0fiFOe8fPzEKhyKy|nome=edede|nascimento=2009-07-30|cadastrado_em=2025-07-22 17:03:41
+kezia@gmail.com|$2y$10$5kdRge14WBM0oBMV6sa9teHVuHjvJod.eMvtestWz8FPKAEjxTHTG|nome=keizazaza|nascimento=2009-03-02|cadastrado_em=2025-07-22 17:08:00
