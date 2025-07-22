@@ -66,7 +66,7 @@ function gerarCalendario() {
             <a href="../inicio/inicio.html">Início</a>
             <a href="../agenda/agenda.html">Agenda</a>
             <a href="../calendario/calendario.php">Calendário</a>
-            <a href="#">Perfil</a>
+            <a href="../perfil/perfil.php">Perfil</a>
             <a href="#">Sobre</a>
             <a href="#">Contato</a>
         </nav>
