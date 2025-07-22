@@ -1,4 +1,7 @@
 <?php
+// Carrega os feriados do JSON
+$feriados = json_decode(file_get_contents(__DIR__ . '/feriados.json'), true);
+
 // Função para gerar os dias de cada mês
 function obterDiasDoMes($mes, $ano) {
     $meses = [
@@ -13,42 +16,55 @@ function obterDiasDoMes($mes, $ano) {
     $dias = [];
     for ($i = 0; $i < $primeiroDiaSemana; $i++) $dias[] = '';
     for ($i = 1; $i <= $diasNoMes; $i++) $dias[] = $i;
-    return $dias;
+    return [$dias, $numeroMes];
 }
 
 // Gera o calendário completo (todos os meses)
 function gerarCalendario() {
+    global $feriados;
     $ano = date('Y');
     $meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
     $diasSemana = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
     foreach ($meses as $mes) {
-        $dias = obterDiasDoMes($mes, $ano);
+        list($dias, $numeroMes) = obterDiasDoMes($mes, $ano);
         echo "<div class='mes'>";
         echo "<div class='calendario-mes'>";
         echo "<div class='header-mes'>$mes</div>";
         echo "<div class='dias'>";
+
         foreach ($diasSemana as $dia) {
-            echo "<div class='dia header-dia'><strong>$dia</strong></div>"; // Cabeçalho (não clicável)
+            echo "<div class='dia header-dia'><strong>$dia</strong></div>";
         }
+
         foreach ($dias as $d) {
-            echo "<div class='dia'>".($d ?: '')."</div>";
+            if ($d) {
+                $dataAtual = sprintf('%04d-%02d-%02d', $ano, $numeroMes, $d);
+                $classeExtra = '';
+                if (isset($feriados[$dataAtual])) {
+                    $classeExtra = 'azul'; // já marca como feriado
+                }
+                echo "<div class='dia $classeExtra'>$d</div>";
+            } else {
+                echo "<div class='dia'></div>";
+            }
         }
+
         echo "</div></div>";
-        // Coluna da direita (informações/agenda)
         echo "<div class='info-mes'>";
-       echo "<p>Selecione a cor e depois clique no dia:</p>";
-       echo "<div class='botoes-cores'>";
-       echo "<button class='btn-cor' data-cor='vermelho' title='Faltou (sem atestado)' style='background:#e74c3c'></button>";
-       echo "<button class='btn-cor' data-cor='amarelo' title='Faltou com atestado' style='background:#f1c40f'></button>";
-       echo "<button class='btn-cor' data-cor='azul' title='Feriado / sem aula' style='background:#3498db'></button>";
-       echo "<button class='btn-cor' data-cor='roxo' title='Dia de prova' style='background:#8e44ad'></button>";
-       echo "</div>";
-       echo "</div>";
+echo "<p>Selecione a cor e depois clique no dia:</p>";
+echo "<div class='botoes-cores'>";
+echo "<div class='cor-item'><button class='btn-cor' data-cor='vermelho' style='background:#e74c3c'></button><span>Faltou</span></div>";
+echo "<div class='cor-item'><button class='btn-cor' data-cor='amarelo' style='background:#f1c40f'></button><span>Atestado</span></div>";
+echo "<div class='cor-item'><button class='btn-cor' data-cor='sem-aula' style='background:#f39c12'></button><span>Sem aula</span></div>";  // substitui azul por sem aula
+echo "<div class='cor-item'><button class='btn-cor' data-cor='roxo' style='background:#8e44ad'></button><span>Prova</span></div>";
+echo "<div class='cor-item'><button class='btn-cor limpar' data-cor='limpar' style='background:#bdc3c7'></button><span>Limpar</span></div>";
+echo "</div>";
+echo "</div>";
         echo "</div>";
     }
-
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -83,77 +99,93 @@ function gerarCalendario() {
 
     <script>
     // Seu código de expandir mês (já existente)
-    document.querySelectorAll('.mes').forEach(mes => {
-        mes.addEventListener('click', () => {
-            const aberto = document.querySelector('.mes.expanded');
-            if (aberto && aberto !== mes) aberto.classList.remove('expanded');
-            mes.classList.add('expanded');
+document.querySelectorAll('.mes').forEach(mes => {
+    mes.addEventListener('click', () => {
+        const aberto = document.querySelector('.mes.expanded');
+        if (aberto && aberto !== mes) aberto.classList.remove('expanded');
+        mes.classList.add('expanded');
 
-            // Adiciona botão de fechar apenas uma vez
-            if (!mes.querySelector('.fechar-btn')) {
-                const fechar = document.createElement('button');
-                fechar.textContent = '×';
-                fechar.classList.add('fechar-btn');
-                fechar.onclick = e => {
-                    e.stopPropagation();
-                    mes.classList.remove('expanded');
-                    // Limpa seleção de cor ao fechar
-                    corSelecionada = null;
-                    atualizarBotoesCor();
-                };
-                mes.appendChild(fechar);
-            }
-        });
+        // Adiciona botão de fechar apenas uma vez
+        if (!mes.querySelector('.fechar-btn')) {
+            const fechar = document.createElement('button');
+            fechar.textContent = '×';
+            fechar.classList.add('fechar-btn');
+            fechar.onclick = e => {
+                e.stopPropagation();
+                mes.classList.remove('expanded');
+                // Limpa seleção de cor ao fechar
+                corSelecionada = null;
+                atualizarBotoesCor();
+            };
+            mes.appendChild(fechar);
+        }
     });
+});
 
-    // Variável para guardar a cor selecionada
-    let corSelecionada = null;
+// Variável para guardar a cor selecionada
+let corSelecionada = null;
 
-    // Pega todos os botões de cor
-    const botoesCor = document.querySelectorAll('.btn-cor');
+// Pega todos os botões de cor
+const botoesCor = document.querySelectorAll('.btn-cor');
 
-    // Marca/desmarca o botão selecionado visualmente
-    function atualizarBotoesCor() {
-        botoesCor.forEach(botao => {
-            if (botao.dataset.cor === corSelecionada) {
-                botao.style.outline = '3px solid #555';
-                botao.style.transform = 'scale(1.3)';
-            } else {
-                botao.style.outline = 'none';
-                botao.style.transform = 'scale(1)';
-            }
-        });
-    }
-
-    // Evento para clicar no botão de cor
+// Marca/desmarca o botão selecionado visualmente
+function atualizarBotoesCor() {
     botoesCor.forEach(botao => {
-        botao.addEventListener('click', e => {
-            e.stopPropagation(); // evita fechar o mês expandido
-            const cor = botao.dataset.cor;
-            if (corSelecionada === cor) {
-                corSelecionada = null; // desmarca se clicar de novo
-            } else {
-                corSelecionada = cor;
-            }
-            atualizarBotoesCor();
-        });
+        if (botao.dataset.cor === corSelecionada) {
+            botao.style.outline = '3px solid #555';
+            botao.style.transform = 'scale(1.3)';
+        } else {
+            botao.style.outline = 'none';
+            botao.style.transform = 'scale(1)';
+        }
     });
+}
 
-    // Evento para clicar nos dias (apenas no mês expandido)
-    document.querySelectorAll('.mes').forEach(mes => {
-        mes.addEventListener('click', e => {
-            if (!mes.classList.contains('expanded')) return;
-            if (!corSelecionada) return;
-
-            const target = e.target;
-            if (target.classList.contains('dia') && !target.classList.contains('header-dia') && target.textContent.trim() !== '') {
-                // Remove as classes de cor antigas
-                target.classList.remove('vermelho', 'amarelo', 'azul', 'roxo');
-                // Aplica a cor selecionada
-                target.classList.add(corSelecionada);
-            }
-        });
+// Evento para clicar no botão de cor
+botoesCor.forEach(botao => {
+    botao.addEventListener('click', e => {
+        e.stopPropagation(); // evita fechar o mês expandido
+        const cor = botao.dataset.cor;
+        if (corSelecionada === cor) {
+            corSelecionada = null; // desmarca se clicar de novo
+        } else {
+            corSelecionada = cor;
+        }
+        atualizarBotoesCor();
     });
+});
+
+// Evento para clicar nos dias (apenas no mês expandido)
+document.querySelectorAll('.mes').forEach(mes => {
+    mes.addEventListener('click', e => {
+        if (!mes.classList.contains('expanded')) return;
+        if (!corSelecionada) return;
+
+        const target = e.target;
+        if (
+            target.classList.contains('dia') && 
+            !target.classList.contains('header-dia') && 
+            target.textContent.trim() !== ''
+        ) {
+            if (target.classList.contains('feriado')) {
+                // Dia feriado automático, não permite mudar
+                alert('Este dia é feriado automático e não pode ser alterado.');
+                return;
+            }
+            // Remove as classes de cor antigas (exceto 'feriado')
+            target.classList.remove('vermelho', 'amarelo', 'sem-aula', 'roxo');
+
+            if (corSelecionada === 'limpar') {
+                // Limpa as cores manuais
+                return;
+            }
+
+            // Aplica a cor selecionada
+            target.classList.add(corSelecionada);
+        }
+    });
+});
+
 </script>
 
 </body>
