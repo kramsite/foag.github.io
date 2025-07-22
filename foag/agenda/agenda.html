@@ -1,100 +1,70 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizador</title>
-    <link rel="stylesheet" href="agenda.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Organizador</title>
+  <link rel="stylesheet" href="./agenda.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+  
 </head>
 
 <body>
-    <header class="cabecalho">FOAG</header>
-    <div class="container">
-        <nav class="menu">
-            <a href="../inicio/inicio.html">Início</a>
-            <a href="../calendario/calendario.html">Calendário</a>
-            <a href="../HORARIO/horario.html">Horário</a>
-            <a href="#">Perfil</a>
-            <a href="#">Sobre</a>
-            <a href="#">Contato</a>
-        </nav>
+  <header class="cabecalho">FOAG</header>
+  <div class="container">
+    <nav class="menu">
+      <a href="../inicio/inicio.html">Início</a>
+      <a href="../calendario/calendario.html">Calendário</a>
+      <a href="../HORARIO/horario.html">Horário</a>
+      <a href="#">Perfil</a>
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
+    </nav>
 
-        <main class="main-content">
-            <div id="container-notas">
-                <div id="notas">
-                    <textarea placeholder="Escreva suas notas aqui..."></textarea>
-                    <button onclick="salvar()">Salvar Nota</button>
-                    <div id="saved-notes">
-                        <h2>Notas Salvas</h2>
-                        <ul id="noteList">
-                        </ul>
-                    </div>
-                </div>
+    <main class="main-content">
+      <div id="container-notas">
+        <!-- Notas -->
+        <div id="notas">
+          <textarea placeholder="Escreva suas notas aqui..." wrap="soft"></textarea>
+          <button id="btn-salvar-nota">Salvar Nota</button>
+          <div id="saved-notes">
+            <h2>Notas Salvas</h2>
+            <ul id="noteList"></ul>
+          </div>
+        </div>
 
-                <div id="tarefas">
-                    <div class="titulo-tabela">TAREFAS</div>
-                    <table id="tabela-tarefas">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Tarefa</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lista-tarefas" contenteditable="true">
-                            <tr>
-                                <td>1</td>
-                                <td>Tarefa 1</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Tarefa 2</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Tarefa 3</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button id="add-tarefa">Adicionar Tarefa</button>
+        <!-- Tarefas e Não Esquecer -->
+        <div id="tarefas">
+          <div class="titulo-tabela">TAREFAS</div>
+          <table id="tabela-tarefas">
+            <thead>
+              <tr><th>#</th><th>Tarefa</th><th>Data</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="lista-tarefas"></tbody>
+          </table>
+          <button id="add-tarefa">Adicionar Tarefa</button>
 
-                    <div class="titulo-tabela">NÃO ESQUECER</div>
-                    <table id="tabela-nao-esquecer">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Item</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lista-nao-esquecer" contenteditable="true">
-                            <tr>
-                                <td>1</td>
-                                <td>Item 1</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Item 2</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Item 3</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button id="add-nao-esquecer">Adicionar Item</button>
+          <div class="titulo-tabela">NÃO ESQUECER</div>
+          <table id="tabela-nao-esquecer">
+            <thead>
+              <tr><th>#</th><th>Item</th><th>Data</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="lista-nao-esquecer"></tbody>
+          </table>
+          <button id="add-nao-esquecer">Adicionar Item</button>
+        </div>
+      </div>
+    </main>
+  </div>
 
-                    <button id="salvar">Salvar</button>
-                </div>
-            </div>
-        </main>
-    </div>
+  <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
 
-    <footer>
-        &copy; 2025 FOAG. Todos os direitos reservados.
-      </footer>
-      
-    <script src="agenda.js"></script>
+  <!-- Importa jsPDF via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    window.jsPDF = window.jspdf.jsPDF;
+  </script>
+  <script src="./agenda.js"></script>
 </body>
-
 </html>
