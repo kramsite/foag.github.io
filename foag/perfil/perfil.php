@@ -1,50 +1,39 @@
 <?php
 session_start();
 
-$dataFile = 'profile_data.json';
-$nome = '';
-$email = '';
-$foto = 'uploads/default.png';
-$error = '';
-
-if (file_exists($dataFile)) {
-    $data = json_decode(file_get_contents($dataFile), true);
-    $nome = $data['nome'] ?? '';
-    $email = $data['email'] ?? '';
-    $foto = $data['foto'] ?? 'uploads/default.png';
+// Verifica se o usuário está logado
+if (!isset($_SESSION['usuario_email'])) {
+    header("Location: perfil.php");
+    exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nome = trim($_POST['nome']);
-    $email = trim($_POST['email']);
+$emailLogado = $_SESSION['usuario_email'];
+$arquivo = __DIR__ . '/usuarios.txt';
 
-    if (empty($nome) || empty($email)) {
-        $error = "Nome e email são obrigatórios.";
-    } else {
-        if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
-            $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
-            $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-            if (in_array($ext, $allowed)) {
-                $newName = 'uploads/profile_' . time() . '.' . $ext;
-                move_uploaded_file($_FILES['foto']['tmp_name'], $newName);
-                $foto = $newName;
-            } else {
-                $error = "Formato de foto inválido. Use jpg, png ou gif.";
-            }
-        }
+// Variáveis padrão
+$nome = '';
+$data_nascimento = '';
+$data_cadastro = '';
+$foto = 'uploads/default.png'; // Pode ser personalizado se você quiser permitir upload
 
-        if (!isset($error)) {
-            $saveData = [
-                'nome' => $nome,
-                'email' => $email,
-                'foto' => $foto
-            ];
-            file_put_contents($dataFile, json_encode($saveData, JSON_PRETTY_PRINT));
-            $_SESSION['success'] = "Perfil salvo com sucesso!";
-            header("Location: index.php");
-            exit;
+// Procura o usuário no arquivo
+if (file_exists($arquivo)) {
+    $usuarios = file($arquivo, FILE_IGNORE_NEW_LINES);
+    foreach ($usuarios as $linha) {
+        $dados = explode('|', $linha);
+        if ($dados[0] === $emailLogado) {
+            $nome = str_replace('nome=', '', $dados[2]);
+            $data_nascimento = str_replace('nascimento=', '', $dados[3]);
+            $data_cadastro = str_replace('cadastrado_em=', '', $dados[4]);
+            break;
         }
     }
+}
+
+// Se o usuário não for encontrado, volta para o login
+if (empty($nome)) {
+    header("Location: login.php");
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -55,22 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Perfil do Usuário - FOAG</title>
     <link rel="stylesheet" href="perfil.css">
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Remove a sidebar */
-        .sidebar {
-            display: none;
-        }
-
-        /* Centraliza o conteúdo */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f4f8;
-        }
-    </style>
 </head>
 <body>
 
@@ -78,17 +51,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button class="back-btn" onclick="window.history.back()">Voltar</button>
 
         <div class="profile-container">
+            <!-- Foto do usuário -->
             <div class="profile-img-container">
                 <img src="<?php echo $foto; ?>" alt="Foto do Perfil" class="profile-img">
             </div>
 
+            <!-- Informações do perfil -->
             <div class="profile-details">
-                <h3><?php echo $nome ?: 'Nome do Usuário'; ?></h3>
+                <h3><?php echo htmlspecialchars($nome); ?></h3>
                 <div class="profile-info">
-                    <p><strong>Email:</strong> <?php echo $email ?: 'usuario@example.com'; ?></p>
-                    <p><strong>Telefone:</strong> (00) 00000-0000</p>
-                    <p><strong>Endereço:</strong> Rua Exemplo, 123, Bairro, Cidade</p>
+                    <p><strong>Email:</strong> <?php echo htmlspecialchars($emailLogado); ?></p>
+                    <p><strong>Data de Nascimento:</strong> <?php echo htmlspecialchars($data_nascimento); ?></p>
+                    <p><strong>Cadastrado em:</strong> <?php echo htmlspecialchars($data_cadastro); ?></p>
                 </div>
+
+                <!-- Informações extras -->
+                <div class="extra-info">
+                    <p><strong>Escola:</strong> Colégio Exemplo</p>
+                    <p><strong>Curso:</strong> Ensino Médio</p>
+                </div>
+
                 <a href="#" class="btn">Editar Perfil</a>
             </div>
         </div>
