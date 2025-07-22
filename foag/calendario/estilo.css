@@ -1,0 +1,415 @@
+/* Reset de margens, paddings e box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Corpo da página */
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: white;
+}
+
+/* Cabeçalho do site */
+header.cabecalho {
+    font-family: 'Snap ITC', sans-serif;
+    width: 100%;
+    background-color: #38a5ff;
+    color: white;
+    text-align: left;
+    padding: 15px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Container geral (menu e conteúdo principal) */
+.container {
+    display: flex;
+    flex: 1;
+}
+
+/* Menu lateral */
+nav.menu {
+    width: 15%;
+    background-color: #38a5ff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Links do menu */
+nav.menu a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    transition: background-color 0.3s, border-radius 0.3s;
+}
+
+/* Hover dos links */
+nav.menu a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+
+/* Conteúdo principal */
+.conteudo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Contêiner do calendário */
+.calendario-container {
+    display: flex;
+    justify-content: center;
+}
+
+/* Layout do calendário */
+.calendario {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 colunas */
+    grid-template-rows: repeat(3, 1fr); /* 3 linhas */
+    gap: 10px;
+    padding: 20px;
+}
+
+/* Estilo dos meses */
+.mes {
+    width: auto;
+    height: auto;
+    background-color: #f1f1f1;
+    color: rgb(60, 60, 60);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 9px;
+    margin-right: 7px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    position: relative;
+}
+
+/* Ajustes específicos para o calendário expandido */
+.mes.expanded {
+    position: fixed;
+    top: 10%;
+    left: 20%;
+    width: 60%;
+    height: 80%;
+    z-index: 1000;
+    background: white;
+    border: 5px solid #38a5ff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    overflow: hidden; /* impede scroll interno na coluna */
+}
+
+/* Coluna do calendário (lado esquerdo) ocupa metade */
+.mes.expanded .calendario-mes {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* ocupar altura total */
+}
+
+/* Título do mês fixo no topo */
+.mes.expanded .header-mes {
+    font-weight: bold;
+    font-size: 1.8em; /* maior destaque */
+    background-color: #38a5ff;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 5px;
+    flex-shrink: 0; /* evita reduzir altura */
+}
+
+/* Grid dos dias ocupa todo o espaço restante */
+.mes.expanded .dias {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 1fr; /* dias se expandem igualmente */
+    gap: 8px;
+    padding: 10px 0;
+}
+
+/* Dias (semana + números) maiores */
+.mes.expanded .dia {
+    font-size: 1.2em;
+    height: auto;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fafafa;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+/* Dias da semana continuam não clicáveis */
+.mes.expanded .dia.header-dia {
+    background-color: transparent;
+    font-weight: bold;
+    color: #333;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Hover para os dias (números) */
+.mes.expanded .dia:not(.header-dia):hover {
+    background-color: #38a5ff;
+    color: white;
+}
+
+/* Coluna da direita continua para notas/eventos */
+.mes.expanded .info-mes {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border-left: 2px solid #e0e0e0;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+
+/* Esconde o botão de fechar e a área de info no estado normal */
+.mes .info-mes,
+.mes .fechar-btn {
+    display: none;
+}
+
+/* Só mostra quando o mês está expandido */
+.mes.expanded .info-mes {
+    display: flex;
+    flex-direction: column;
+}
+
+.mes.expanded .fechar-btn {
+    display: flex;
+}
+
+
+/* Cabeçalho do mês */
+.header-mes {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    background-color: #38a5ff;
+    color: white;
+    width: 100%;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 5px;
+}
+
+/* Dias da semana (não clicáveis) */
+.dia.header-dia {
+    cursor: default;
+    pointer-events: none;
+    background-color: transparent;
+    font-weight: bold;
+}
+
+/* Grid dos dias */
+.dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    width: 100%;
+    padding: 5px 0;
+}
+
+/* Estilo dos dias */
+.dia {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: 35px;
+    width: 30px;
+}
+
+/* Dias só clicáveis se mês expandido */
+.mes:not(.expanded) .dia {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6;
+}
+
+/* Hover nos dias */
+.dia:hover {
+    background-color: #38a5ff;
+    color: white;
+}
+
+/* Botão fechar (X) no mês expandido */
+.mes.expanded .fechar-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: #38a5ff;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 30%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.cores-info {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #333;
+}
+
+.botoes-cores {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.btn-cor {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+}
+
+.btn-cor:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 8px rgba(0,0,0,0.4);
+}
+
+/* Marcação do dia conforme cor selecionada */
+.dia.vermelho {
+    background-color: #e74c3c !important;
+    color: white !important;
+}
+
+.dia.amarelo {
+    background-color: #f1c40f !important;
+    color: black !important;
+}
+
+.dia.azul {
+    background-color: #3498db !important;
+    color: white !important;
+}
+
+.dia.roxo {
+    background-color: #8e44ad !important;
+    color: white !important;
+}
+
+
+/* Rodapé */
+footer {
+    background-color: #232323;
+    color: #ffffff;
+    text-align: center;
+    padding: 5px;
+    width: 100%;
+    font-size: 1em;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    nav.menu {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .calendario {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+    }
+
+    .mes {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .mes.expanded {
+        top: 5%;
+        left: 5%;
+        width: 90%;
+        height: 80%;
+        flex-direction: column;
+    }
+
+    .mes.expanded .info-mes {
+        border-left: none;
+        border-top: 2px solid #e0e0e0;
+        padding-top: 10px;
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendario {
+        grid-template-columns: 1fr;
+    }
+
+    .mes {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .cabecalho {
+        font-size: 20px;
+        padding: 10px;
+    }
+
+    nav.menu a {
+        font-size: 16px;
+    }
+
+    .mes.expanded {
+        top: 2%;
+        left: 2%;
+        width: 96%;
+        height: 90%;
+    }
+}
