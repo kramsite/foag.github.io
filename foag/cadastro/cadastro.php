@@ -4,79 +4,84 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Usuário</title>
-  <link rel="stylesheet" href="stylecads.css">
+  <link rel="stylesheet" href="estilocads.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+</head>
+<body>
+  <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Usuário</title>
+  <link rel="stylesheet" href="estilocads.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 </head>
 <body>
   <div class="logo">FOAG</div>
-
-  <!-- Fundo com imagem -->
   <div class="background"></div>
 
-  <!-- Bloco central do formulário -->
   <div class="form-container">
     <h2>Cadastro de Usuário</h2>
     <form method="POST" action="processa_cadastro.php">
       <label for="nome">Nome</label>
-      <input type="text" id="nome" name="nome" required>
+      <input type="text" id="nome" name="nome" placeholder="fulano"required autocomplete="off">
 
       <label for="email">E-mail</label>
-      <input type="email" id="email" name="email" required>
+      <input type="email" id="email" name="email" placeholder="fulano@ciclano.com" required autocomplete="off">
 
       <div class="form-row">
-        <div>
-          <label for="senha">Senha</label>
-          <input type="password" id="senha" name="senha" required>
-        </div>
-        <div>
-          <label for="confirmar_senha">Confirmar</label>
-          <input type="password" id="confirmar_senha" name="confirmar_senha" required>
-        </div>
-      </div>
+  <div class="password-wrapper">
+    <label for="senha">Senha</label>
+    <input type="password" id="senha" name="senha"  placeholder="********" required autocomplete="new-password">
+    <span class="toggle-visibility" data-target="senha">🙈</span>
+    <div id="requisitos-senha" class="tooltip-hidden">
+      <p>Requisitos da senha:</p>
+      <ul>
+        <li id="req-tamanho" class="invalid">Mínimo 8 caracteres</li>
+        <li id="req-maiuscula" class="invalid">Uma letra maiúscula</li>
+        <li id="req-numero" class="invalid">Um número</li>
+        <li id="req-simbolo" class="invalid">Um símbolo especial (!@#$...)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="password-wrapper">
+    <label for="confirmar_senha">Confirmar senha</label>
+    <input type="password" id="confirmar_senha" name="confirmar_senha"  placeholder="********" required autocomplete="new-password">
+    <span class="toggle-visibility" data-target="confirmar_senha">🙈</span>
+  </div>
+</div>
+
+
 
       <div class="form-row">
         <div>
           <label for="data_nascimento">Nascimento</label>
-          <input type="date" id="data_nascimento" name="data_nascimento" required>
+          <input type="date" id="data_nascimento" name="data_nascimento" required autocomplete="off">
         </div>
         <div>
           <label for="telefone">Telefone</label>
-          <input type="tel" id="telefone" name="telefone" pattern="[0-9]{10,11}" placeholder="Apenas números" required>
+          <input type="tel" id="telefone" name="telefone" placeholder="(00) 0000-0000" required autocomplete="off">
         </div>
       </div>
 
       <div class="form-row">
-        <div>
+        <div class="form-group">
           <label for="serie">Série/Curso</label>
-          <input type="text" id="serie" name="serie" required>
+          <select id="serie" name="serie" required>
+            <option value="">Carregando...</option>
+          </select>
         </div>
-        <label for="escola">Escola/Faculdade</label>
-      <select id="escola" name="escola" required>
-        <option value="email">E-mail</option>
-        <option value="sms">SMS</option>
-        <option value="ambos">Ambos</option>
-        <option value="nenhum">Nenhum</option>
-      </select>
+        <div class="form-group">
+          <label for="escola">Escola/Faculdade</label>
+          <select id="escola" name="escola" required>
+            <option value="">Carregando escolas...</option>
+          </select>
+        </div>
       </div>
-
-      <label for="notificacoes">Preferências de Notificação</label>
-      <select id="notificacoes" name="notificacoes" required>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-        <option value="escola"></option>
-
-      </select>
 
       <label class="termos">
         <input type="checkbox" name="termos" required>
@@ -86,5 +91,111 @@
       <button type="submit">Cadastrar</button>
     </form>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script>
+    // Choices para selects
+    const selectEscola = document.getElementById('escola');
+    const selectSerie = document.getElementById('serie');
+
+    const choicesEscola = new Choices(selectEscola, { searchEnabled: true, itemSelectText: '', shouldSort: false, placeholderValue: 'Digite para buscar...' });
+    const choicesSerie = new Choices(selectSerie, { searchEnabled: true, itemSelectText: '', shouldSort: false, placeholderValue: 'Digite para buscar...' });
+
+    function popularChoices(choicesInstance, dados) {
+      choicesInstance.clearChoices();
+      choicesInstance.setChoices([{value: '', label: 'Selecione...', selected: true}], 'value', 'label');
+      const opcoes = dados.map(nome => ({value: nome, label: nome}));
+      choicesInstance.setChoices(opcoes, 'value', 'label', false);
+    }
+
+    fetch('escolas.json').then(res => res.json()).then(data => popularChoices(choicesEscola, data));
+    fetch('series.json').then(res => res.json()).then(data => popularChoices(choicesSerie, data));
+
+    // Validação senha + confirmação
+    const form = document.querySelector('form');
+    const senha = document.getElementById('senha');
+    const confirmarSenha = document.getElementById('confirmar_senha');
+
+    form.addEventListener('submit', function(event) {
+      const senhaVal = senha.value;
+      const regexSenha = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$/;
+
+      if (!regexSenha.test(senhaVal)) {
+        event.preventDefault();
+        alert('A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um símbolo especial.');
+        senha.focus();
+        return;
+      }
+
+      if (senhaVal !== confirmarSenha.value) {
+        event.preventDefault();
+        alert('As senhas não coincidem. Por favor, verifique.');
+        confirmarSenha.focus();
+        return;
+      }
+    });
+
+    // Alternar visibilidade das senhas com animação
+document.querySelectorAll('.toggle-visibility').forEach(icon => {
+  icon.addEventListener('click', () => {
+    const targetId = icon.getAttribute('data-target');
+    const input = document.getElementById(targetId);
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+
+    // Troca o ícone e aplica animação
+   icon.textContent = isPassword ? '🙉' : '🙈';
+    icon.classList.toggle('active');
+  });
+});
+
+
+    // Balão de requisitos de senha
+    const balao = document.getElementById('requisitos-senha');
+    const reqTamanho = document.getElementById('req-tamanho');
+    const reqMaiuscula = document.getElementById('req-maiuscula');
+    const reqNumero = document.getElementById('req-numero');
+    const reqSimbolo = document.getElementById('req-simbolo');
+
+    senha.addEventListener('input', () => {
+      const valor = senha.value;
+      if (valor.length === 0) {
+        balao.classList.add('tooltip-hidden');
+        return;
+      }
+      balao.classList.remove('tooltip-hidden');
+      reqTamanho.classList.toggle('valid', valor.length >= 8);
+      reqTamanho.classList.toggle('invalid', valor.length < 8);
+      reqMaiuscula.classList.toggle('valid', /[A-Z]/.test(valor));
+      reqMaiuscula.classList.toggle('invalid', !/[A-Z]/.test(valor));
+      reqNumero.classList.toggle('valid', /\d/.test(valor));
+      reqNumero.classList.toggle('invalid', !/\d/.test(valor));
+      reqSimbolo.classList.toggle('valid', /[!@#$%^&*()\-_=+{};:,<.>]/.test(valor));
+      reqSimbolo.classList.toggle('invalid', !/[!@#$%^&*()\-_=+{};:,<.>]/.test(valor));
+    });
+
+    senha.addEventListener('blur', () => balao.classList.add('tooltip-hidden'));
+
+    // Máscara telefone
+    const telefoneInput = document.getElementById('telefone');
+    telefoneInput.addEventListener('input', function(e) {
+      let x = e.target.value.replace(/\D/g, '');
+      if (x.length > 11) x = x.slice(0, 11);
+      if (x.length > 6) {
+        if (x.length === 11) {
+          e.target.value = `(${x.slice(0,2)}) ${x.slice(2,7)}-${x.slice(7)}`;
+        } else {
+          e.target.value = `(${x.slice(0,2)}) ${x.slice(2,6)}-${x.slice(6)}`;
+        }
+      } else if (x.length > 2) {
+        e.target.value = `(${x.slice(0,2)}) ${x.slice(2)}`;
+      } else if (x.length > 0) {
+        e.target.value = `(${x}`;
+      }
+    });
+
+    
+  </script>
 </body>
 </html>
