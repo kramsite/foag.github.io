@@ -9,5 +9,16 @@
         "escola": "Escola Estadual Militar Dom Pedro II",
         "termos_aceitos": true,
         "cadastrado_em": "2025-07-28 20:40:19"
+    },
+    {
+        "nome": "hebert gomes",
+        "email": "mt-cambios@hotmail.com",
+        "senha": "$2y$10$SPvCSj2sNwLCBG\/NM42cd.drEbhVQDIXTj3ZXg8r0JB\/3yvsNMEVq",
+        "nascimento": "1981-07-06",
+        "telefone": "(65) 99615-6171",
+        "serie": "3º ano do Ensino Médio",
+        "escola": "Universidade de Cuiabá (UNIC)",
+        "termos_aceitos": true,
+        "cadastrado_em": "2025-07-29 01:00:05"
     }
 ]

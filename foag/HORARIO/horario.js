@@ -28,7 +28,6 @@ function adicionarLinha() {
 
 function removerLinha() {
     const tabela = document.getElementById("scheduleTable");
-    // Remover a última linha, mas não o cabeçalho (índice 0)
     if (tabela.rows.length > 1) {
         tabela.deleteRow(tabela.rows.length - 1);
     }
@@ -41,10 +40,10 @@ function adicionarIntervalo() {
     celula.colSpan = 6;
     celula.contentEditable = true;
     celula.style.backgroundColor = "#38a5ff";
+    celula.style.color = "white";
     celula.innerHTML = "Intervalo";
 }
 
-// Função para salvar a tabela como PDF com formato de tabela
 function salvarComoPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -53,14 +52,14 @@ function salvarComoPDF() {
     const rows = tabela.rows;
 
     let data = [];
-    
-    // Cabeçalho
     const headers = [];
+
+    // Cabeçalho
     for (let i = 0; i < rows[0].cells.length; i++) {
         headers.push(rows[0].cells[i].textContent);
     }
 
-    // Dados da tabela
+    // Linhas
     for (let i = 1; i < rows.length; i++) {
         let row = [];
         for (let j = 0; j < rows[i].cells.length; j++) {
@@ -69,46 +68,71 @@ function salvarComoPDF() {
         data.push(row);
     }
 
-    // Adicionar o nome do site "FOAG" no canto superior esquerdo com uma fonte bonita
-    doc.setFont("snap ITC', sans-serif"); // Fonte padrão, pois jsPDF não tem Snap ITC embutida
+    // Nome do site (usa fonte suportada)
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(24);
-    doc.text("FOAG", 10, 10); // Posição (10, 10) coloca "FOAG" no canto superior esquerdo
+    doc.text("FOAG", 10, 10);
 
-    // Adicionar a data no topo
+    // Data
     const dataAtual = new Date();
     const dataFormatada = dataAtual.toLocaleDateString('pt-BR', {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
         hour: '2-digit', minute: '2-digit', second: '2-digit'
     });
-
     doc.setFontSize(12);
-    doc.text(`Gerado em: ${dataFormatada}`, 10, 20); // Posição (10, 20) coloca a data logo abaixo de "FOAG"
+    doc.text(`Gerado em: ${dataFormatada}`, 10, 20);
 
-    // Gerando a tabela no PDF usando autoTable
+    // Gera tabela
     doc.autoTable({
         head: [headers],
         body: data,
-        startY: 30,  // Ajuste para não sobrepor o nome do site e a data
+        startY: 30,
         theme: 'grid',
         margin: { top: 10 },
         tableWidth: 'auto',
         headStyles: {
-            fillColor: [56, 165, 255], // Cor de fundo do cabeçalho
-            textColor: [255, 255, 255], // Cor do texto do cabeçalho (branco)
+            fillColor: [56, 165, 255],
+            textColor: [255, 255, 255],
             fontSize: 12,
             fontStyle: 'bold',
         },
         bodyStyles: {
-            fillColor: [255, 255, 255], // Cor de fundo das células (branco)
-            textColor: [56, 165, 255],  // Cor do texto das células (cor 38a5ff)
+            fillColor: [255, 255, 255],
+            textColor: [56, 165, 255],
             fontSize: 10,
-            fontStyle: 'normal',
         },
         alternateRowStyles: {
-            fillColor: [240, 240, 240]  // Cor alternada para as linhas
+            fillColor: [240, 240, 240]
         }
     });
 
-    // Gerando o arquivo PDF
     doc.save('horario_escolar.pdf');
 }
+
+const logoutModal = document.getElementById('logout-modal');
+const confirmLogout = document.getElementById('confirm-logout');
+const cancelLogout = document.getElementById('cancel-logout');
+const iconSair = document.getElementById('icon-sair');
+
+// Abrir modal ao clicar no ícone de sair
+iconSair.addEventListener('click', () => {
+  logoutModal.style.display = 'flex';
+});
+
+// Botão "Sim" - redireciona
+confirmLogout.addEventListener('click', () => {
+  window.location.href = '../index/index.php';
+});
+
+// Botão "Cancelar" - fecha o modal
+cancelLogout.addEventListener('click', () => {
+  logoutModal.style.display = 'none';
+});
+
+// Fecha o modal se clicar fora da caixa
+logoutModal.addEventListener('click', e => {
+  if (e.target === logoutModal) {
+    logoutModal.style.display = 'none';
+  }
+});
+
