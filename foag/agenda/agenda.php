@@ -1,22 +1,34 @@
+<?php
+// Inicia a sessão (caso queira usar futuramente para salvar dados por usuário)
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Organizador</title>
-  <link rel="stylesheet" href="./agenda.css" />
+  <link rel="stylesheet" href="macaco.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
-  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
 
 <body>
-  <header class="cabecalho">FOAG</header>
+  <header class="cabecalho">
+  FOAG
+  <div class="header-icons">
+    <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
+    <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
+  </div>
+</header>
+
+
   <div class="container">
     <nav class="menu">
-      <a href="../inicio/inicio.html">Início</a>
-      <a href="../calendario/calendario.html">Calendário</a>
-      <a href="../HORARIO/horario.html">Horário</a>
+      <a href="../inicio/inicio.php">Início</a>
+      <a href="../calendario/calendario.php">Calendário</a>
+      <a href="../HORARIO/horario.php">Horário</a>
       <a href="#">Perfil</a>
       <a href="#">Sobre</a>
       <a href="#">Contato</a>

@@ -1,0 +1,13 @@
+[
+    {
+        "nome": "rafa",
+        "email": "rafa@gmail.com",
+        "senha": "$2y$10$bwSKscezGK6C5hWmGdYzSOWA6wwXULQYqQqxSogSEtonJAP3pKdbG",
+        "nascimento": "2008-09-22",
+        "telefone": "(65) 99313-7382",
+        "serie": "2º ano do Ensino Médio",
+        "escola": "Escola Estadual Militar Dom Pedro II",
+        "termos_aceitos": true,
+        "cadastrado_em": "2025-07-28 20:40:19"
+    }
+]
