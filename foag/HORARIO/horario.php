@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horário Escolar</title>
-    <link rel="stylesheet" href="../horario/horario.css">
+    <link rel="stylesheet" href="babuino.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <!-- Importando a biblioteca jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Importando a biblioteca jsPDF AutoTable -->
@@ -14,12 +14,18 @@
 </head>
 
 <body>
-    <header class="cabecalho">FOAG</header>
+    <header class="cabecalho">
+  FOAG
+  <div class="header-icons">
+    <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
+    <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
+  </div>
+</header>
     <div class="container">
         <!-- Menu lateral -->
         <nav class="menu">
             <a href="../inicio/inicio.html">Início</a>
-            <a href="../agenda/agenda.html">Agenda</a>
+            <a href="../agenda/agenda.php">Agenda</a>
             <a href="../calendario/calendario.php">Calendario</a>
             <a href="#">Perfil</a>
             <a href="#">Sobre</a>
@@ -79,10 +85,21 @@
         </div>
     </div>
 
+    <div id="logout-modal" class="modal">
+  <div class="modal-content">
+    <h3>Ah... já vai?</h3>
+    <h4>Tem certeza de que deseja sair?</h4>
+    <div class="modal-buttons">
+      <button id="confirm-logout">Sim</button>
+      <button id="cancel-logout">Cancelar</button>
+    </div>
+  </div>
+</div>
+
     <footer>
         &copy; 2025 FOAG. Todos os direitos reservados.
       </footer>
       
-    <script src="../horario/horario.js"></script>
+    <script src="horario.js"></script>
 </body>
 </html>
