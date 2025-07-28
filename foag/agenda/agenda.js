@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const salvarNotaButton = document.getElementById('btn-salvar-nota');
   const textareaNotas = document.querySelector('#notas textarea');
 
-  // Removido o botão global de baixar PDF pois agora será individual
-
   // Função para salvar uma nota
   function salvarNota() {
     const texto = textareaNotas.value.trim();
@@ -15,13 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const title = prompt('Digite um título para a nota:');
     if (title && title.trim()) {
-      // Evitar sobrescrever notas com título repetido
       if (localStorage.getItem('nota-' + title.trim())) {
         if (!confirm('Já existe uma nota com esse título. Deseja sobrescrever?')) {
           return;
         }
       }
-
       localStorage.setItem('nota-' + title.trim(), texto);
       carregarNotas();
       textareaNotas.value = '';
@@ -39,26 +35,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Função para baixar PDF individual da nota
+  // Função para gerar PDF com cabeçalho e rodapé
   function baixarPdf(title, content) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 10;
     let y = 10;
 
+    // Cabeçalho fixo - FOAG + data
+    const dataAtual = new Date().toLocaleString('pt-BR');
+    doc.setFontSize(20);
+    doc.setTextColor(40, 40, 120);
+    doc.text('FOAG - Minhas Notas', pageWidth / 2, y, { align: 'center' });
+    y += 8;
+
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Exportado em: ${dataAtual}`, pageWidth / 2, y, { align: 'center' });
+    y += 6;
+
+    // Linha separadora
+    doc.setDrawColor(150);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 10;
+
+    // Título da nota
     doc.setFontSize(16);
+    doc.setTextColor(0);
     doc.text(title, margin, y);
     y += 10;
 
+    // Conteúdo da nota (quebra automática de linha)
     doc.setFontSize(12);
     const splitContent = doc.splitTextToSize(content, pageWidth - 2 * margin);
     doc.text(splitContent, margin, y);
 
+    // Rodapé (número de página)
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text(`Página ${i} de ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+    }
+
+    // Salvar PDF
     doc.save(`${title}.pdf`);
   }
 
-  // Carrega as notas salvas no localStorage e cria a lista com botões individuais
+  // Carregar lista de notas
   function carregarNotas() {
     const noteList = document.getElementById('noteList');
     noteList.innerHTML = '';
@@ -74,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         listItem.style.alignItems = 'center';
         listItem.style.justifyContent = 'space-between';
 
-        // Título clicável que carrega o conteúdo no textarea
         const spanTitle = document.createElement('span');
         spanTitle.textContent = title;
         spanTitle.style.cursor = 'pointer';
@@ -83,17 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
           textareaNotas.value = content;
         });
 
-        // Contêiner dos botões
         const divButtons = document.createElement('div');
 
-        // Botão baixar PDF
         const btnBaixar = document.createElement('button');
         btnBaixar.textContent = 'Baixar PDF';
         btnBaixar.className = 'btn-pequeno';
         btnBaixar.style.marginRight = '8px';
         btnBaixar.onclick = () => baixarPdf(title, content);
 
-        // Botão excluir
         const btnExcluir = document.createElement('button');
         btnExcluir.textContent = 'Excluir';
         btnExcluir.className = 'btn-excluir';
@@ -110,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Função para criar linhas nas tabelas de tarefas/nao esquecer
+  // Criar linha nas tabelas de tarefas e não esquecer
   function criarLinha(lista) {
     const index = lista.rows.length + 1;
     const row = lista.insertRow();
@@ -133,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btnExcluir.onclick = () => {
       if (confirm('Deseja realmente excluir esta linha?')) {
         lista.deleteRow(row.rowIndex - 1);
-        // Reajusta índices
         Array.from(lista.rows).forEach((r, i) => (r.cells[0].textContent = i + 1));
       }
     };
@@ -141,11 +163,10 @@ document.addEventListener('DOMContentLoaded', () => {
     cell4.appendChild(btnExcluir);
   }
 
-  // Eventos dos botões
+  // Eventos
   document.getElementById('add-tarefa').addEventListener('click', () => criarLinha(listaTarefas));
   document.getElementById('add-nao-esquecer').addEventListener('click', () => criarLinha(listaNaoEsquecer));
   salvarNotaButton.addEventListener('click', salvarNota);
 
-  // Inicialização
   carregarNotas();
 });

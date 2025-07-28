@@ -34,12 +34,12 @@ header.cabecalho {
 
 /* Menu lateral */
 nav.menu {
-    width: 15%;
+    width: 600px;
     background-color: #38a5ff;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 25px;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
 }
 

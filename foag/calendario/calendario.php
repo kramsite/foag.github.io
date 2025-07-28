@@ -72,7 +72,7 @@ echo "</div>";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendário</title>
-    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="calendario.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -80,8 +80,8 @@ echo "</div>";
     <div class="container">
         <nav class="menu">
             <a href="../inicio/inicio.html">Início</a>
-            <a href="../agenda/agenda.html">Agenda</a>
-            <a href="../calendario/calendario.php">Calendário</a>
+            <a href="../agenda/agenda.php">Agenda</a>
+            <a href="../HORARIO/horario.html">Horario</a>
             <a href="../perfil/perfil.php">Perfil</a>
             <a href="#">Sobre</a>
             <a href="#">Contato</a>

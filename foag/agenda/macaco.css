@@ -221,6 +221,33 @@ button:hover {
     background-color: #e04444;
 }
 
+.cabecalho {
+  position: relative;
+  padding: 10px 20px;
+  font-size: 24px;
+  font-weight: bold;
+  /* preserve seu estilo atual */
+}
+
+/* Container dos botões no header */
+.header-icons {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 15px;
+  font-size: 22px;
+  color: #ffffff;
+  cursor: pointer;
+  user-select: none;
+}
+
+.header-icons i:hover {
+  color: #006cc5; /* muda a cor no hover, pode ajustar */
+  transform: translateY(-13%) scale(1.1);
+}
+
 /* Campo de data nas tabelas */
 td input[type="date"] {
     width: 100%;
