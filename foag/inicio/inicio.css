@@ -42,93 +42,102 @@ header.cabecalho {
   user-select: none;
 }
 
+.header-icons i {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
 .header-icons i:hover {
   color: #006cc5;
   transform: translateY(-13%) scale(1.1);
 }
 
-/* Container principal: menu + conteúdo */
+/* Container principal com grid */
 .container {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 200px);
+  justify-content: center;
+  column-gap: 5px;   /* pequeno espaço horizontal */
+  row-gap: -2px;        /* sem espaço vertical entre linhas */
+  padding: 0;
   flex: 1;
-  min-height: calc(100vh - 90px); /* Ajusta altura para footer */
+  min-height: auto;
 }
 
-/* Estilo das caixas (boxes) */
 .box {
-    background-color: #38a5ff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, background-color 0.3s ease;
+  width: 200px;
+  height: 60px;  /* altura reduzida */
+  background-color: #38a5ff;
+  border-radius: 8px;
+  margin-bottom: -20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  margin: 0;       /* garante que não cria espaçamento extra */
+  padding: 0;      /* remove qualquer folga interna */
+  box-shadow: none; /* tira a sombra (a sombra também aumenta espaço visual) */
+  box-sizing: border-box;
 }
 
 .box a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
-    display: block;
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
 }
+
 
 .box:hover {
-    transform: translateY(-3px); /* Efeito de elevação ao passar o mouse */
-    background-color: #3099ef; /* Cor mais escura ao passar o mouse */
+  transform: translateY(-3px);
+  background-color: #3099ef;
 }
 
-/* Estilo do título e parágrafo de introdução */
+/* Texto de introdução */
 .intro-text {
-    text-align: center;
-    margin-top: 40px; /* Espaço entre as caixas e o título */
+  text-align: center;
+  margin: 20px 0;
 }
 
 .intro-text h1 {
-    color: #38a5ff;
-    font-size: 36px;
+  color: #38a5ff;
+  font-size: 36px;
 }
 
 .intro-text p {
-    font-size: 18px;
-    color: #555;
+  font-size: 18px;
+  color: #555;
 }
 
+/* Rodapé */
 footer {
-    background-color: #232323;
-    color: #ffffff;
-    text-align:center;
-    padding: 3px;
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    font-size: 0.9em;
-    margin-top: 200px;
+  background-color: #232323;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px;
+  font-size: 0.9em;
+  margin-top: auto;
+  position: relative;
+  width: 100%;
 }
 
-/* Responsividade: Ajuste para telas menores */
+/* Responsividade */
 @media (max-width: 768px) {
-    nav ul {
-        flex-direction: column;
-    }
+  .container {
+    grid-template-columns: repeat(2, 200px); /* 2 blocos por linha */
+  }
 
-    nav ul li {
-        margin: 10px 0;
-    }
+  .intro-text h1 {
+    font-size: 28px;
+  }
 
-    h1 {
-        font-size: 28px;
-    }
-
-    p {
-        font-size: 16px;
-    }
-
-    .container {
-        grid-template-columns: 1fr 1fr; /* Duas colunas em telas menores */
-    }
+  .intro-text p {
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 480px) {
-    .container {
-        grid-template-columns: 1fr; /* Uma coluna em telas muito pequenas */
-    }
+  .container {
+    grid-template-columns: 200px; /* 1 bloco por linha */
+  }
 }
