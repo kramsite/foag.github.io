@@ -90,7 +90,6 @@ echo "</div>";
             <a href="../inicio/inicio.html">Início</a>
             <a href="../agenda/agenda.php">Agenda</a>
             <a href="../HORARIO/horario.php">Horario</a>
-            <a href="../perfil/perfil.php">Perfil</a>
             <a href="#">Sobre</a>
             <a href="#">Contato</a>
         </nav>

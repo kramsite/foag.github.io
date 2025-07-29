@@ -27,7 +27,6 @@
             <a href="../inicio/inicio.html">Início</a>
             <a href="../agenda/agenda.php">Agenda</a>
             <a href="../calendario/calendario.php">Calendario</a>
-            <a href="#">Perfil</a>
             <a href="#">Sobre</a>
             <a href="#">Contato</a>
         </nav>

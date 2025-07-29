@@ -1,82 +1,57 @@
-/* Reset de margens e padding */
+/* Reset básico */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* Cor de fundo da página */
+/* Corpo da página */
 body {
-    font-family: "Poppins", sans-serif;
-    background-image: url('../img/foto.png'); /* Altere 'caminho-da-imagem.jpg' pelo caminho correto da imagem */
-    background-size: cover; /* Ajusta o tamanho da imagem para cobrir toda a tela */
-    background-position: center;
-    background-color: #f4f4f9;
-    color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: white;
 }
+
+/* Cabeçalho */
 header.cabecalho {
-    font-family: 'Snap ITC', sans-serif;
-    width: 100%;
-    background-color: #38a5ff;
-    color: white;
-    text-align: left;
-    padding: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    position: fixed; /* Fixa o header */
-    top: 1px; /* Altura do nav */
-    left: 0;
-    z-index: 10; /* Certifique-se que está acima do nav */
+  font-family: 'Snap ITC', cursive;
+  width: 100%;
+  background-color: #38a5ff;
+  color: white;
+  text-align: left;
+  padding: 15px 20px;
+  font-size: 24px;
+  font-weight: bold;
+  position: relative;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Barra de navegação fixa no topo */
-nav {
-    width: 100%;
-    background-color: #38a5ff;
-    padding: 15px 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10; /* Garante que a barra fique acima do conteúdo */
+/* Ícones do cabeçalho */
+.header-icons {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 15px;
+  font-size: 22px;
+  color: #ffffff;
+  cursor: pointer;
+  user-select: none;
 }
 
-nav ul {
-    display: flex;
-    justify-content: center;
-    list-style: none;
+.header-icons i:hover {
+  color: #006cc5;
+  transform: translateY(-13%) scale(1.1);
 }
 
-nav ul li {
-    margin: 0 15px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-    padding: 8px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-nav ul li a:hover {
-    background-color: #005bb5;
-}
-
-/* Container centralizado para os links */
+/* Container principal: menu + conteúdo */
 .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Disposição flexível para diferentes tamanhos de tela */
-    gap: 20px;
-    width: 100%;
-    max-width: 800px;
-    padding-top: 135px; /* Ajustado para compensar a barra de navegação fixa */
-    text-align: center;
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 90px); /* Ajusta altura para footer */
 }
 
 /* Estilo das caixas (boxes) */

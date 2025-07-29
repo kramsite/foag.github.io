@@ -20,5 +20,16 @@
         "escola": "Universidade de Cuiabá (UNIC)",
         "termos_aceitos": true,
         "cadastrado_em": "2025-07-29 01:00:05"
+    },
+    {
+        "nome": "alice",
+        "email": "alice.sfa@hotmail.com",
+        "senha": "$2y$10$MgwZzIJCb7iUj\/m2M8Bu7uFaurXM6fntkUG4l5Bcw\/uC5IBG6qsna",
+        "nascimento": "1983-06-03",
+        "telefone": "(65) 99266-8596",
+        "serie": "Educação Física",
+        "escola": "Universidade de Cuiabá (UNIC)",
+        "termos_aceitos": true,
+        "cadastrado_em": "2025-07-29 02:01:08"
     }
 ]
