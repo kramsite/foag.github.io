@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario_email'])) {
 }
 
 $emailLogado = $_SESSION['usuario_email'];
-$arquivo = __DIR__ . '/usuarios.txt';
+$arquivo = __DIR__ . '../cadastro/usuarios.json';
 
 // Variáveis padrão
 $nome = '';
