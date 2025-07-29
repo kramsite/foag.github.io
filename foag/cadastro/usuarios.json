@@ -31,5 +31,16 @@
         "escola": "Universidade de Cuiabá (UNIC)",
         "termos_aceitos": true,
         "cadastrado_em": "2025-07-29 02:01:08"
+    },
+    {
+        "nome": "aaaacara8",
+        "email": "aaaacara8@gmail.com",
+        "senha": "$2y$10$KSciR7.naMyP1IqrjYOJyOSGDOB5c05AsVwJu7BzgDtwVgoHaIk.u",
+        "nascimento": "2004-05-08",
+        "telefone": "(65) 9337-0877",
+        "serie": "7º ano do Ensino Fundamental",
+        "escola": "Escola Estadual Militar Tiradentes",
+        "termos_aceitos": true,
+        "cadastrado_em": "2025-07-29 13:50:58"
     }
 ]
