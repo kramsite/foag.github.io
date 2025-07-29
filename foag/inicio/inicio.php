@@ -36,9 +36,6 @@
             <a href="../HORARIO/horario.html">Horário</a>
         </div>
         <div class="box">
-            <a href="#">Perfil</a>
-        </div>
-        <div class="box">
             <a href="#">Sobre</a>
         </div>
         <div class="box">
