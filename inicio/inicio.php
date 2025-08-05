@@ -27,13 +27,13 @@
     <!-- Container Principal com os Links -->
     <div class="container">
         <div class="box">
-            <a href="../calendario/calendario.html">Calendário</a>
+            <a href="../calendario/calendario.php">Calendário</a>
         </div>
         <div class="box">
-            <a href="../agenda/agenda.html">Agenda</a>
+            <a href="../agenda/agenda.php">Agenda</a>
         </div>
         <div class="box">
-            <a href="../HORARIO/horario.html">Horário</a>
+            <a href="../HORARIO/horario.php">Horário</a>
         </div>
         <div class="box">
             <a href="#">Sobre</a>
