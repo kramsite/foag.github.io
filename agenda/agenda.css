@@ -21,6 +21,26 @@ header.cabecalho {
     padding: 15px;
     font-size: 24px;
     font-weight: bold;
+    position: relative;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.header-icons {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 15px;
+    font-size: 22px;
+    color: #ffffff;
+    cursor: pointer;
+    user-select: none;
+}
+
+.header-icons i:hover {
+    color: #006cc5;
+    transform: translateY(-13%) scale(1.1);
 }
 
 .container {
@@ -130,8 +150,9 @@ nav.menu a:hover {
     flex-grow: 1;
 }
 
-/* Botões dentro da lista de notas */
-#saved-notes ul li button {
+.btn-pequeno {
+    background-color: #38a5ff;
+    color: white;
     padding: 6px 12px;
     border-radius: 4px;
     border: none;
@@ -141,20 +162,19 @@ nav.menu a:hover {
     margin-left: 8px;
 }
 
-/* Botão para baixar PDF na nota */
-.btn-pequeno {
-    background-color: #38a5ff;
-    color: white;
-}
-
 .btn-pequeno:hover {
     background-color: #2691c8;
 }
 
-/* Botão de exclusão */
 .btn-excluir {
     background-color: #ff5c5c;
     color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
 }
 
 .btn-excluir:hover {
@@ -173,7 +193,8 @@ nav.menu a:hover {
 table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: auto;
+    table-layout: fixed;
+    word-wrap: break-word;
 }
 
 table th, table td {
@@ -181,11 +202,24 @@ table th, table td {
     border: 1px solid #ddd;
     text-align: center;
     font-size: 16px;
+    word-break: break-word;
 }
 
 table th {
     background-color: #38a5ff;
     color: white;
+}
+
+table td {
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+#tabela-tarefas th:nth-child(2),
+#tabela-tarefas td:nth-child(2),
+#tabela-nao-esquecer th:nth-child(2),
+#tabela-nao-esquecer td:nth-child(2) {
+    width: 40%;
 }
 
 button {
@@ -205,130 +239,81 @@ button:hover {
     background-color: #2691c8;
 }
 
-/* Botões de exclusão de tarefas/itens */
-.btn-excluir {
-    background-color: #ff5c5c;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-}
-
-.btn-excluir:hover {
-    background-color: #e04444;
-}
-
-.cabecalho {
-  position: relative;
-  padding: 10px 20px;
-  font-size: 24px;
-  font-weight: bold;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2); 
-}
-
-/* Container dos botões no header */
-.header-icons {
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  display: flex;
-  gap: 15px;
-  font-size: 22px;
-  color: #ffffff;
-  cursor: pointer;
-  user-select: none;
-}
-
-.header-icons i:hover {
-  color: #006cc5; /* muda a cor no hover, pode ajustar */
-  transform: translateY(-13%) scale(1.1);
-}
-
-/* Campo de data nas tabelas */
 td input[type="date"] {
     width: 100%;
     padding: 5px;
     border-radius: 4px;
     border: 1px solid #ccc;
     font-size: 14px;
+    max-width: 100%;
 }
 
-/* Fundo escuro do modal */
 .modal {
-  display: none; /* escondido por padrão */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 2000;
-  justify-content: center;
-  align-items: center;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Caixa branca do modal */
 .modal-content {
-  background: #fff;
-  color: #333;
-  padding: 25px;
-  border-radius: 10px;
-  text-align: center;
-  width: 320px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-  animation: aparecer 0.3s ease;
+    background: #fff;
+    color: #333;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    animation: aparecer 0.3s ease;
 }
 
-/* Botões do modal */
 .modal-buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }
 
 .modal-buttons button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  transition: background 0.3s;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.3s;
+    width: auto;
+    margin-top: 0;
 }
 
-/* Botão "Sim" */
 #confirm-logout {
-  background-color: #38a5ff;
-  color: #fff;
+    background-color: #38a5ff;
+    color: #fff;
 }
 
 #confirm-logout:hover {
-  background-color: #006cc5;
+    background-color: #006cc5;
 }
 
-/* Botão "Cancelar" */
 #cancel-logout {
-  background-color: #e0e0e0;
-  color: #333;
+    background-color: #e0e0e0;
+    color: #333;
 }
 
 #cancel-logout:hover {
-  background-color: #bdbdbd;
+    background-color: #bdbdbd;
 }
 
-/* Animação */
 @keyframes aparecer {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
 
-
-/* Rodapé */
 footer {
     background-color: #232323;
     color: #ffffff;
@@ -338,7 +323,6 @@ footer {
     font-size: 1em;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
@@ -347,6 +331,9 @@ footer {
     nav.menu {
         width: 100%;
         padding: 15px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .main-content {
