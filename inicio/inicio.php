@@ -27,6 +27,7 @@
         <p>Organize sua rotina escolar de forma prática e rápida.</p>
     </section>
 
+
     <!-- Painel de Acesso Rápido -->
     <section class="dashboard">
         <div class="card">
@@ -43,6 +44,7 @@
             <h3>🕐 Horários</h3>
             <p>Consulte sua grade de aulas.</p>
             <a href="#">Ver horários</a>
+
         </div>
         <div class="card">
             <h3>📅 Calendário</h3>
