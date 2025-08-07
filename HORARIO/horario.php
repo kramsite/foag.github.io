@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horário Escolar</title>
     <link rel="stylesheet" href="babuino.css">
+    <link rel="stylesheet" href="../m.escuro/dark-mode.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <!-- Importando a biblioteca jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Importando a biblioteca jsPDF AutoTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.24/jspdf.plugin.autotable.min.js"></script>
+    <script src="../m.escuro/dark-mode.js"></script>
 </head>
 
 <body>
@@ -94,6 +96,8 @@
     </div>
   </div>
 </div>
+
+<button class="theme-toggle" id="themeToggle">🌙</button>
 
     <footer>
         &copy; 2025 FOAG. Todos os direitos reservados.

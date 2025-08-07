@@ -8,9 +8,11 @@ session_start();
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Organizador</title>
   <link rel="stylesheet" href="agenda.css" />
+  <link rel="stylesheet" href="../m.escuro/dark-mode.css">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="../m.escuro/dark-mode.js"></script>
 </head>
 
 <body>
@@ -78,6 +80,8 @@ session_start();
       </div>
     </div>
   </div>
+
+  <button class="theme-toggle" id="themeToggle">🌙</button>
 
   <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
 
