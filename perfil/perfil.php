@@ -1,79 +1,90 @@
 <?php
-session_start();
+// Simulando o usuário logado
+$email_logado = "rafa@gmail.com";
 
-// Verifica se o usuário está logado
-if (!isset($_SESSION['usuario_email'])) {
-    header("Location: perfil.php");
+// Caminhos
+$caminho_json = "../json/usuarios.json";
+$pasta_fotos = "../img/perfil/";
+$foto_padrao = "foto_padrao.png";
+
+// Carregando os dados
+if (!file_exists($caminho_json)) {
+    echo "Arquivo de usuários não encontrado!";
     exit;
 }
 
-$emailLogado = $_SESSION['usuario_email'];
-$arquivo = __DIR__ . '../cadastro/usuarios.json';
+$usuarios = json_decode(file_get_contents($caminho_json), true);
+$usuario_logado = null;
 
-// Variáveis padrão
-$nome = '';
-$data_nascimento = '';
-$data_cadastro = '';
-$foto = 'uploads/default.png'; // Pode ser personalizado se você quiser permitir upload
-
-// Procura o usuário no arquivo
-if (file_exists($arquivo)) {
-    $usuarios = file($arquivo, FILE_IGNORE_NEW_LINES);
-    foreach ($usuarios as $linha) {
-        $dados = explode('|', $linha);
-        if ($dados[0] === $emailLogado) {
-            $nome = str_replace('nome=', '', $dados[2]);
-            $data_nascimento = str_replace('nascimento=', '', $dados[3]);
-            $data_cadastro = str_replace('cadastrado_em=', '', $dados[4]);
-            break;
-        }
+foreach ($usuarios as $usuario) {
+    if ($usuario["email"] === $email_logado) {
+        $usuario_logado = $usuario;
+        break;
     }
 }
 
-// Se o usuário não for encontrado, volta para o login
-if (empty($nome)) {
-    header("Location: login.php");
+if (!$usuario_logado) {
+    echo "Usuário não encontrado!";
     exit;
 }
+
+// Definindo a foto
+$foto_perfil = (!empty($usuario_logado["foto"]) && file_exists($pasta_fotos . $usuario_logado["foto"]))
+    ? $usuario_logado["foto"]
+    : $foto_padrao;
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil do Usuário - FOAG</title>
-    <link rel="stylesheet" href="perfil.css">
+  <meta charset="UTF-8">
+  <title>Perfil - Foag</title>
+  <link rel="stylesheet" href="perfil.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
+  <button class="btn-sair" onclick="location.href='../login.php'">Sair</button>
 
-    <div class="main-content">
-        <button class="back-btn" onclick="window.history.back()">Voltar</button>
-
-        <div class="profile-container">
-            <!-- Foto do usuário -->
-            <div class="profile-img-container">
-                <img src="<?php echo $foto; ?>" alt="Foto do Perfil" class="profile-img">
-            </div>
-
-            <!-- Informações do perfil -->
-            <div class="profile-details">
-                <h3><?php echo htmlspecialchars($nome); ?></h3>
-                <div class="profile-info">
-                    <p><strong>Email:</strong> <?php echo htmlspecialchars($emailLogado); ?></p>
-                    <p><strong>Data de Nascimento:</strong> <?php echo htmlspecialchars($data_nascimento); ?></p>
-                    <p><strong>Cadastrado em:</strong> <?php echo htmlspecialchars($data_cadastro); ?></p>
-                </div>
-
-                <!-- Informações extras -->
-                <div class="extra-info">
-                    <p><strong>Escola:</strong> Colégio Exemplo</p>
-                    <p><strong>Curso:</strong> Ensino Médio</p>
-                </div>
-
-                <a href="#" class="btn">Editar Perfil</a>
-            </div>
-        </div>
+  <div class="container">
+    <div class="left-panel">
+      <img src="<?= $pasta_fotos . $foto_perfil ?>" alt="Foto de perfil" class="avatar">
+      <h2>Seu Perfil</h2>
+      <p>Essas são suas informações salvas no sistema.</p>
+      <button class="btn-seta" onclick="location.href='editar.php'">✎</button>
     </div>
 
+    <div class="right-panel">
+      <div class="campo-info">
+        <label>Nome</label>
+        <div class="texto-info"><?= htmlspecialchars($usuario_logado["nome"]) ?></div>
+      </div>
+
+      <div class="campo-info">
+        <label>Email</label>
+        <div class="texto-info"><?= htmlspecialchars($usuario_logado["email"]) ?></div>
+      </div>
+
+      <div class="campo-info">
+        <label>Data de Nascimento</label>
+        <div class="texto-info"><?= htmlspecialchars($usuario_logado["nascimento"]) ?></div>
+      </div>
+
+      <div class="campo-info">
+        <label>Telefone</label>
+        <div class="texto-info"><?= htmlspecialchars($usuario_logado["telefone"]) ?></div>
+      </div>
+
+      <div class="campo-info">
+        <label>Série / Ano</label>
+        <div class="texto-info"><?= htmlspecialchars($usuario_logado["serie"]) ?></div>
+      </div>
+
+      <div class="campo-info">
+        <label>Escola / Faculdade</label>
+        <div class="texto-info"><?= htmlspecialchars($usuario_logado["escola"]) ?></div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

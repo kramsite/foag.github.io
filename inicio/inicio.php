@@ -38,18 +38,18 @@
         <div class="card">
             <h3>📆 Faltas</h3>
             <p>Controle suas presenças e faltas.</p>
-            <a href="#">Ver faltas</a>
+            <a href="../calendario/calendario.php">Ver faltas</a>
         </div>
         <div class="card">
             <h3>🕐 Horários</h3>
             <p>Consulte sua grade de aulas.</p>
-            <a href="#">Ver horários</a>
+            <a href="../HORARIO/horario.php">Ver horários</a>
 
         </div>
         <div class="card">
-            <h3>📅 Calendário</h3>
-            <p>Acompanhe as datas importantes.</p>
-            <a href="#">Ver calendário</a>
+            <h3>👤 Perfil</h3>
+            <p>Veja suas informações.</p>
+            <a href="../perfil/perfil.php">Ver perfil</a>
         </div>
     </section>
 

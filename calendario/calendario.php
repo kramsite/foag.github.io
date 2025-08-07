@@ -1,6 +1,6 @@
 <?php
 // Carrega os feriados do JSON
-$feriados = json_decode(file_get_contents(__DIR__ . '/feriados.json'), true);
+$feriados = json_decode(file_get_contents(__DIR__ . '/../json/feriados.json'), true);
 
 // Função para gerar os dias de cada mês
 function obterDiasDoMes($mes, $ano) {
