@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = trim($_POST['senha'] ?? '');
 
     if (filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($senha)) {
-        $arquivo = __DIR__ . '/../cadastro/usuarios.json';
+        $arquivo = __DIR__ . '/../json/usuarios.json';
 
         if (!file_exists($arquivo)) {
             echo "Nenhum usuário cadastrado.";

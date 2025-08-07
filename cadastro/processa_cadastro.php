@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit("Senha inválida. Deve ter ao menos 8 caracteres, 1 letra maiúscula, 1 número e 1 símbolo.");
     }
 
-    $arquivo = __DIR__ . '/usuarios.json';
+    $arquivo = __DIR__ . '../json/usuarios.json';
 
     // Carregar dados existentes
     $usuarios = [];
