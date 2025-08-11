@@ -130,6 +130,25 @@ header.cabecalho {
   to { transform: scale(1); opacity: 1; }
 }
 
+.header-icons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.header-icons i {
+    color: white; /* deixa todos os ícones brancos */
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.header-icons i:hover {
+    transform: scale(1.2);
+    color: #ddd; /* cor levemente mais clara no hover */
+}
+
+
 
 /* Menu lateral */
 nav.menu {
@@ -165,6 +184,7 @@ nav.menu a:hover {
     align-items: center;
     padding: 20px;
 }
+
 
 /* Contêiner do calendário */
 .calendario-container {
