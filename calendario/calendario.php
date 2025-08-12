@@ -90,7 +90,7 @@ echo "</div>";
 </header>
     <div class="container">
         <nav class="menu">
-            <a href="../inicio/inicio.html">Início</a>
+            <a href="../inicio/inicio.php">Início</a>
             <a href="../agenda/agenda.php">Agenda</a>
             <a href="../HORARIO/horario.php">Horario</a>
             <a href="#">Sobre</a>
