@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horário Escolar</title>
     <link rel="stylesheet" href="babuino.css">
-    <link rel="stylesheet" href="../m.escuro/dark-mode.css">
+    <link rel="stylesheet" href="dark_hora.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <!-- Importando a biblioteca jsPDF -->
@@ -19,6 +19,7 @@
     <header class="cabecalho">
   FOAG
   <div class="header-icons">
+    <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
     <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
     <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
   </div>
@@ -96,8 +97,6 @@
     </div>
   </div>
 </div>
-
-<button class="theme-toggle" id="themeToggle">🌙</button>
 
     <footer>
         &copy; 2025 FOAG. Todos os direitos reservados.

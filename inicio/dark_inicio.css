@@ -1,0 +1,154 @@
+/* dark-mode.css - Modo Noturno Vibrante */
+:root {
+  --dark-bg: #0f172a;         /* Azul muito escuro */
+  --dark-surface: #1e293b;    /* Azul escuro */
+  --dark-primary: #669ada;    /* Azul vibrante */
+  --dark-secondary: #3b82f6;  /* Azul mais claro */
+  --dark-text: #e2e8f0;       /* Cinza claro */
+  --dark-border: #334155;     /* Borda azulada */
+}
+
+/* ============= BASE ============= */
+.dark-mode {
+  background-color: var(--dark-bg) !important;
+  color: var(--dark-text) !important;
+}
+
+/* ============= COMPONENTES COMUNS ============= */
+.dark-mode header.cabecalho,
+.dark-mode nav.menu {
+  background-color: var(--dark-primary) !important;
+}
+
+.dark-mode .header-icons i:hover {
+  color: #93c5fd !important;
+}
+
+.dark-mode .btn-cor.selecionado {
+  outline: 3px solid #888 !important; /* cinza neutro */
+  box-shadow: 0 0 8px #888 !important;
+  transform: scale(1.3) !important;
+  z-index: 10 !important;
+}
+
+
+.dark-mode button {
+  background-color: var(--dark-primary) !important;
+  color: white !important;
+}
+
+.dark-mode button:hover {
+  background-color: var(--dark-secondary) !important;
+}
+
+.dark-mode .calendario-container {
+  background-color: var(--dark-bg) !important;
+}
+
+.dark-mode .calendario {
+  background-color: transparent !important;
+}
+
+.dark-mode .mes {
+  background-color: var(--dark-surface) !important;
+  border: 1px solid var(--dark-border) !important;
+  color: var(--dark-text) !important;
+}
+
+.dark-mode .mes.expanded {
+  background-color: var(--dark-surface) !important;
+  border: 2px solid var(--dark-primary) !important;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3) !important;
+}
+
+.dark-mode .header-mes {
+  background-color: var(--dark-primary) !important;
+  color: white !important;
+}
+
+.dark-mode .dias {
+  background-color: transparent !important;
+}
+
+.dark-mode .dia {
+  background-color: #1e293b !important;
+  color: var(--dark-text) !important;
+  border: 1px solid var(--dark-border) !important;
+}
+
+/* Dias coloridos mantendo contraste */
+.dark-mode .dia.vermelho { background-color: #e74c3c !important; color: white !important; }
+.dark-mode .dia.amarelo { background-color: #f1c40f !important; color: black !important; }
+.dark-mode .dia.azul { background-color: #70befe !important; color: white !important; }
+.dark-mode .dia.roxo { background-color: #8e44ad !important; color: white !important; }
+.dark-mode .dia.sem-aula { background-color: #f39c12 !important; color: black !important; }
+
+/* Fim de semana */
+.dark-mode .dia.fim-de-semana {
+  background-color: #252525 !important;
+}
+
+/* Área de informações */
+.dark-mode .info-mes {
+  background-color: var(--dark-surface) !important;
+  border-left: 1px solid var(--dark-border) !important;
+  color: var(--dark-text) !important;
+}
+
+/* Botões de cor - Versão definitiva */
+.dark-mode .botoes-cores {
+  background-color: rgba(30, 41, 59, 0.9) !important;
+  border: 1px solid var(--dark-border) !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+}
+
+.dark-mode .btn-cor {
+  width: 28px !important;
+  height: 28px !important;
+  border: 2px solid transparent !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 12px !important;
+}
+
+/* Cores específicas para cada botão */
+.dark-mode .btn-cor.vermelho { background-color: #e74c3c !important; border-color: #c0392b !important; }
+.dark-mode .btn-cor.amarelo { background-color: #f1c40f !important; border-color: #f39c12 !important; color: black !important; }
+.dark-mode .btn-cor.azul { background-color: #70befe !important; border-color: #3498db !important; }
+.dark-mode .btn-cor.roxo { background-color: #8e44ad !important; border-color: #9b59b6 !important; }
+.dark-mode .btn-cor.sem-aula { background-color: #f39c12 !important; border-color: #e67e22 !important; color: black !important; }
+
+/* Efeito hover nos botões */
+.dark-mode .btn-cor:hover {
+  transform: scale(1.15) !important;
+  box-shadow: 0 0 12px currentColor !important;
+  z-index: 10 !important;
+}
+
+/* Texto das legendas */
+.dark-mode .cor-item {
+  color: var(--dark-text) !important;
+}
+
+/* Botão fechar */
+.dark-mode .fechar-btn {
+  background-color: var(--dark-primary) !important;
+  color: white !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .dark-mode .mes.expanded {
+    background-color: var(--dark-surface) !important;
+  }
+  
+  .dark-mode .info-mes {
+    border-left: none !important;
+    border-top: 1px solid var(--dark-border) !important;
+  }
+}

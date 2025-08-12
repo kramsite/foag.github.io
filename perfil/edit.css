@@ -13,7 +13,7 @@ body {
   display: flex;
   width: 80%;
   max-width: 900px;
-  margin: 20px auto;
+  margin: 40px auto;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -117,7 +117,7 @@ body {
 
 .salvar {
   padding: 10px 20px;
-  background-color: #00CBA9;
+  background-color: #38a5ff;
   color: white;
   border: none;
   border-radius: 10px;

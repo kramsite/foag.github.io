@@ -33,4 +33,19 @@
   background-color: var(--dark-secondary) !important;
 }
 
+/* ============= PÁGINA HORÁRIO ============= */
+.dark-mode table {
+  background-color: var(--dark-surface) !important;
+}
 
+.dark-mode th {
+  background-color: var(--dark-primary) !important;
+}
+
+.dark-mode td {
+  background-color: #1e293b !important;
+}
+
+.dark-mode tr:nth-child(even) td {
+  background-color: #334155 !important;
+}
