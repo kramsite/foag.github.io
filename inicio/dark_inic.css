@@ -9,6 +9,14 @@
 }
 
 /* ================= MODO NOTURNO VIBRANTE - só cores ================= */
+
+body.dark-mode {
+  background: url('../img/papelpreto.jpg') no-repeat center center fixed !important;
+  background-size: cover !important;
+  color: var(--dark-text) !important;
+}
+
+
 .dark-mode {
   background-color: var(--dark-bg) !important;
   color: var(--dark-text) !important;

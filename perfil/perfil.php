@@ -44,7 +44,7 @@ $foto_perfil = (!empty($usuario_logado["foto"]) && file_exists($pasta_fotos . $u
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
-  <button class="btn-sair" onclick="location.href='../login.php'">Sair</button>
+  <button class="btn-sair" onclick="location.href='../inicio/inicio.php'">Sair</button>
 
   <div class="container">
     <div class="left-panel">
