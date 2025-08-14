@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Horário Escolar - Sobre</title>
-  <link rel="stylesheet" href="inicio.css">
-  <link rel="stylesheet" href="dark_inicio.css">
+  <link rel="stylesheet" href="inic.css">
+  <link rel="stylesheet" href="dark_inic.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <script src="../m.escuro/dark-mode.js"></script>
@@ -34,7 +34,7 @@
       <div class="card">
         <h3>📋 Tarefas</h3>
         <p>Veja e adicione suas tarefas.</p>
-        <a href="#">Ver tarefas</a>
+        <a href="../agenda/agenda.php">Ver tarefas</a>
       </div>
       <div class="card">
         <h3>📆 Faltas</h3>
@@ -54,7 +54,55 @@
     </section>
   </main>
 
+  <!-- Modal de Confirmação -->
+<div id="logout-modal" class="modal">
+  <div class="modal-content">
+    <h3>Ah... já vai?</h3>
+    <h4>Tem certeza que deseja sair?</h4>
+    <div class="modal-buttons">
+      <button id="confirm-logout">Sim</button>
+      <button id="cancel-logout">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+
   <!-- Rodapé -->
   <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
+
+  <script>
+    
+// Botões do header
+document.getElementById('icon-perfil').addEventListener('click', () => {
+    window.location.href = '../perfil/perfil.php'; // Redireciona para perfil
+});
+
+const logoutModal = document.getElementById('logout-modal');
+const confirmLogout = document.getElementById('confirm-logout');
+const cancelLogout = document.getElementById('cancel-logout');
+
+// Abrir modal ao clicar no ícone de sair
+document.getElementById('icon-sair').addEventListener('click', () => {
+  logoutModal.style.display = 'flex';
+});
+
+// Botão "Sim" - redireciona
+confirmLogout.addEventListener('click', () => {
+  window.location.href = '../index/index.php';
+});
+
+// Botão "Cancelar" - fecha o modal
+cancelLogout.addEventListener('click', () => {
+  logoutModal.style.display = 'none';
+});
+
+// Fecha o modal se clicar fora dele
+logoutModal.addEventListener('click', e => {
+  if (e.target === logoutModal) {
+    logoutModal.style.display = 'none';
+  }
+});
+
+</script>
 </body>
 </html>
