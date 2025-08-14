@@ -220,18 +220,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // =============================================
     // MODO ESCURO
     // =============================================
+window.addEventListener('storage', () => {
+    // Força a atualização do modo escuro quando houver mudanças em outra aba
+    document.dispatchEvent(new CustomEvent('darkModeUpdated'));
+});
 
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        const isDark = document.body.classList.contains('dark-mode');
-        localStorage.setItem('darkMode', isDark);
-    }
-
-    function verificarModoEscuro() {
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-        }
-    }
+// Atualiza o modo ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    document.body.classList.toggle('dark-mode', isDark);
+});
 
     // =============================================
     // EVENT LISTENERS
