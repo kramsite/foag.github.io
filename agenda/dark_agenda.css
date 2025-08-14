@@ -1,0 +1,143 @@
+/* ==================== VARIÁVEIS MODO ESCURO ==================== */
+:root {
+  --dark-bg: #0f172a;         /* Azul muito escuro */
+  --dark-surface: #1e293b;    /* Azul escuro */
+  --dark-primary: #669ada;    /* Azul vibrante */
+  --dark-secondary: #3b82f6;  /* Azul mais claro */
+  --dark-text: #e2e8f0;       /* Cinza claro */
+  --dark-border: #334155;     /* Borda azulada */
+}
+
+/* ==================== BASE ==================== */
+body.dark-mode {
+  background-color: var(--dark-bg) !important;
+  color: var(--dark-text) !important;
+}
+
+/* ==================== CABEÇALHO E MENU ==================== */
+body.dark-mode header.cabecalho {
+  background-color: var(--dark-primary) !important;
+  color: var(--dark-text) !important;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-mode .header-icons i {
+  color: var(--dark-text) !important;
+}
+
+body.dark-mode .header-icons i:hover {
+  color: #93c5fd !important;
+}
+
+body.dark-mode nav.menu {
+  background-color: var(--dark-primary) !important;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-mode nav.menu a {
+  color: var(--dark-text) !important;
+}
+
+body.dark-mode nav.menu a:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* ==================== CARDS E ÁREAS ==================== */
+body.dark-mode #notas,
+body.dark-mode #tarefas {
+  background-color: var(--dark-surface) !important;
+  color: var(--dark-text) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ==================== TEXTAREA ==================== */
+body.dark-mode #notas textarea {
+  background-color: var(--dark-bg) !important;
+  color: var(--dark-text) !important;
+  border: 1px solid var(--dark-border) !important;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ==================== LISTA DE NOTAS ==================== */
+body.dark-mode #saved-notes ul {
+  background-color: var(--dark-surface) !important;
+  border: 1px solid var(--dark-border) !important;
+}
+
+body.dark-mode #saved-notes ul li {
+  background-color: var(--dark-bg) !important;
+  color: var(--dark-text) !important;
+}
+
+body.dark-mode #saved-notes ul li:hover {
+  background-color: var(--dark-surface) !important;
+}
+
+/* ==================== BOTÕES ==================== */
+body.dark-mode button,
+body.dark-mode .btn-pequeno {
+  background-color: var(--dark-primary) !important;
+  color: white !important;
+}
+
+body.dark-mode button:hover,
+body.dark-mode .btn-pequeno:hover {
+  background-color: var(--dark-secondary) !important;
+}
+
+body.dark-mode .btn-excluir {
+  background-color: #e04444 !important;
+}
+
+body.dark-mode .btn-excluir:hover {
+  background-color: #ff5c5c !important;
+}
+
+/* ==================== TÍTULOS ==================== */
+body.dark-mode .titulo-tabela {
+  color: var(--dark-secondary) !important;
+}
+
+/* ==================== TABELAS ==================== */
+body.dark-mode table {
+  background-color: var(--dark-surface) !important;
+  color: var(--dark-text) !important;
+}
+
+body.dark-mode table th {
+  background-color: var(--dark-primary) !important;
+  color: var(--dark-text) !important;
+}
+
+body.dark-mode table td {
+  border-color: var(--dark-border) !important;
+}
+
+/* ==================== INPUTS ==================== */
+body.dark-mode td input[type="date"] {
+  background-color: var(--dark-bg) !important;
+  color: var(--dark-text) !important;
+  border: 1px solid var(--dark-border) !important;
+}
+
+/* ==================== MODAL ==================== */
+body.dark-mode .modal-content {
+  background-color: var(--dark-surface) !important;
+  color: var(--dark-text) !important;
+}
+
+body.dark-mode #cancel-logout {
+  background-color: var(--dark-border) !important;
+  color: var(--dark-text) !important;
+}
+
+body.dark-mode #cancel-logout:hover {
+  background-color: var(--dark-primary) !important;
+}
+
+/* ==================== RODAPÉ ==================== */
+body.dark-mode footer {
+  background-color: var(--dark-surface) !important;
+  color: var(--dark-text) !important;
+  border-top: 1px solid var(--dark-border) !important;
+}
