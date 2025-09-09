@@ -30,7 +30,7 @@ session_start();
       <a href="../inicio/inicio.php">Início</a>
       <a href="../calendario/calendario.php">Calendário</a>
       <a href="../HORARIO/horario.php">Horário</a>
-      <a href="../sobre/sobre.php">Sobre Nós</a>
+      <a href="../sobre/sobre.html">Sobre Nós</a>
       <a href="#">Contato</a>
     </nav>
 
