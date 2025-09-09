@@ -4,137 +4,225 @@
   <meta charset="UTF-8" />
   <title>Boletim Escolar Interativo</title>
   <style>
-    /* Container geral (card branco com sombra e cantos arredondados) */
-#tabela-container {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
-  margin-top: 20px;
-  max-width: 100%;
-  overflow-x: auto;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+        /* Reset e básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body, html {
+      height: 100%;
+      background-color: #f7f7f7;
+    }
 
-/* Títulos dos semestres e seções */
-#tabela-container h3 {
-  color: #3ea6ff;
-  margin-bottom: 12px;
-  font-weight: 700;
-  font-size: 1.3rem;
-}
+    /* Container geral flex */
+    #app-container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-/* Tabela */
-#tabela-container table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-  font-size: 0.95rem;
+    /* Sidebar azul */
+    #sidebar {
+      width: 220px;
+      background-color: #3ea6ff;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-shadow: 3px 0 8px rgba(0,0,0,0.1);
+      user-select: none;
+    }
+    #sidebar #logo {
+      font-weight: 900;
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    #sidebar nav ul {
+      list-style: none;
+    }
+    #sidebar nav ul li {
+      margin-bottom: 20px;
+    }
+    #sidebar nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: color 0.3s ease;
+      cursor: pointer;
+    }
+    #sidebar nav ul li a:hover {
+      color: #cce7ff;
+    }
 
-  /* Borda externa da tabela */
-  border: 2px solid #3ea6ff;
-  border-radius: 8px;
-  overflow: hidden; /* para a borda arredondada funcionar */
-}
+    /* Conteúdo principal */
+    #content {
+      flex-grow: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
 
-#tabela-container thead th {
-  background-color: #3ea6ff;
-  color: white;
-  padding: 10px;
-  text-align: left;
-  font-weight: 600;
-  border-bottom: 2px solid #2b88e8;
-}
+    /* Seu container com borda azul arredondada e sombra */
+    #tabela-container {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
+      border: 2px solid #3ea6ff;
+      max-width: 900px;
+      margin: 0 auto 20px auto;
+      overflow-x: auto;
+    }
 
-#tabela-container tbody td {
-  padding: 8px 10px;
-  border-bottom: 1px solid #ddd;
-  vertical-align: middle;
-}
+    /* Títulos dos semestres e seções */
+    #tabela-container h3 {
+      color: #3ea6ff;
+      margin-bottom: 12px;
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
 
-/* Média na tabela */
-.media {
-  font-weight: 600;
-  color: #333;
-  text-align: center;
-}
+    /* Tabela */
+    #tabela-container table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
 
-/* Inputs de nota */
-#tabela-container input.nota,
-#tabela-container input.nota-faculdade {
-  width: 60px;
-  padding: 6px 8px;
-  border: 1.8px solid #3ea6ff;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: #333;
-  text-align: center;
-  transition: border-color 0.3s ease;
-}
+      /* Borda externa da tabela */
+      border: 2px solid #3ea6ff;
+      border-radius: 8px;
+      overflow: hidden; /* para a borda arredondada funcionar */
+    }
 
-#tabela-container input.nota:focus,
-#tabela-container input.nota-faculdade:focus {
-  outline: none;
-  border-color: #2b88e8;
-  box-shadow: 0 0 5px #2b88e8aa;
-}
+    #tabela-container thead th {
+      background-color: #3ea6ff;
+      color: white;
+      padding: 10px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid #2b88e8;
+    }
 
-/* Média Geral abaixo da tabela */
-#media-geral {
-  margin-top: 12px;
-  font-weight: 700;
-  color: #3ea6ff;
-  font-size: 1.1rem;
-  text-align: right;
-}
+    #tabela-container tbody td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #ddd;
+      vertical-align: middle;
+    }
 
-/* Botões estilo FOAG azul */
-button {
-  background-color: #3ea6ff;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
+    /* Média na tabela */
+    .media {
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+    }
+    .media.aprovado {
+      color: green;
+      font-weight: 700;
+    }
+    .media.reprovado {
+      color: red;
+      font-weight: 700;
+    }
 
-button:hover {
-  background-color: #2b88e8;
-}
+    /* Inputs de nota */
+    #tabela-container input.nota,
+    #tabela-container input.nota-faculdade {
+      width: 60px;
+      padding: 6px 8px;
+      border: 1.8px solid #3ea6ff;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: #333;
+      text-align: center;
+      transition: border-color 0.3s ease;
+    }
 
-/* Dropdown selects estilo */
-select {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1.5px solid #3ea6ff;
-  font-size: 1rem;
-  color: #333;
-  margin-bottom: 12px;
-  cursor: pointer;
-  transition: border-color 0.3s ease;
-}
+    #tabela-container input.nota:focus,
+    #tabela-container input.nota-faculdade:focus {
+      outline: none;
+      border-color: #2b88e8;
+      box-shadow: 0 0 5px #2b88e8aa;
+    }
 
-select:focus {
-  outline: none;
-  border-color: #2b88e8;
-  box-shadow: 0 0 5px #2b88e8aa;
-}
+    /* Média Geral abaixo da tabela */
+    #media-geral {
+      margin-top: 12px;
+      font-weight: 700;
+      color: #3ea6ff;
+      font-size: 1.1rem;
+      text-align: right;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-/* Responsividade: permitir scroll horizontal na tabela */
-@media (max-width: 768px) {
-  #tabela-container table {
-    font-size: 0.85rem;
-  }
+    /* Botões estilo FOAG azul */
+    button {
+      background-color: #3ea6ff;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
 
-  #tabela-container input.nota,
-  #tabela-container input.nota-faculdade {
-    width: 50px;
-    padding: 4px 6px;
-  }
-}
+    button:hover {
+      background-color: #2b88e8;
+    }
+
+    /* Dropdown selects estilo */
+    select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1.5px solid #3ea6ff;
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+      max-width: 320px;
+      display: block;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #2b88e8;
+      box-shadow: 0 0 5px #2b88e8aa;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      #sidebar {
+        display: none;
+      }
+      #content {
+        padding: 15px;
+      }
+      #tabela-container {
+        max-width: 100%;
+        margin: 0 10px 20px 10px;
+      }
+      select {
+        max-width: 100%;
+      }
+      #tabela-container table {
+        font-size: 0.85rem;
+      }
+
+      #tabela-container input.nota,
+      #tabela-container input.nota-faculdade {
+        width: 50px;
+        padding: 4px 6px;
+      }
+    }
   </style>
 </head>
 <body>
