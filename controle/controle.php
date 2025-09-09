@@ -77,6 +77,9 @@
               <button class="btn" id="startBtn"><i class="fa-solid fa-play"></i> Iniciar</button>
               <button class="btn secondary" id="pauseBtn"><i class="fa-solid fa-pause"></i> Pausar</button>
               <button class="btn ghost" id="resetBtn"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+              <button class="btn secondary" id="savePartialPomodoro" title="Salvar o tempo decorrido até agora">
+                <i class="fa-solid fa-floppy-disk"></i> Salvar sessão parcial
+  </button>
             </div>
             <div class="row" style="justify-content:center; gap:8px; margin-top:10px">
               <span class="pill" id="modePill"><i class="fa-solid fa-hourglass-half"></i> Foco</span>
@@ -132,15 +135,20 @@
           <div id="tasksList" class="list" style="margin-top:12px"></div>
         </section>
 
-        <!-- ESTATÍSTICAS -->
-        <section class="card wide">
-          <h2>📊 Estatísticas</h2>
-          <p class="sub">Horas estudadas (últimos 14 dias) e distribuição por disciplina.</p>
-          <div class="grid-2">
-            <div><canvas id="lineChart"></canvas></div>
-            <div><canvas id="pieChart"></canvas></div>
-          </div>
+        <!-- ESTATÍSTICAS — LINHA -->
+        <section class="card wide" id="stats-line">
+          <h2>📈 Horas por Dia (últimos 14 dias)</h2>
+          <p class="sub">Visualize sua evolução diária de estudo.</p>
+          <canvas id="lineChart"></canvas>
         </section>
+
+        <!-- ESTATÍSTICAS — DISTRIBUIÇÃO -->
+        <section class="card wide" id="stats-pie">
+          <h2>🧩 Distribuição por Disciplina</h2>
+          <p class="sub">Como suas horas se dividem entre as disciplinas.</p>
+          <canvas id="pieChart"></canvas>
+        </section>
+
 
         <!-- HISTÓRICO / EXPORT -->
         <section class="card full">
