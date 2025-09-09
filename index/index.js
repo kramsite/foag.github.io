@@ -17,7 +17,7 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
 
     // Simulação de tempo de resposta (substitua com sua lógica real)
     setTimeout(() => {  // Simulando tempo de resposta do servidor
-      window.location.href = "../inicio/inicio.html"; // Redireciona para o calendário
+      window.location.href = "../inicio/inicio.php"; // Redireciona para o calendário
       submitButton.disabled = false; // Habilitar o botão novamente
     }, 1000);  // Simula um delay de 1 segundo
   });
