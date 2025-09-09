@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Boletim Escolar Interativo</title>
+  <style>
+    /* Container geral (card branco com sombra e cantos arredondados) */
+#tabela-container {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
+  margin-top: 20px;
+  max-width: 100%;
+  overflow-x: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Títulos dos semestres e seções */
+#tabela-container h3 {
+  color: #3ea6ff;
+  margin-bottom: 12px;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* Tabela */
+#tabela-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+
+  /* Borda externa da tabela */
+  border: 2px solid #3ea6ff;
+  border-radius: 8px;
+  overflow: hidden; /* para a borda arredondada funcionar */
+}
+
+#tabela-container thead th {
+  background-color: #3ea6ff;
+  color: white;
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #2b88e8;
+}
+
+#tabela-container tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+/* Média na tabela */
+.media {
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+/* Inputs de nota */
+#tabela-container input.nota,
+#tabela-container input.nota-faculdade {
+  width: 60px;
+  padding: 6px 8px;
+  border: 1.8px solid #3ea6ff;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #333;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+#tabela-container input.nota:focus,
+#tabela-container input.nota-faculdade:focus {
+  outline: none;
+  border-color: #2b88e8;
+  box-shadow: 0 0 5px #2b88e8aa;
+}
+
+/* Média Geral abaixo da tabela */
+#media-geral {
+  margin-top: 12px;
+  font-weight: 700;
+  color: #3ea6ff;
+  font-size: 1.1rem;
+  text-align: right;
+}
+
+/* Botões estilo FOAG azul */
+button {
+  background-color: #3ea6ff;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2b88e8;
+}
+
+/* Dropdown selects estilo */
+select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #3ea6ff;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #2b88e8;
+  box-shadow: 0 0 5px #2b88e8aa;
+}
+
+/* Responsividade: permitir scroll horizontal na tabela */
+@media (max-width: 768px) {
+  #tabela-container table {
+    font-size: 0.85rem;
+  }
+
+  #tabela-container input.nota,
+  #tabela-container input.nota-faculdade {
+    width: 50px;
+    padding: 4px 6px;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📘 Boletim Escolar Interativo</h1>
+
+    <label for="modelo">Selecione o Nível Escolar:</label>
+    <select id="modelo">
+      <option value="fundamental1">Ensino Fundamental I (1º ao 5º ano)</option>
+      <option value="fundamental2">Ensino Fundamental II (6º ao 9º ano)</option>
+      <option value="medio">Ensino Médio</option>
+      <option value="faculdade">Faculdade (escolha seu curso)</option>
+    </select>
+
+    <div id="curso-faculdade-container" style="display:none;">
+      <label for="curso-faculdade">Selecione o Curso da Faculdade:</label>
+      <select id="curso-faculdade">
+        <option value="">-- Selecione --</option>
+        <option value="medicina">Medicina</option>
+        <option value="direito">Direito</option>
+        <option value="engenharia">Engenharia</option>
+        <option value="psicologia">Psicologia</option>
+        <option value="administracao">Administração</option>
+        <option value="computacao">Ciência da Computação</option>
+        <option value="arquitetura">Arquitetura e Urbanismo</option>
+        <option value="enfermagem">Enfermagem</option>
+      </select>
+    </div>
+
+    <div id="tabela-container"></div>
+    <div id="media-geral" class="media-geral"></div>
+  </div>
+
+<script>
+  const tabelas = {
+    fundamental1: ["Português", "Matemática", "Ciências", "História", "Geografia", "Artes"],
+    fundamental2: ["Português", "Matemática", "Ciências", "História", "Geografia", "Inglês", "Educação Física"],
+    medio: ["Português", "Matemática", "Biologia", "Física", "Química", "Sociologia", "Filosofia", "Geografia", "História"],
+    faculdade: {
+      medicina: {
+        semestre1: ["Anatomia", "Fisiologia", "Bioquímica", "Histologia"],
+        semestre2: ["Microbiologia", "Parasitologia", "Imunologia", "Patologia Geral"],
+        semestre3: ["Farmacologia", "Patologia Clínica", "Genética", "Semiologia"],
+        semestre4: ["Clínica Médica I", "Cirurgia I", "Pediatria I", "Psiquiatria"]
+      },
+      direito: {
+        semestre1: ["Introdução ao Direito", "História do Direito", "Sociologia Jurídica", "Teoria Geral do Estado"],
+        semestre2: ["Direito Constitucional I", "Direito Civil I", "Direito Penal I", "Direito Administrativo I"],
+        semestre3: ["Direito Constitucional II", "Direito Civil II", "Direito Penal II", "Direito Processual Civil"],
+        semestre4: ["Direito do Trabalho", "Direito Tributário", "Direito Empresarial", "Direito Internacional"]
+      },
+      engenharia: {
+        semestre1: ["Cálculo I", "Física Geral I", "Química Geral", "Desenho Técnico"],
+        semestre2: ["Cálculo II", "Física Geral II", "Mecânica Geral", "Algoritmos e Programação"],
+        semestre3: ["Cálculo III", "Resistência dos Materiais", "Eletrônica Básica", "Estatística"],
+        semestre4: ["Termodinâmica", "Mecânica dos Solos", "Projetos de Estruturas", "Engenharia Ambiental"]
+      },
+      psicologia: {
+        semestre1: ["Introdução à Psicologia", "Psicologia do Desenvolvimento", "Psicopatologia I", "Neuroanatomia"],
+        semestre2: ["Psicologia Social", "Psicologia Clínica I", "Psicopatologia II", "Estatística Aplicada"],
+        semestre3: ["Psicologia Organizacional", "Psicoterapia I", "Avaliação Psicológica", "Psicofarmacologia"],
+        semestre4: ["Psicologia Educacional", "Psicoterapia II", "Neuropsicologia", "Ética Profissional"]
+      },
+      administracao: {
+        semestre1: ["Introdução à Administração", "Matemática Financeira", "Contabilidade Básica", "Comportamento Organizacional"],
+        semestre2: ["Marketing", "Gestão Financeira", "Gestão de Pessoas", "Estatística Aplicada"],
+        semestre3: ["Planejamento Estratégico", "Logística", "Pesquisa Operacional", "Direito Empresarial"],
+        semestre4: ["Empreendedorismo", "Gestão de Projetos", "Economia", "Sustentabilidade Empresarial"]
+      },
+      computacao: {
+        semestre1: ["Algoritmos e Lógica", "Matemática Discreta", "Introdução à Programação", "Fundamentos de Computação"],
+        semestre2: ["Estruturas de Dados", "Cálculo I", "Programação Orientada a Objetos", "Sistemas Digitais"],
+        semestre3: ["Banco de Dados", "Sistemas Operacionais", "Cálculo II", "Engenharia de Software"],
+        semestre4: ["Redes de Computadores", "Inteligência Artificial", "Programação Web", "Segurança da Informação"]
+      },
+      arquitetura: {
+        semestre1: ["Desenho Técnico", "História da Arquitetura", "Geometria Descritiva", "Materiais de Construção"],
+        semestre2: ["Projeto Arquitetônico I", "Topografia", "Estruturas I", "Conforto Ambiental"],
+        semestre3: ["Projeto Arquitetônico II", "Instalações Prediais", "Urbanismo", "Sistemas Construtivos"],
+        semestre4: ["Paisagismo", "Tecnologia da Construção", "Gerenciamento de Obras", "Sustentabilidade"]
+      },
+      enfermagem: {
+        semestre1: ["Anatomia Humana", "Fisiologia", "Fundamentos de Enfermagem", "Microbiologia"],
+        semestre2: ["Patologia", "Farmacologia", "Saúde Coletiva", "Ética e Legislação"],
+        semestre3: ["Enfermagem Médico-Cirúrgica", "Saúde Mental", "Assistência Materno-Infantil", "Nutrição"],
+        semestre4: ["Enfermagem em Urgência", "Gestão em Enfermagem", "Estágio Supervisionado I", "Pesquisa em Enfermagem"]
+      }
+    }
+  };
+
+  const container = document.getElementById("tabela-container");
+  const selectModelo = document.getElementById("modelo");
+  const cursoFaculdadeContainer = document.getElementById("curso-faculdade-container");
+  const selectCursoFaculdade = document.getElementById("curso-faculdade");
+  const mediaGeralDiv = document.getElementById("media-geral");
+
+  function criarTabelaSimples(disciplinas) {
+    if (!disciplinas.length) {
+      container.innerHTML = "<p><em>Adicione matérias para começar.</em></p>";
+      return;
+    }
+    let html = `<table>
+      <thead>
+        <tr>
+          <th>Disciplinas</th>
+          <th>1º Bimestre</th>
+          <th>2º Bimestre</th>
+          <th>3º Bimestre</th>
+          <th>4º Bimestre</th>
+          <th>Média Anual</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    disciplinas.forEach(disciplina => {
+      html += `<tr>
+        <td>${disciplina}</td>
+        <td><input type="number" min="0" max="10" step="0.1"></td>
+        <td><input type="number" min="0" max="10" step="0.1"></td>
+        <td><input type="number" min="0" max="10" step="0.1"></td>
+        <td><input type="number" min="0" max="10" step="0.1"></td>
+        <td class="media"></td>
+      </tr>`;
+    });
+
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+    mediaGeralDiv.textContent = "";
+
+    const inputs = container.querySelectorAll("input[type='number']");
+    inputs.forEach(input => {
+      input.addEventListener("input", calcularMediasSimples);
+    });
+  }
+
+  function calcularMediasSimples() {
+    const linhas = container.querySelectorAll("tbody tr");
+
+    linhas.forEach(linha => {
+      const inputs = linha.querySelectorAll("input");
+      const tdMedia = linha.querySelector(".media");
+      let soma = 0;
+      let validas = 0;
+
+      inputs.forEach(input => {
+        const val = parseFloat(input.value);
+        if (!isNaN(val)) {
+          soma += val;
+          validas++;
+        }
+      });
+
+      if (validas === 4) {
+        const media = soma / 4;
+        tdMedia.textContent = media.toFixed(1).replace('.', ',');
+        tdMedia.className = media >= 6 ? "media aprovado" : "media reprovado";
+      } else {
+        tdMedia.textContent = "";
+        tdMedia.className = "media";
+      }
+    });
+  }
+
+  function criarTabelaFaculdade(curso) {
+    const cursoSemestres = tabelas.faculdade[curso];
+    if (!cursoSemestres) {
+      container.innerHTML = "<p>Curso não encontrado.</p>";
+      mediaGeralDiv.textContent = "";
+      return;
+    }
+
+    let html = "";
+
+    Object.entries(cursoSemestres).forEach(([semestre, materias]) => {
+      html += `<h3>${semestre.toUpperCase()}</h3>`;
+      html += `<table>
+        <thead>
+          <tr>
+            <th>Matéria</th>
+            <th>1ª Nota</th>
+            <th>2ª Nota</th>
+            <th>Média do Semestre</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+      materias.forEach(materia => {
+        html += `<tr>
+          <td>${materia}</td>
+          <td><input type="number" min="0" max="10" step="0.1"></td>
+          <td><input type="number" min="0" max="10" step="0.1"></td>
+          <td class="media-semestre"></td>
+        </tr>`;
+      });
+
+      html += `</tbody></table>`;
+    });
+
+    container.innerHTML = html;
+    mediaGeralDiv.textContent = "";
+
+    // Adiciona evento para calcular médias
+    const inputs = container.querySelectorAll("input[type='number']");
+    inputs.forEach(input => {
+      input.addEventListener("input", calcularMediasFaculdade);
+    });
+  }
+
+  function calcularMediasFaculdade() {
+    const tabelas = container.querySelectorAll("table");
+    let somaMedias = 0;
+    let contMedias = 0;
+
+    tabelas.forEach(tabela => {
+      const linhas = tabela.querySelectorAll("tbody tr");
+      let somaSemestre = 0;
+      let qtdNotas = 0;
+
+      linhas.forEach(linha => {
+        const inputs = linha.querySelectorAll("input");
+        const tdMedia = linha.querySelector(".media-semestre");
+        const nota1 = parseFloat(inputs[0].value);
+        const nota2 = parseFloat(inputs[1].value);
+
+        if (!isNaN(nota1) && !isNaN(nota2)) {
+          const media = (nota1 + nota2) / 2;
+          tdMedia.textContent = media.toFixed(1).replace('.', ',');
+          tdMedia.className = media >= 6 ? "media-semestre aprovado" : "media-semestre reprovado";
+          somaSemestre += media;
+          qtdNotas++;
+        } else {
+          tdMedia.textContent = "";
+          tdMedia.className = "media-semestre";
+        }
+      });
+
+      if (qtdNotas > 0) {
+        const mediaSemestre = somaSemestre / qtdNotas;
+        somaMedias += mediaSemestre;
+        contMedias++;
+      }
+    });
+
+    if (contMedias > 0) {
+      const mediaGeral = somaMedias / contMedias;
+      mediaGeralDiv.textContent = `Média geral do curso: ${mediaGeral.toFixed(2).replace('.', ',')}`;
+    } else {
+      mediaGeralDiv.textContent = "";
+    }
+  }
+
+  selectModelo.addEventListener("change", () => {
+    const valor = selectModelo.value;
+
+    if (valor === "faculdade") {
+      cursoFaculdadeContainer.style.display = "block";
+      container.innerHTML = "";
+      mediaGeralDiv.textContent = "";
+    } else {
+      cursoFaculdadeContainer.style.display = "none";
+      selectCursoFaculdade.value = "";
+      mediaGeralDiv.textContent = "";
+      criarTabelaSimples(tabelas[valor]);
+    }
+  });
+
+  selectCursoFaculdade.addEventListener("change", () => {
+    const curso = selectCursoFaculdade.value;
+    if (curso) {
+      criarTabelaFaculdade(curso);
+    } else {
+      container.innerHTML = "";
+      mediaGeralDiv.textContent = "";
+    }
+  });
+
+  // Inicializa com o primeiro modelo
+  criarTabelaSimples(tabelas[selectModelo.value]);
+</script>
+
+</body>
+</html>
