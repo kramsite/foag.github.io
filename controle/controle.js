@@ -98,6 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setMode(m) {
     mode = m;
+
+    // NOVO: liberar novo salvamento parcial ao entrar em foco
+    if (m === 'focus') partialSaved = false;
+
     const mins = (m === 'focus' ? +(focusM?.value || 25) :
                  m === 'short'  ? +(shortM?.value || 5)  :
                                   +(longM?.value || 15));
@@ -158,9 +162,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const startBtn = document.getElementById('startBtn');
   const pauseBtn = document.getElementById('pauseBtn');
   const resetBtn = document.getElementById('resetBtn');
+  // NOVO: botão para salvar o tempo já estudado no Pomodoro
+  const savePartialPomodoroBtn = document.getElementById('savePartialPomodoro');
+  // NOVO: evita salvar duas vezes a mesma sessão dentro do mesmo ciclo de foco
+  let partialSaved = false;
+
   startBtn && (startBtn.onclick = start);
   pauseBtn && (pauseBtn.onclick = pause);
   resetBtn && (resetBtn.onclick = reset);
+
+  // NOVO: salva o tempo já decorrido no Pomodoro como estudo (conta nas metas/gráficos)
+  function savePomodoroPartial(){
+    if (mode !== 'focus') {
+      alert('Só é possível salvar tempo parcial no modo Foco.');
+      return;
+    }
+    if (partialSaved) {
+      alert('Sessão parcial deste ciclo já foi salva.');
+      return;
+    }
+    const elapsedMs = Math.max(0, totalMs - remainingMs);
+    const minutes = Math.round(elapsedMs / 60000);
+    if (minutes <= 0) {
+      alert('Nenhum tempo decorrido para salvar.');
+      return;
+    }
+    const discipline = disciplineSel ? disciplineSel.value : 'Geral';
+    state.sessions.push({ ts: Date.now(), minutes, mode:'focus', discipline });
+    save();
+    updateHistory(); updateCharts(); updateGoalsView();
+    partialSaved = true;
+    alert('Sessão parcial salva!');
+  }
+
+  // NOVO: listener do botão
+  savePartialPomodoroBtn && savePartialPomodoroBtn.addEventListener('click', savePomodoroPartial);
+
   setMode('focus');
 
   // ===== Cronômetro =====
