@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boletim Escolar</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        font-size: 14px;
+    }
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    input {
+        width: 60px;
+        padding: 4px;
+        text-align: center;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .media {
+        font-weight: bold;
+    }
+    .situacao {
+        font-weight: bold;
+    }
+    .aprovado {
+        color: green;
+    }
+    .reprovado {
+        color: red;
+    }
+</style>
+</head>
+<body>
+
+<h1>Boletim Escolar</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Matéria</th>
+            <th>1º Bim.</th>
+            <th>2º Bim.</th>
+            <th>3º Bim.</th>
+            <th>4º Bim.</th>
+            <th>Média</th>
+            <th>Situação</th>
+        </tr>
+    </thead>
+    <tbody id="tabela-notas">
+        <!-- Linhas já existentes -->
+        <tr>
+            <td>Língua Portuguesa</td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td class="media"></td>
+            <td class="situacao"></td>
+        </tr>
+        <!-- Copie o mesmo padrão para todas as matérias -->
+        <tr>
+            <td>Matemática</td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td class="media"></td>
+            <td class="situacao"></td>
+        </tr>
+
+        <tr>
+            <td>Educação Física</td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td class="media"></td>
+            <td class="situacao"></td>
+        </tr>
+
+    <tr>
+            <td>ingles</td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td class="media"></td>
+            <td class="situacao"></td>
+        </tr>
+
+        <tr>
+            <td>Filosofia</td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td class="media"></td>
+            <td class="situacao"></td>
+        </tr>
+        <td>artes</td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td class="media"></td>
+            <td class="situacao"></td>
+        </tr>
+        <td>sociologia</td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td class="media"></td>
+            <td class="situacao"></td>
+        </tr>
+        <tr>
+            <td>Biologia</td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td class="media"></td>
+            <td class="situacao"></td>
+        </tr>
+        <tr>
+            <td>Física</td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td class="media"></td>
+            <td class="situacao"></td>
+        </tr>
+        <tr>
+            <td>Química</td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td><input type="number" min="0" max="10"></td>
+            <td class="media"></td>
+            <td class="situacao"></td>
+        </tr>
+        <!-- Continue para todas as matérias -->
+    </tbody>
+</table>
+
+<script>
+document.querySelectorAll('#tabela-notas input').forEach(input => {
+    input.addEventListener('input', calcularMedias);
+});
+
+function calcularMedias() {
+    document.querySelectorAll('#tabela-notas tr').forEach(linha => {
+        let notas = Array.from(linha.querySelectorAll('input'))
+                         .map(i => {
+                             let valor = parseFloat(i.value);
+                             if (valor > 10) valor = 10;
+                             if (valor < 0 || isNaN(valor)) valor = 0;
+                             i.value = valor;
+                             return valor;
+                         });
+        let soma = notas.reduce((a, b) => a + b, 0);
+        let media = notas.length > 0 ? soma / notas.length : 0;
+        let mediaCell = linha.querySelector('.media');
+        let situacaoCell = linha.querySelector('.situacao');
+
+        if (notas.some(n => n > 0)) {
+            mediaCell.textContent = media.toFixed(1);
+            if (media >= 6) {
+                situacaoCell.textContent = "Aprovado";
+                situacaoCell.className = "situacao aprovado";
+            } else {
+                situacaoCell.textContent = "Reprovado";
+                situacaoCell.className = "situacao reprovado";
+            }
+        } else {
+            mediaCell.textContent = "";
+            situacaoCell.textContent = "";
+            situacaoCell.className = "situacao";
+        }
+    });
+}
+</script>
+
+</body>
+</html>
