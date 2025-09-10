@@ -1,0 +1,338 @@
+/* =========================
+   BASE / RESET / LAYOUT
+   ========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #fff;
+  color: #232323;
+}
+
+/* =========================
+   HEADER (atualizado p/ seu estilo)
+   ========================= */
+header.cabecalho {
+  font-family: 'Snap ITC', sans-serif;
+  width: 100%;
+  background-color: #38a5ff;
+  color: #fff;
+  text-align: left;
+  padding: 15px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* complementos do header */
+.cabecalho {
+  position: relative;
+  padding: 10px 20px;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.logo { 
+letter-spacing: .5px;
+font-family: "Snap ITC"; }
+
+/* Ícones do header no seu estilo */
+.header-icons {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 15px;
+  font-size: 22px;
+  color: #ffffff;
+  cursor: pointer;
+  user-select: none;
+}
+
+.header-icons i {
+  color: #ffffff;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.header-icons i:hover {
+  color: #006cc5;
+  transform: translateY(-13%) scale(1.1);
+}
+
+/* =========================
+   STRUCTURE
+   ========================= */
+.container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+nav.menu {
+  width: 260px;
+  background: #38a5ff;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, .15);
+}
+
+nav.menu a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background .2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+nav.menu a:hover,
+nav.menu a.active { background: rgba(255, 255, 255, .18); }
+
+main.conteudo {
+  flex: 1;
+  padding: 20px;
+  overflow: auto;
+}
+
+footer {
+  background: #232323;
+  color: #fff;
+  text-align: center;
+  padding: 8px;
+  font-size: .95rem;
+}
+
+/* =========================
+   GRID / CARDS
+   ========================= */
+.estudos-wrapper {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+}
+
+.card {
+  grid-column: span 4;
+  background: #f7f8fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
+}
+
+.card.wide { grid-column: span 8; }
+.card.half { grid-column: span 6; }
+.card.full { grid-column: 1 / -1; }
+
+.card h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.sub {
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+/* =========================
+   HELPERS
+   ========================= */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.between { justify-content: space-between; align-items: center; }
+.center { justify-content: center; align-items: center; }
+.gap { gap: 8px; }
+.mt { margin-top: 12px; }
+.lbl { min-width: 120px; color: #666; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* =========================
+   FORM / BUTTONS
+   ========================= */
+input, select, button { font-family: inherit; font-size: 14px; }
+
+.input, .select {
+  width: 100%;
+  padding: 10px 12px;
+  background: #fff;
+  color: #111;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+}
+
+.btn {
+  border: 0;
+  background: #38a5ff;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn.secondary { background: #e5e7eb; color: #111; }
+.btn.ghost { background: transparent; border: 1px solid #e5e7eb; color: #232323; }
+
+/* =========================
+   TIMER / PILLS / PROGRESS
+   ========================= */
+.timer {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-align: center;
+  margin: 8px 0 12px;
+}
+
+.pill {
+  font-size: 12px;
+  padding: 6px 10px;
+  background: #eaf5ff;
+  color: #0057ad;
+  border-radius: 999px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.progress {
+  height: 10px;
+  background: #e9eef5;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress > span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #38a5ff, #0a83e6);
+  transition: width .3s ease;
+}
+
+/* =========================
+   LISTAS / TABELA
+   ========================= */
+.list { display: flex; flex-direction: column; gap: 8px; }
+
+.task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.tag {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: rgba(56,165,255,.08);
+  color: #0a83e6;
+}
+
+.table { width: 100%; border-collapse: collapse; }
+
+.table th,
+.table td {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 8px 6px;
+  text-align: left;
+  font-size: 13px;
+}
+
+/* =========================
+   ABAS (TABS)
+   ========================= */
+.tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+
+.tab-btn {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #232323;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tab-btn.active {
+  background: #38a5ff;
+  color: #fff;
+  border-color: #38a5ff;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* =========================
+   MODAL
+   ========================= */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  color: #333;
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0 5px 20px rgba(0,0,0,.3);
+}
+
+.modal-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 1024px) {
+  .card,
+  .card.wide,
+  .card.half { grid-column: 1 / -1; }
+  nav.menu { width: 220px; }
+}
+
+@media (max-width: 780px) {
+  .container { flex-direction: column; }
+  nav.menu { width: 100%; }
+}
+
+/* =========================
+   CANVAS (GRÁFICOS)
+   ========================= */
+canvas {
+  width: 100% !important;
+  height: 320px !important;
+}
