@@ -28,7 +28,6 @@
       <a href="../agenda/agenda.php"><i class="fa-regular fa-square-check"></i> Tarefas</a>
       <a href="../calendario/calendario.php"><i class="fa-regular fa-calendar"></i> Faltas / Calendário</a>
       <a href="../HORARIO/horario.php"><i class="fa-regular fa-clock"></i> Horários</a>
-      <a href="../perfil/perfil.php"><i class="fa-regular fa-user"></i> Perfil</a>
       <a class="active" href="#"><i class="fa-solid fa-book"></i> Controle de Estudos</a>
     </nav>
 
