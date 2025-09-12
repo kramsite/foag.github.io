@@ -76,9 +76,9 @@
     <nav class="nav">
       <div class="logo">FOAG</div>
       <div class="nav-links">
-        <a href="#features">Recursos</a>
-        <a href="#como-funciona">Como funciona</a>
-        <a href="#faq">FAQ</a>
+        <a href="recursos.php">Recursos</a>
+        <a href="como.php">Como funciona</a>
+        <a href="FAQ.php">FAQ</a>
       </div>
       <a id="startBtn" class="btn primary" href="#"><i class="fa-solid fa-rocket"></i> Começar</a>
       <i id="themeToggle" class="fa-solid fa-moon"></i>
