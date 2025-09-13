@@ -81,7 +81,7 @@
     <nav class="nav">
       <div class="logo">FOAG</div>
       <div class="nav-links">
-        <a href="index.html" id="goHome">Início</a>
+        <a href="index.php" id="goHome">Início</a>
         <a href="recursos.php">Recursos</a>
         <a href="faq.html" id="goFaq">FAQ</a>
       </div>
