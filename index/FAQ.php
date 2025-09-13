@@ -71,7 +71,7 @@
         <a href="recursos.php">Recursos</a>
         <a href="como.php">Como funciona</a>
       </div>
-      <a id="startBtn" class="btn primary" href="#"><i class="fa-solid fa-rocket"></i> Começar</a>
+      <a id="startBtn" class="btn primary" href="/../login/login.php"><i class="fa-solid fa-rocket"></i> Começar</a>
       <i id="themeToggle" class="fa-solid fa-moon"></i>
     </nav>
   </header>

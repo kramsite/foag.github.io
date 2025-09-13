@@ -95,8 +95,8 @@
     <nav class="nav">
       <div class="logo">FOAG</div>
       <div class="nav-links">
-        <a href="index.html" id="goHome">Início</a>
-        <a href="#" class="active">Como funciona</a>
+        <a href="index.php" id="goHome">Início</a>
+        <a href="como.php" class="active">Como funciona</a>
         <a href="faq.html" id="goFaq">FAQ</a>
       </div>
       <a id="startBtn" class="btn primary" href="#"><i class="fa-solid fa-rocket"></i> Começar</a>
