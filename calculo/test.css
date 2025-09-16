@@ -1,0 +1,126 @@
+/* Container geral (card branco com sombra e cantos arredondados) */
+#tabela-container {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
+  margin-top: 20px;
+  max-width: 100%;
+  overflow-x: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Títulos dos semestres e seções */
+#tabela-container h3 {
+  color: #3ea6ff;
+  margin-bottom: 12px;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* Tabela */
+#tabela-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+#tabela-container thead th {
+  background-color: #3ea6ff;
+  color: white;
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #2b88e8;
+}
+
+#tabela-container tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+/* Média na tabela */
+.media {
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+/* Inputs de nota */
+#tabela-container input.nota,
+#tabela-container input.nota-faculdade {
+  width: 60px;
+  padding: 6px 8px;
+  border: 1.8px solid #3ea6ff;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #333;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+#tabela-container input.nota:focus,
+#tabela-container input.nota-faculdade:focus {
+  outline: none;
+  border-color: #2b88e8;
+  box-shadow: 0 0 5px #2b88e8aa;
+}
+
+/* Média Geral abaixo da tabela */
+#media-geral {
+  margin-top: 12px;
+  font-weight: 700;
+  color: #3ea6ff;
+  font-size: 1.1rem;
+  text-align: right;
+}
+
+/* Botões estilo FOAG azul */
+button {
+  background-color: #3ea6ff;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2b88e8;
+}
+
+/* Dropdown selects estilo */
+select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #3ea6ff;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #2b88e8;
+  box-shadow: 0 0 5px #2b88e8aa;
+}
+
+/* Responsividade: permitir scroll horizontal na tabela */
+@media (max-width: 768px) {
+  #tabela-container table {
+    font-size: 0.85rem;
+  }
+
+  #tabela-container input.nota,
+  #tabela-container input.nota-faculdade {
+    width: 50px;
+    padding: 4px 6px;
+  }
+}

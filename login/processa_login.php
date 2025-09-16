@@ -21,17 +21,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($usuario['email'] === $email && password_verify($senha, $usuario['senha'])) {
                 // Salva o nome na sessão (ou e-mail se não tiver nome)
                 $_SESSION['usuario'] = $usuario['nome'] ?: $usuario['email'];
-                header('Location: entrada.php');
+
+                // Mostra tela de sucesso com gato feliz 😺
+                exibirMensagem("Login realizado com sucesso!", "entrada.php", "gato5.png");
                 exit;
             }
         }
 
-        // Mensagem de erro (email ou senha incorretos)
-        exibirMensagem("Vish... e-mail ou senha incorretos :(", "index.php");
+        // Mensagem de erro (email ou senha incorretos) → gato triste
+        exibirMensagem("Vish... e-mail ou senha incorretos :(", "index.php", "gato6.png");
         exit;
     } else {
-        // Dados incompletos
-        exibirMensagem("Ops... preencha o e-mail e a senha corretamente.", "index.php");
+        // Dados incompletos → gato desconfiado
+        exibirMensagem("Ops... preencha o e-mail e a senha corretamente.", "login6", "gato_desconfiado.png");
         exit;
     }
 } else {
@@ -40,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Função para exibir mensagens com estilo
-function exibirMensagem($mensagem, $redirect) {
+function exibirMensagem($mensagem, $redirect, $imagem) {
     echo <<<HTML
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -59,11 +61,9 @@ function exibirMensagem($mensagem, $redirect) {
             height: 100vh;
             margin: 0;
         }
-        h1 {
-            font-size: 5em;
-            font-family: 'Snap ITC', sans-serif;
-            color: white;
-            margin-bottom: 10px;
+        img {
+            max-width: 250px;
+            margin-bottom: 20px;
         }
         h2 {
             font-size: 1.8em;
@@ -79,7 +79,7 @@ function exibirMensagem($mensagem, $redirect) {
     </style>
 </head>
 <body>
-    <h1>FOAG</h1>
+    <img src="../img/gatofoag/{$imagem}" alt="gato">
     <h2>{$mensagem}</h2>
     <p>Você será redirecionado em alguns segundos...</p>
 </body>
