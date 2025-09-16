@@ -492,6 +492,157 @@ nav.menu a:hover {
     background-color: inherit;
 }
 
+/* =========================
+   FOAG – Overrides finais
+   (cole no FINAL do seu CSS)
+   ========================= */
+:root{
+  --foag-prim:#38a5ff;
+  --foag-azul-clarinho:#dff3ff; /* feriado azul clarinho */
+  --card-bg:#ffffff;
+  --card-borda:#e9eef3;
+  --txt:#1f2937;
+  --txt-suave:#6b7280;
+}
+
+/* 1) FERIADOS: azul clarinho + tooltip elegante */
+.dia.feriado{
+  background: var(--foag-azul-clarinho) !important;
+  color: #0b1324 !important;
+  outline: 1px solid rgba(56,165,255,.18);
+}
+.dia.feriado:hover::after{
+  content: attr(data-feriado);
+  position:absolute; z-index:10;
+  left:50%; transform:translateX(-50%);
+  bottom:100%; margin-bottom:6px;
+  background:#0f172a; color:#fff; padding:6px 8px; border-radius:6px; white-space:nowrap;
+  font-size:.78rem; box-shadow:0 6px 18px rgba(0,0,0,.18);
+}
+.dia.feriado:hover::before{
+  content:''; position:absolute; left:50%; transform:translateX(-50%);
+  bottom:100%; border:6px solid transparent; border-top-color:#0f172a; margin-bottom:-6px;
+}
+
+/* 2) INDICADORES (bolinhas) discretos */
+.dots{ position:absolute; left:6px; bottom:6px; display:flex; gap:4px; }
+.dot{ width:8px; height:8px; border-radius:50%; box-shadow:0 0 0 1px rgba(0,0,0,.06) inset; }
+.dot.vermelho{ background:#e74c3c; }
+.dot.amarelo{ background:#f1c40f; }
+.dot.semaula{ background:#f39c12; }
+.dot.roxo{ background:#8e44ad; }
+
+/* 3) ORGANIZAÇÃO “HARMÔNICA” DENTRO DO MÊS EXPANDIDO
+      – transforma .info-mes em grade limpa, com cartões
+*/
+.mes.expanded .info-mes{
+  background:#fafcff !important;
+  border-left: 2px solid #e0e0e0;
+  padding: 14px !important;
+
+  /* grid responsiva:
+     toolbar ocupa linha inteira; cores e metas à esquerda; agenda à direita */
+  display: grid !important;
+  grid-template-columns: 1.2fr 1fr;
+  grid-template-areas:
+    "toolbar toolbar"
+    "cores   agenda"
+    "metas   agenda";
+  gap: 12px;
+}
+
+/* toolbar (ano + exportar/imprimir) como card */
+.mes.expanded .info-mes .toolbar-cal{
+  grid-area: toolbar;
+  background: var(--card-bg);
+  border:1px solid var(--card-borda);
+  border-radius:12px;
+  padding:10px 12px;
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+}
+.mes.expanded .info-mes .toolbar-cal .lado-b button{
+  padding:8px 12px; border:0; border-radius:10px; cursor:pointer;
+  background:var(--foag-prim); color:#fff; font-weight:600;
+}
+.mes.expanded .info-mes .toolbar-cal label{ font-weight:600; color:var(--txt); margin-right:6px; }
+.mes.expanded .info-mes .toolbar-cal .anoSelect{
+  padding:6px 8px; border-radius:10px; border:1px solid var(--card-borda); background:#fff;
+}
+
+/* paleta de cores como card */
+.mes.expanded .info-mes .botoes-cores{
+  grid-area: cores;
+  background: var(--card-bg);
+  border:1px solid var(--card-borda);
+  border-radius:12px;
+  padding:12px;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.mes.expanded .info-mes .botoes-cores .cor-item{ display:flex; align-items:center; gap:8px; color:var(--txt); }
+.mes.expanded .info-mes .botoes-cores .btn-cor{
+  width:26px; height:26px; border-radius:50%;
+  border:2px solid #fff; box-shadow:0 0 0 1px rgba(0,0,0,.08);
+  cursor:pointer; transition:transform .1s, box-shadow .1s;
+}
+.mes.expanded .info-mes .botoes-cores .btn-cor:hover{ transform:scale(1.08); box-shadow:0 4px 12px rgba(0,0,0,.08); }
+
+/* metas + contadores como card */
+.mes.expanded .info-mes .painel-metas{
+  grid-area: metas;
+  background: var(--card-bg);
+  border:1px solid var(--card-borda);
+  border-radius:12px;
+  padding:12px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.mes.expanded .info-mes .painel-metas .linha{ display:flex; gap:10px; align-items:center; }
+.mes.expanded .info-mes .progress-wrap{ flex:1; background:#eef2f7; border-radius:999px; height:12px; overflow:hidden; }
+.mes.expanded .info-mes .progress-bar{ height:100%; background:var(--foag-prim); transition:width .3s; }
+.mes.expanded .info-mes .label-presenca{ width:44px; text-align:right; font-weight:700; color:var(--txt); }
+.mes.expanded .info-mes .resumos{ display:flex; flex-wrap:wrap; gap:10px; font-size:.93rem; color:var(--txt); }
+
+/* mini-agenda embutida à direita como card */
+.mes.expanded .info-mes .mini-agenda{
+  grid-area: agenda;
+  background: var(--card-bg);
+  border:1px solid var(--card-borda);
+  border-radius:12px;
+  padding:10px;
+  display:block;  /* visível quando expandido */
+}
+.mes.expanded .info-mes .mini-agenda .agenda-header{
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;
+}
+.mes.expanded .info-mes .mini-agenda .agenda-data{ color:#0b1324; font-weight:600; }
+.mes.expanded .info-mes .mini-agenda .agenda-notas{
+  width:100%; min-height:110px; resize:vertical;
+  padding:10px; border:1px solid #dde3ea; border-radius:10px; font-size:.95rem;
+}
+.mes.expanded .info-mes .mini-agenda .agenda-salvar,
+.mes.expanded .info-mes .mini-agenda .agenda-fechar{
+  margin-top:8px; padding:8px 10px; border:0; border-radius:10px; cursor:pointer;
+}
+.mes.expanded .info-mes .mini-agenda .agenda-salvar{ background:var(--foag-prim); color:#fff; font-weight:600; }
+.mes.expanded .info-mes .mini-agenda .agenda-fechar{ background:#e5e7eb; color:#111827; }
+
+/* botão fechar do mês mais “clean” */
+.mes.expanded .fechar-btn{
+  background: var(--foag-prim) !important; color:#fff !important;
+  border-radius:50%; width:35px; height:35px; font-size:20px; font-weight:700;
+  box-shadow:0 6px 16px rgba(56,165,255,.35);
+}
+
+/* responsivo: empilha os cards no expandido */
+@media (max-width: 980px){
+  .mes.expanded .info-mes{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "toolbar"
+      "cores"
+      "metas"
+      "agenda";
+  }
+}
 
 
 /* Rodapé */
