@@ -618,6 +618,49 @@ nav.menu a:hover {
   width:100%; min-height:110px; resize:vertical;
   padding:10px; border:1px solid #dde3ea; border-radius:10px; font-size:.95rem;
 }
+
+/* ===== Modal backdrop para o mês expandido ===== */
+#cal-backdrop{
+  position: fixed;
+  inset: 0;                 /* top/right/bottom/left: 0 */
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(1px);
+  z-index: 999;             /* abaixo do .mes.expanded (que já tem z-index:1000) */
+  display: none;            /* aparece só quando ativo */
+}
+#cal-backdrop.ativo{ display: block; }
+
+/* Travar o scroll do body quando modal aberto */
+body.no-scroll{
+  overflow: hidden;
+  touch-action: none;       /* melhora em mobile */
+}
+
+/* Garantir que apenas a COLUNA DIREITA role quando necessário */
+.mes.expanded{
+  /* você já tem overflow: hidden; aqui, perfeito para conter o scroll só no filho direito */
+  overflow: hidden;
+}
+.mes.expanded .calendario-mes{
+  /* lado esquerdo NÃO rola */
+  overflow: hidden;
+}
+.mes.expanded .info-mes{
+  /* lado direito PODE rolar quando necessário */
+  overflow-y: auto;
+}
+
+/* Em telas pequenas, quando vira coluna, deixe a info rolar também */
+@media (max-width: 768px){
+  .mes.expanded{
+    overflow: hidden;         /* mantém container sem rolagem */
+  }
+  .mes.expanded .info-mes{
+    overflow-y: auto;         /* rola os cards da direita (que ficam abaixo) */
+  }
+}
+
+
 .mes.expanded .info-mes .mini-agenda .agenda-salvar,
 .mes.expanded .info-mes .mini-agenda .agenda-fechar{
   margin-top:8px; padding:8px 10px; border:0; border-radius:10px; cursor:pointer;
