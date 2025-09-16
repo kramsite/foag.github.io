@@ -161,7 +161,7 @@
     function goLogin(e){
       e.preventDefault();
       document.body.classList.add('fade-out');
-      setTimeout(()=>{ window.location.href = 'login/login.php'; }, 350);
+      setTimeout(()=>{ window.location.href = '../login/login.php'; }, 350);
     }
 
     document.getElementById('startBtn').addEventListener('click', goLogin);
