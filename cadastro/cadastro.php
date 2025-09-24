@@ -183,7 +183,6 @@ document.querySelectorAll('.toggle-visibility').forEach(icon => {
         e.target.value = `(${x}`;
       }
     });
-
     
 
     
