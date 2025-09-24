@@ -22,16 +22,19 @@ function obterDiasDoMes($mes, $ano) {
 // Gera o calendário completo (todos os meses)
 function gerarCalendario() {
     global $feriados;
-    $ano = date('Y');
+    // Histórico por ano via ?ano=YYYY
+    $ano = isset($_GET['ano']) ? (int)$_GET['ano'] : (int)date('Y');
+
     $meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
     $diasSemana = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
     foreach ($meses as $mes) {
         list($dias, $numeroMes) = obterDiasDoMes($mes, $ano);
-        echo "<div class='mes'>";
-        echo "<div class='calendario-mes'>";
-        echo "<div class='header-mes'>$mes</div>";
-        echo "<div class='dias'>";
+
+        echo "<div class='mes' data-ano='$ano' data-mes='$numeroMes'>";
+        echo "  <div class='calendario-mes'>";
+        echo "    <div class='header-mes'>$mes</div>";
+        echo "    <div class='dias'>";
 
         foreach ($diasSemana as $dia) {
             echo "<div class='dia header-dia'><strong>$dia</strong></div>";
@@ -41,208 +44,440 @@ function gerarCalendario() {
             if ($d) {
                 $dataAtual = sprintf('%04d-%02d-%02d', $ano, $numeroMes, $d);
                 $classeExtra = '';
+                $attrExtra = '';
                 if (isset($feriados[$dataAtual])) {
-                    $classeExtra = 'azul'; // já marca como feriado
+                    // marca feriado + nome no data-attribute (tooltip)
+                    $classeExtra = 'feriado';
+                    $nomeFeriado = htmlspecialchars($feriados[$dataAtual], ENT_QUOTES, 'UTF-8');
+                    $attrExtra = " data-feriado=\"$nomeFeriado\"";
                 }
-                echo "<div class='dia $classeExtra'>$d</div>";
+                echo "<div class='dia $classeExtra'$attrExtra data-date='$dataAtual'>
+                        <span class='num-dia'>$d</span>
+                        <div class='dots'></div>
+                      </div>";
             } else {
                 echo "<div class='dia'></div>";
             }
         }
 
-        echo "</div></div>";
-        echo "<div class='info-mes'>";
-echo "<p>Selecione a cor e depois clique no dia:</p>";
-echo "<div class='botoes-cores'>";
-echo "<div class='cor-item'><button class='btn-cor' data-cor='vermelho' style='background:#e74c3c'></button><span>Faltou</span></div>";
-echo "<div class='cor-item'><button class='btn-cor' data-cor='amarelo' style='background:#f1c40f'></button><span>Atestado</span></div>";
-echo "<div class='cor-item'><button class='btn-cor' data-cor='sem-aula' style='background:#f39c12'></button><span>Sem aula</span></div>";  // substitui azul por sem aula
-echo "<div class='cor-item'><button class='btn-cor' data-cor='roxo' style='background:#8e44ad'></button><span>Prova</span></div>";
-echo "<div class='cor-item'><button class='btn-cor limpar' data-cor='limpar' style='background:#bdc3c7'></button><span>Limpar</span></div>";
-echo "</div>";
-echo "</div>";
-        echo "</div>";
+        echo "    </div>"; // .dias
+        echo "  </div>";   // .calendario-mes
+
+        // TUDO DENTRO DO MINI CALENDÁRIO (por mês)
+        echo "  <div class='info-mes'>";
+        echo "    <div class='toolbar-cal'>";
+        echo "      <div class='lado-a'>";
+        echo "        <label>Ano:</label>";
+        echo "        <select class='anoSelect'></select>";
+        echo "      </div>";
+        echo "      <div class='lado-b'>";
+        echo "        <button class='btn-exportar-png' title='Exportar PNG'>Exportar PNG</button>";
+        echo "        <button class='btn-imprimir' title='Imprimir mês'>Imprimir</button>";
+        echo "      </div>";
+        echo "    </div>";
+
+        echo "    <p>Selecione a cor e depois clique no dia:</p>";
+        echo "    <div class='botoes-cores'>";
+        echo "      <div class='cor-item'><button class='btn-cor' data-cor='vermelho' style='background:#e74c3c'></button><span>Faltou</span></div>";
+        echo "      <div class='cor-item'><button class='btn-cor' data-cor='amarelo' style='background:#f1c40f'></button><span>Atestado</span></div>";
+        echo "      <div class='cor-item'><button class='btn-cor' data-cor='sem-aula' style='background:#f39c12'></button><span>Sem aula</span></div>";
+        echo "      <div class='cor-item'><button class='btn-cor' data-cor='roxo' style='background:#8e44ad'></button><span>Prova</span></div>";
+        echo "      <div class='cor-item'><button class='btn-cor limpar' data-cor='limpar' style='background:#bdc3c7'></button><span>Limpar</span></div>";
+        echo "    </div>";
+
+        echo "    <div class='painel-metas'>";
+        echo "      <div class='linha'>";
+        echo "        <label>Meta de presença (%):</label>";
+        echo "        <input class='meta-presenca' type='number' min='0' max='100' value='80'>";
+        echo "      </div>";
+        echo "      <div class='linha linha-progress'>";
+        echo "        <div class='progress-wrap'><div class='progress-bar'></div></div>";
+        echo "        <span class='label-presenca'>0%</span>";
+        echo "      </div>";
+        echo "      <div class='resumos'>";
+        echo "        <span><b>Presenças</b>: <span class='count-presenca'>0</span></span>";
+        echo "        <span><b>Faltas</b>: <span class='count-falta'>0</span></span>";
+        echo "        <span><b>Atestados</b>: <span class='count-atestado'>0</span></span>";
+        echo "        <span><b>Sem aula</b>: <span class='count-semaula'>0</span></span>";
+        echo "        <span><b>Provas</b>: <span class='count-prova'>0</span></span>";
+        echo "      </div>";
+        echo "    </div>";
+
+        // Mini-agenda embutida no próprio mês
+        echo "    <div class='mini-agenda'>";
+        echo "      <div class='agenda-header'>";
+        echo "        <strong class='agenda-data'></strong>";
+        echo "        <button class='agenda-fechar'>×</button>";
+        echo "      </div>";
+        echo "      <textarea class='agenda-notas' placeholder='Anote tarefas, horários, links...'></textarea>";
+        echo "      <button class='agenda-salvar'>Salvar</button>";
+        echo "    </div>";
+
+        echo "  </div>"; // .info-mes
+        echo "</div>";   // .mes
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendário</title>
-    <link rel="stylesheet" href="calen.css">
-    <link rel="stylesheet" href="dark_calend.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-    <script src="../m.escuro/dark-mode.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendário</title>
+  <link rel="stylesheet" href="calendario.css">
+  <link rel="stylesheet" href="dark_calend.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="../m.escuro/dark-mode.js"></script>
+  <!-- Export PNG -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 </head>
+<!-- Backdrop para bloquear interação no fundo quando um mês estiver expandido -->
+<div id="cal-backdrop" aria-hidden="true"></div>
 
 <body>
   <header class="cabecalho">
-  FOAG
-  <div class="header-icons">
-    <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
-    <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
-    <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
-  </div>
-</header>
-    <div class="container">
-        <nav class="menu">
-            <a href="../inicio/inicio.php">Início</a>
-            <a href="../agenda/agenda.php">Agenda</a>
-            <a href="../HORARIO/horario.php">Horario</a>
-            <a href="#">Sobre</a>
-            <a href="#">Contato</a>
-        </nav>
+    FOAG
+    <div class="header-icons">
+      <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
+      <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
+      <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
+    </div>
+  </header>
 
-        <div class="conteudo">
-            <div class="calendario-container">
-                <div class="calendario">
-                    <?php gerarCalendario(); ?>
-                </div>
-            </div>
+  <div class="container">
+    <nav class="menu">
+      <a href="../inicio/inicio.php">Início</a>
+      <a href="../agenda/agenda.php">Agenda</a>
+      <a href="../HORARIO/horario.php">Horario</a>
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
+    </nav>
+
+    <div class="conteudo">
+      <div class="calendario-container">
+        <div class="calendario">
+          <?php gerarCalendario(); ?>
         </div>
-    </div>
-
-    <!-- Modal de Confirmação -->
-<div id="logout-modal" class="modal">
-  <div class="modal-content">
-    <h3>Ah... já vai?</h3>
-    <h4>Tem certeza que deseja sair?</h4>
-    <div class="modal-buttons">
-      <button id="confirm-logout">Sim</button>
-      <button id="cancel-logout">Cancelar</button>
+      </div>
     </div>
   </div>
-</div>
 
+  <!-- Modal de Confirmação -->
+  <div id="logout-modal" class="modal">
+    <div class="modal-content">
+      <h3>Ah... já vai?</h3>
+      <h4>Tem certeza que deseja sair?</h4>
+      <div class="modal-buttons">
+        <button id="confirm-logout">Sim</button>
+        <button id="cancel-logout">Cancelar</button>
+      </div>
+    </div>
+  </div>
 
-    <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
+  <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
 
-    <script>
-    // Seu código de expandir mês (já existente)
-document.querySelectorAll('.mes').forEach(mes => {
-    mes.addEventListener('click', () => {
-        const aberto = document.querySelector('.mes.expanded');
-        if (aberto && aberto !== mes) aberto.classList.remove('expanded');
-        mes.classList.add('expanded');
+  <script>
+// ========= util: fechar mês (só pelo X) =========
+function fecharMes(mes){
+  if(!mes) return;
+  mes.classList.remove('expanded');
+  mes.__corSelecionada = null;
+  mes?.__atualizarBotoesCor?.(); // reseta visual dos botões de cor
 
-        // Adiciona botão de fechar apenas uma vez
-        if (!mes.querySelector('.fechar-btn')) {
-            const fechar = document.createElement('button');
-            fechar.textContent = '×';
-            fechar.classList.add('fechar-btn');
-            fechar.onclick = e => {
-                e.stopPropagation();
-                mes.classList.remove('expanded');
-                // Limpa seleção de cor ao fechar
-                corSelecionada = null;
-                atualizarBotoesCor();
-            };
-            mes.appendChild(fechar);
-        }
-    });
-});
-
-// Variável para guardar a cor selecionada
-let corSelecionada = null;
-
-// Pega todos os botões de cor
-const botoesCor = document.querySelectorAll('.btn-cor');
-
-// Marca/desmarca o botão selecionado visualmente
-function atualizarBotoesCor() {
-    botoesCor.forEach(botao => {
-        if (botao.dataset.cor === corSelecionada) {
-            botao.style.outline = '3px solid #555';
-            botao.style.transform = 'scale(1.3)';
-        } else {
-            botao.style.outline = 'none';
-            botao.style.transform = 'scale(1)';
-        }
-    });
+  // Se nenhum outro mês estiver expandido, libera o fundo
+  if(!document.querySelector('.mes.expanded')){
+    document.body.classList.remove('no-scroll');
+    document.getElementById('cal-backdrop')?.classList.remove('ativo');
+  }
 }
 
-// Evento para clicar no botão de cor
-botoesCor.forEach(botao => {
-    botao.addEventListener('click', e => {
-        e.stopPropagation(); // evita fechar o mês expandido
-        const cor = botao.dataset.cor;
-        if (corSelecionada === cor) {
-            corSelecionada = null; // desmarca se clicar de novo
-        } else {
-            corSelecionada = cor;
-        }
-        atualizarBotoesCor();
-    });
-});
-
-// Evento para clicar nos dias (apenas no mês expandido)
+// ========= Expandir mês (não fecha outro automaticamente) =========
 document.querySelectorAll('.mes').forEach(mes => {
-    mes.addEventListener('click', e => {
-        if (!mes.classList.contains('expanded')) return;
-        if (!corSelecionada) return;
+  mes.addEventListener('click', () => {
+    const aberto = document.querySelector('.mes.expanded');
 
-        const target = e.target;
-        if (
-            target.classList.contains('dia') && 
-            !target.classList.contains('header-dia') && 
-            target.textContent.trim() !== ''
-        ) {
-            if (target.classList.contains('feriado')) {
-                // Dia feriado automático, não permite mudar
-                alert('Este dia é feriado automático e não pode ser alterado.');
-                return;
-            }
-            // Remove as classes de cor antigas (exceto 'feriado')
-            target.classList.remove('vermelho', 'amarelo', 'sem-aula', 'roxo');
+    // Se já existe um mês aberto e não é este, não faz nada
+    if (aberto && aberto !== mes) return;
 
-            if (corSelecionada === 'limpar') {
-                // Limpa as cores manuais
-                return;
-            }
+    // Se este mês ainda não está expandido, expande
+    if (!mes.classList.contains('expanded')) {
+      mes.classList.add('expanded');
 
-            // Aplica a cor selecionada
-            target.classList.add(corSelecionada);
-        }
-    });
+      // Ativa backdrop e trava scroll do body
+      document.body.classList.add('no-scroll');
+      document.getElementById('cal-backdrop')?.classList.add('ativo');
+
+      // Botão de fechar (uma vez por mês)
+      if (!mes.querySelector('.fechar-btn')) {
+        const fechar = document.createElement('button');
+        fechar.textContent = '×';
+        fechar.classList.add('fechar-btn');
+        fechar.onclick = e => {
+          e.stopPropagation();
+          fecharMes(mes);   // << único jeito de fechar
+        };
+        mes.appendChild(fechar);
+      }
+    }
+  });
 });
 
-// Botões do header
+// ========= Seleção de cor POR MÊS =========
+document.querySelectorAll('.mes').forEach(mes=>{
+  mes.__corSelecionada = null;
+  const botoesCor = mes.querySelectorAll('.btn-cor');
+
+  function atualizarBotoesCorLocal(){
+    botoesCor.forEach(botao=>{
+      if (botao.dataset.cor === mes.__corSelecionada){
+        botao.style.outline = '3px solid #555';
+        botao.style.transform = 'scale(1.3)';
+      } else {
+        botao.style.outline = 'none';
+        botao.style.transform = 'scale(1)';
+      }
+    });
+  }
+  mes.__atualizarBotoesCor = atualizarBotoesCorLocal;
+
+  botoesCor.forEach(botao=>{
+    botao.addEventListener('click', e=>{
+      e.stopPropagation();
+      const cor = botao.dataset.cor;
+      mes.__corSelecionada = (mes.__corSelecionada === cor ? null : cor);
+      atualizarBotoesCorLocal();
+    });
+  });
+});
+function atualizarBotoesCor(mes){ mes?.__atualizarBotoesCor?.(); }
+
+// ========= Clique nos dias (respeita feriado) + Dots + Métricas =========
+document.querySelectorAll('.mes').forEach(mes=>{
+  mes.addEventListener('click', e=>{
+    if (!mes.classList.contains('expanded')) return;
+    if (!mes.__corSelecionada) return;
+
+    const t = e.target.closest?.('.dia');
+    if (!t || t.classList.contains('header-dia') || t.textContent.trim()==='') return;
+
+    if (t.classList.contains('feriado')) {
+      alert('Este dia é feriado automático e não pode ser alterado.');
+      return;
+    }
+    t.classList.remove('vermelho','amarelo','sem-aula','roxo');
+    if (mes.__corSelecionada !== 'limpar'){
+      t.classList.add(mes.__corSelecionada);
+    }
+    // após aplicar cor, atualiza visual
+    setTimeout(()=>{
+      atualizarDots(t);
+      recalcularMetricasDoMes(mes);
+    },0);
+  });
+});
+
+// ========= Tooltips e Dots =========
+function atualizarDots(diaEl){
+  const dots = diaEl.querySelector('.dots');
+  if(!dots) return;
+  dots.innerHTML = '';
+  if (diaEl.classList.contains('vermelho')) dots.appendChild(criaDot('vermelho'));
+  if (diaEl.classList.contains('amarelo')) dots.appendChild(criaDot('amarelo'));
+  if (diaEl.classList.contains('sem-aula')) dots.appendChild(criaDot('semaula'));
+  if (diaEl.classList.contains('roxo'))     dots.appendChild(criaDot('roxo'));
+}
+function criaDot(tipo){
+  const s = document.createElement('span');
+  s.className = `dot ${tipo}`;
+  return s;
+}
+
+// ========= Métricas + metas (por mês) =========
+function recalcularMetricasDoMes(mes){
+  const dias = [...mes.querySelectorAll('.dia')].filter(d=>!d.classList.contains('header-dia') && d.querySelector('.num-dia'));
+  let pres=0, falt=0, atest=0, sem=0, provas=0, totalValidos=0;
+
+  dias.forEach(d=>{
+    if (d.classList.contains('sem-aula')) { sem++; return; }
+    if (!d.classList.contains('feriado')) totalValidos++;
+
+    if (d.classList.contains('vermelho')) falt++;
+    if (d.classList.contains('amarelo')) atest++;
+    if (d.classList.contains('roxo'))     provas++;
+
+    const marcado = d.classList.contains('vermelho') || d.classList.contains('amarelo');
+    const feriado = d.classList.contains('feriado');
+    if (!marcado && !feriado) pres++;
+  });
+
+  const metaInput  = mes.querySelector('.meta-presenca');
+  const progress   = mes.querySelector('.progress-bar');
+  const label      = mes.querySelector('.label-presenca');
+
+  mes.querySelector('.count-presenca').textContent = pres;
+  mes.querySelector('.count-falta').textContent    = falt;
+  mes.querySelector('.count-atestado').textContent = atest;
+  mes.querySelector('.count-semaula').textContent  = sem;
+  mes.querySelector('.count-prova').textContent    = provas;
+
+  const meta = clamp(parseInt(metaInput?.value||'80',10),0,100);
+  const percPres = totalValidos>0 ? Math.round((pres/totalValidos)*100) : 0;
+  if (progress) progress.style.width = Math.min(100, Math.round((percPres/meta)*100)) + '%';
+  if (label)    label.textContent = `${percPres}%`;
+
+  const ano = mes.dataset.ano, idx = mes.dataset.mes;
+  localStorage.setItem(`foag_meta_${ano}_${idx}`, JSON.stringify({ meta, percPres, pres, falt, atest, sem, provas }));
+}
+function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
+
+// meta change
+document.querySelectorAll('.mes .meta-presenca').forEach(inp=>{
+  inp.addEventListener('change', e=>{
+    const mes = e.target.closest('.mes');
+    recalcularMetricasDoMes(mes);
+  });
+});
+
+// quando um mês expande, calcula
+document.querySelectorAll('.mes').forEach(m=>{
+  m.addEventListener('click', ()=> setTimeout(()=>recalcularMetricasDoMes(m), 50));
+});
+
+// ========= Mini-agenda (dentro do mês) =========
+document.querySelectorAll('.mes .dia').forEach(d=>{
+  d.addEventListener('dblclick', e=>{
+    const mes = d.closest('.mes');
+    const box = mes.querySelector('.mini-agenda');
+    const dataEl = mes.querySelector('.mini-agenda .agenda-data');
+    const notas  = mes.querySelector('.mini-agenda .agenda-notas');
+
+    const iso = d.getAttribute('data-date');
+    if(!iso) return;
+
+    dataEl.textContent = formataDataBR(iso);
+    notas.value = localStorage.getItem(chaveAgenda(iso)) || '';
+    box.classList.add('aberto');
+    notas.focus();
+    e.stopPropagation();
+  });
+});
+document.querySelectorAll('.mes .agenda-fechar').forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    e.preventDefault();
+    const mes = e.target.closest('.mes');
+    mes.querySelector('.mini-agenda').classList.remove('aberto');
+  });
+});
+document.querySelectorAll('.mes .agenda-salvar').forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    e.preventDefault();
+    const mes = e.target.closest('.mes');
+    const dataBr = mes.querySelector('.mini-agenda .agenda-data').textContent;
+    const notas  = mes.querySelector('.mini-agenda .agenda-notas').value;
+
+    const [d,m,y] = dataBr.split('/').map(Number);
+    const iso = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    localStorage.setItem(chaveAgenda(iso), notas);
+    mes.querySelector('.mini-agenda').classList.remove('aberto');
+  });
+});
+function chaveAgenda(iso){ return `foag_agenda_${iso}`; }
+function formataDataBR(iso){
+  const [y,m,d] = iso.split('-').map(Number);
+  return `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}/${y}`;
+}
+
+// ========= Exportar / Imprimir POR MÊS =========
+document.querySelectorAll('.mes .btn-imprimir').forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    e.preventDefault();
+    const mes = e.target.closest('.mes');
+    if (!mes.classList.contains('expanded')) {
+      mes.classList.add('expanded');
+      document.body.classList.add('no-scroll');
+      document.getElementById('cal-backdrop')?.classList.add('ativo');
+      if (!mes.querySelector('.fechar-btn')) {
+        const fechar = document.createElement('button');
+        fechar.textContent = '×';
+        fechar.classList.add('fechar-btn');
+        fechar.onclick = ev => { ev.stopPropagation(); fecharMes(mes); };
+        mes.appendChild(fechar);
+      }
+    }
+    window.print();
+  });
+});
+
+document.querySelectorAll('.mes .btn-exportar-png').forEach(btn=>{
+  btn.addEventListener('click', async e=>{
+    e.preventDefault();
+    const mes = e.target.closest('.mes');
+    const bloco = mes.querySelector('.calendario-mes');
+    if(!bloco) return;
+    const ano = mes.dataset.ano;
+    const idx = mes.dataset.mes;
+    const nomes = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    const nomeMes = nomes[parseInt(idx,10)-1] || idx;
+
+    const canvas = await html2canvas(bloco, {useCORS:true, backgroundColor:'#ffffff', scale:2});
+    const link = document.createElement('a');
+    link.download = `Calendario_${nomeMes}_${ano}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+});
+
+// ========= Histórico (seletor de ano DENTRO do mês) =========
+document.querySelectorAll('.mes .anoSelect').forEach(sel=>{
+  const anoAtual = parseInt(new URLSearchParams(location.search).get('ano') || new Date().getFullYear(), 10);
+  for(let a=anoAtual-4; a<=anoAtual+4; a++){
+    const op = document.createElement('option');
+    op.value = a; op.textContent = a;
+    if (a === anoAtual) op.selected = true;
+    sel.appendChild(op);
+  }
+  sel.addEventListener('change', ()=>{
+    const url = new URL(location.href);
+    url.searchParams.set('ano', sel.value);
+    location.href = url.toString();
+  });
+});
+
+// ========= Inicialização (dots + métricas) =========
+window.addEventListener('load', ()=>{
+  document.querySelectorAll('.calendario .dia').forEach(atualizarDots);
+  const primeiro = document.querySelector('.mes');
+  if (primeiro) recalcularMetricasDoMes(primeiro);
+});
+
+// ========= Importante: NADA fecha por ESC ou clique no backdrop =========
+// (Sem listeners de ESC/backdrop aqui de propósito)
+
+// ========= Header ícones (logout/perfil) =========
 document.getElementById('icon-perfil').addEventListener('click', () => {
-    window.location.href = '../perfil/perfil.php'; // Redireciona para perfil
+  window.location.href = '../perfil/perfil.php';
 });
 
 const logoutModal = document.getElementById('logout-modal');
 const confirmLogout = document.getElementById('confirm-logout');
 const cancelLogout = document.getElementById('cancel-logout');
 
-// Abrir modal ao clicar no ícone de sair
 document.getElementById('icon-sair').addEventListener('click', () => {
   logoutModal.style.display = 'flex';
 });
-
-// Botão "Sim" - redireciona
 confirmLogout.addEventListener('click', () => {
   window.location.href = '../index/index.php';
 });
-
-// Botão "Cancelar" - fecha o modal
 cancelLogout.addEventListener('click', () => {
   logoutModal.style.display = 'none';
 });
-
-// Fecha o modal se clicar fora dele
 logoutModal.addEventListener('click', e => {
-  if (e.target === logoutModal) {
-    logoutModal.style.display = 'none';
-  }
+  if (e.target === logoutModal) logoutModal.style.display = 'none';
 });
-
-
 </script>
+
 
 </body>
 </html>
