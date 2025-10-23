@@ -40,8 +40,10 @@ $foto_perfil = (!empty($usuario_logado["foto"]) && file_exists($pasta_fotos . $u
   <meta charset="UTF-8">
   <title>Perfil - Foag</title>
   <link rel="stylesheet" href="perfil.css">
+ <link rel="stylesheet" href="dark-per.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="../m.escuro/dark-mode.js"></script>
 </head>
 <body>
   <button class="btn-sair" onclick="location.href='../inicio/inicio.php'">Sair</button>

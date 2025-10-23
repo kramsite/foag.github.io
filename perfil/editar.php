@@ -69,8 +69,10 @@ $foto_perfil = (!empty($usuario["foto"]) && file_exists($pasta_fotos . $usuario[
   <meta charset="UTF-8">
   <title>Editar Perfil</title>
   <link rel="stylesheet" href="edit.css">
+ <link rel="stylesheet" href="dark-per.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="../m.escuro/dark-mode.js"></script>
 </head>
 <body>
   <form class="container" method="post" enctype="multipart/form-data">
