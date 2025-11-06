@@ -78,7 +78,7 @@ $foto_perfil = (!empty($usuario["foto"]) && is_file($pasta_fotos . $usuario["fot
 <head>
   <meta charset="UTF-8">
   <title>Editar Perfil</title>
-  <link rel="stylesheet" href="edit.css">
+  <link rel="stylesheet" href="editar.css">
  <link rel="stylesheet" href="dark-per.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
