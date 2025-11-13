@@ -59,37 +59,50 @@ body.dark-mode #notas textarea {
 }
 
 /* ==================== LISTA DE NOTAS ==================== */
-body.dark-mode #saved-notes ul {
-  background-color: var(--dark-surface) !important;
-  border: 1px solid var(--dark-border) !important;
+body.dark-mode .notas-container {
+  background-color: transparent !important;
 }
 
-body.dark-mode #saved-notes ul li {
-  background-color: var(--dark-bg) !important;
+body.dark-mode .nota-item {
+  background-color: var(--dark-surface) !important;
+  border-color: var(--dark-border) !important;
+  border-left-color: var(--dark-primary) !important;
   color: var(--dark-text) !important;
 }
 
-body.dark-mode #saved-notes ul li:hover {
-  background-color: var(--dark-surface) !important;
+body.dark-mode .nota-titulo {
+  color: var(--dark-secondary) !important;
+}
+
+body.dark-mode .nota-data {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .sem-notas {
+  color: #94a3b8 !important;
 }
 
 /* ==================== BOTÕES ==================== */
 body.dark-mode button,
-body.dark-mode .btn-pequeno {
+body.dark-mode .btn-pequeno,
+body.dark-mode .btn-nota {
   background-color: var(--dark-primary) !important;
   color: white !important;
 }
 
 body.dark-mode button:hover,
-body.dark-mode .btn-pequeno:hover {
+body.dark-mode .btn-pequeno:hover,
+body.dark-mode .btn-nota:hover {
   background-color: var(--dark-secondary) !important;
 }
 
-body.dark-mode .btn-excluir {
+body.dark-mode .btn-excluir,
+body.dark-mode .btn-excluir-nota {
   background-color: #e04444 !important;
 }
 
-body.dark-mode .btn-excluir:hover {
+body.dark-mode .btn-excluir:hover,
+body.dark-mode .btn-excluir-nota:hover {
   background-color: #ff5c5c !important;
 }
 
@@ -107,10 +120,13 @@ body.dark-mode table {
 body.dark-mode table th {
   background-color: var(--dark-primary) !important;
   color: var(--dark-text) !important;
+  border-color: var(--dark-border) !important;
 }
 
 body.dark-mode table td {
+  background-color: var(--dark-surface) !important;
   border-color: var(--dark-border) !important;
+  color: var(--dark-text) !important;
 }
 
 /* ==================== INPUTS ==================== */
@@ -121,17 +137,26 @@ body.dark-mode td input[type="date"] {
 }
 
 /* ==================== MODAL ==================== */
-body.dark-mode .modal-content {
+body.dark-mode .modal-content,
+body.dark-mode .modal-nomear-nota .modal-content {
   background-color: var(--dark-surface) !important;
   color: var(--dark-text) !important;
 }
 
-body.dark-mode #cancel-logout {
+body.dark-mode .modal-nomear-nota input {
+  background-color: var(--dark-bg) !important;
+  color: var(--dark-text) !important;
+  border: 1px solid var(--dark-border) !important;
+}
+
+body.dark-mode #cancel-logout,
+body.dark-mode #cancelar-nome-nota {
   background-color: var(--dark-border) !important;
   color: var(--dark-text) !important;
 }
 
-body.dark-mode #cancel-logout:hover {
+body.dark-mode #cancel-logout:hover,
+body.dark-mode #cancelar-nome-nota:hover {
   background-color: var(--dark-primary) !important;
 }
 
