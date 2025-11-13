@@ -1,11 +1,18 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     // Elementos do DOM
     const listaTarefas = document.getElementById('lista-tarefas');
     const listaNaoEsquecer = document.getElementById('lista-nao-esquecer');
     const salvarNotaButton = document.getElementById('btn-salvar-nota');
     const textareaNotas = document.querySelector('#notas textarea');
     const noteList = document.getElementById('noteList');
-    const themeToggle = document.getElementById('themeToggle');
+    
+    // Elementos do modal de nomear nota
+    const modalNomearNota = document.getElementById('modal-nomear-nota');
+    const inputNomeNota = document.getElementById('nome-nota');
+    const btnConfirmarNomeNota = document.getElementById('confirmar-nome-nota');
+    const btnCancelarNomeNota = document.getElementById('cancelar-nome-nota');
+    
+    let notaPendente = null;
 
     // =============================================
     // FUNÇÕES PARA TAREFAS E "NÃO ESQUECER"
@@ -103,89 +110,143 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =============================================
-    // FUNÇÕES PARA NOTAS
+    // FUNÇÕES PARA NOTAS (COM MODAL)
     // =============================================
 
-    function salvarNota() {
-        const texto = textareaNotas.value.trim();
-        if (!texto) {
-            alert('A nota está vazia. Escreva algo antes de salvar.');
+    function abrirModalNomearNota() {
+        modalNomearNota.style.display = 'flex';
+        inputNomeNota.value = '';
+        inputNomeNota.focus();
+    }
+    
+    function fecharModalNomearNota() {
+        modalNomearNota.style.display = 'none';
+        notaPendente = null;
+    }
+    
+    function salvarNotaComTitulo(texto, titulo) {
+        if (!titulo.trim()) {
+            alert('Por favor, dê um nome para sua nota.');
+            return false;
+        }
+        
+        // Recuperar notas existentes
+        let notas = JSON.parse(localStorage.getItem('notas')) || [];
+        
+        // Verificar se já existe uma nota com o mesmo título
+        const notaExistente = notas.find(nota => nota.titulo === titulo);
+        if (notaExistente) {
+            if (!confirm('Já existe uma nota com esse título. Deseja sobrescrever?')) {
+                return false;
+            }
+            // Remover a nota existente
+            notas = notas.filter(nota => nota.titulo !== titulo);
+        }
+        
+        // Adicionar nova nota com título e data/hora
+        const novaNota = {
+            id: Date.now(),
+            titulo: titulo,
+            texto: texto,
+            data: new Date().toLocaleString('pt-BR')
+        };
+        
+        notas.push(novaNota);
+        
+        // Salvar no localStorage
+        localStorage.setItem('notas', JSON.stringify(notas));
+        
+        // Atualizar a exibição
+        carregarNotas();
+        return true;
+    }
+    
+    function carregarNotas() {
+        const notas = JSON.parse(localStorage.getItem('notas')) || [];
+        noteList.innerHTML = '';
+        
+        if (notas.length === 0) {
+            noteList.innerHTML = '<div class="sem-notas">Nenhuma nota salva ainda.</div>';
             return;
         }
         
-        const title = prompt('Digite um título para a nota:');
-        if (title && title.trim()) {
-            if (localStorage.getItem('nota-' + title.trim())) {
-                if (!confirm('Já existe uma nota com esse título. Deseja sobrescrever?')) {
-                    return;
+        // Ordenar notas por data (mais recente primeiro)
+        notas.sort((a, b) => b.id - a.id);
+        
+        // Adicionar cada nota à lista
+        notas.forEach(nota => {
+            const notaElement = document.createElement('div');
+            notaElement.className = 'nota-item';
+            notaElement.innerHTML = `
+                <span class="nota-titulo">${nota.titulo}</span>
+                <span class="nota-data">${nota.data}</span>
+                <div class="nota-conteudo">${nota.texto}</div>
+                <div class="nota-acoes">
+                    <button class="btn-nota btn-editar" data-id="${nota.id}">Editar</button>
+                    <button class="btn-nota btn-excluir-nota" data-id="${nota.id}">Excluir</button>
+                    <button class="btn-nota btn-pequeno" data-title="${nota.titulo}">Baixar PDF</button>
+                </div>
+            `;
+            
+            noteList.appendChild(notaElement);
+        });
+        
+        // Adicionar eventos aos botões
+        document.querySelectorAll('.btn-excluir-nota').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.getAttribute('data-id'));
+                excluirNota(id);
+            });
+        });
+        
+        document.querySelectorAll('.btn-editar').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.getAttribute('data-id'));
+                editarNota(id);
+            });
+        });
+        
+        document.querySelectorAll('.btn-pequeno').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const title = this.getAttribute('data-title');
+                const notas = JSON.parse(localStorage.getItem('notas')) || [];
+                const nota = notas.find(n => n.titulo === title);
+                if (nota) {
+                    baixarPdf(nota.titulo, nota.texto);
                 }
-            }
-            localStorage.setItem('nota-' + title.trim(), texto);
-            carregarNotas();
-            textareaNotas.value = '';
-            alert('Nota salva com sucesso!');
-        } else {
-            alert('O título da nota não pode estar vazio!');
-        }
+            });
+        });
     }
-
-    function carregarNotas() {
-        noteList.innerHTML = '';
-
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith('nota-')) {
-                const title = key.substring(5);
-                const content = localStorage.getItem(key);
-
-                const listItem = document.createElement('li');
-                listItem.style.display = 'flex';
-                listItem.style.alignItems = 'center';
-                listItem.style.justifyContent = 'space-between';
-
-                const spanTitle = document.createElement('span');
-                spanTitle.textContent = title;
-                spanTitle.style.cursor = 'pointer';
-                spanTitle.style.flexGrow = '1';
-                spanTitle.addEventListener('click', () => {
-                    textareaNotas.value = content;
-                });
-
-                const divButtons = document.createElement('div');
-
-                const btnBaixar = document.createElement('button');
-                btnBaixar.textContent = 'Baixar PDF';
-                btnBaixar.className = 'btn-pequeno';
-                btnBaixar.style.marginRight = '8px';
-                btnBaixar.addEventListener('click', () => {
-                    baixarPdf(title, content);
-                });
-
-                const btnExcluir = document.createElement('button');
-                btnExcluir.textContent = 'Excluir';
-                btnExcluir.className = 'btn-excluir';
-                btnExcluir.addEventListener('click', () => {
-                    excluirNota(title);
-                });
-
-                divButtons.appendChild(btnBaixar);
-                divButtons.appendChild(btnExcluir);
-
-                listItem.appendChild(spanTitle);
-                listItem.appendChild(divButtons);
-
-                noteList.appendChild(listItem);
-            }
-        }
-    }
-
-    function excluirNota(title) {
-        if (confirm(`Excluir a nota "${title}"?`)) {
-            localStorage.removeItem('nota-' + title);
+    
+    function excluirNota(id) {
+        if (confirm('Tem certeza que deseja excluir esta nota?')) {
+            let notas = JSON.parse(localStorage.getItem('notas')) || [];
+            notas = notas.filter(nota => nota.id !== id);
+            localStorage.setItem('notas', JSON.stringify(notas));
             carregarNotas();
         }
     }
-
+    
+    function editarNota(id) {
+        let notas = JSON.parse(localStorage.getItem('notas')) || [];
+        const nota = notas.find(nota => nota.id === id);
+        
+        if (nota) {
+            // Preencher o textarea com o conteúdo da nota
+            textareaNotas.value = nota.texto;
+            
+            // Preencher o campo de título no modal
+            inputNomeNota.value = nota.titulo;
+            
+            // Abrir o modal para edição
+            notaPendente = nota.texto;
+            abrirModalNomearNota();
+            
+            // Excluir a nota antiga
+            excluirNota(id);
+        }
+    }
+    
     function baixarPdf(title, content) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -218,20 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =============================================
-    // MODO ESCURO
-    // =============================================
-window.addEventListener('storage', () => {
-    // Força a atualização do modo escuro quando houver mudanças em outra aba
-    document.dispatchEvent(new CustomEvent('darkModeUpdated'));
-});
-
-// Atualiza o modo ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    const isDark = localStorage.getItem('darkMode') === 'true';
-    document.body.classList.toggle('dark-mode', isDark);
-});
-
-    // =============================================
     // EVENT LISTENERS
     // =============================================
 
@@ -246,13 +293,42 @@ document.addEventListener('DOMContentLoaded', () => {
         salvarDados();
     });
 
-    // Notas
-    salvarNotaButton.addEventListener('click', salvarNota);
-
-    // Modo Escuro
-    if (themeToggle) {
-        themeToggle.addEventListener('click', toggleDarkMode);
-    }
+    // Notas com modal
+    salvarNotaButton.addEventListener('click', function() {
+        const textoNota = textareaNotas.value.trim();
+        
+        if (textoNota) {
+            // Salvar o texto da nota temporariamente
+            notaPendente = textoNota;
+            
+            // Limpar o campo de texto
+            textareaNotas.value = '';
+            
+            // Abrir modal para nomear a nota
+            abrirModalNomearNota();
+        } else {
+            alert('Por favor, escreva algo na nota antes de salvar.');
+        }
+    });
+    
+    btnConfirmarNomeNota.addEventListener('click', function() {
+        const nomeNota = inputNomeNota.value.trim();
+        
+        if (salvarNotaComTitulo(notaPendente, nomeNota)) {
+            fecharModalNomearNota();
+        }
+    });
+    
+    btnCancelarNomeNota.addEventListener('click', function() {
+        fecharModalNomearNota();
+    });
+    
+    // Fechar modal ao clicar fora dele
+    modalNomearNota.addEventListener('click', function(e) {
+        if (e.target === modalNomearNota) {
+            fecharModalNomearNota();
+        }
+    });
 
     // Salvar automaticamente ao editar
     listaTarefas.addEventListener('input', salvarDados);
@@ -261,9 +337,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Carregar tudo ao iniciar
     carregarDados();
     carregarNotas();
-    verificarModoEscuro();
 
-    // Logout Modal (código existente)
+    // Logout Modal
     const logoutModal = document.getElementById('logout-modal');
     if (logoutModal) {
         document.getElementById('icon-sair').addEventListener('click', () => {

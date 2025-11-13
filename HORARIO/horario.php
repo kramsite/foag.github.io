@@ -27,7 +27,7 @@
     <div class="container">
         <!-- Menu lateral -->
         <nav class="menu">
-            <a href="../inicio/inicio.html">Início</a>
+            <a href="../inicio/sla.html">Início</a>
             <a href="../agenda/agenda.php">Agenda</a>
             <a href="../calendario/calendario.php">Calendario</a>
             <a href="../sobre/sobre.html">Sobre Nós</a>
