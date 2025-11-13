@@ -148,7 +148,7 @@ function gerarCalendario() {
 
   <div class="container">
     <nav class="menu">
-      <a href="../inicio/inicio.php">Início</a>
+      <a href="../inicio/sla.php">Início</a>
       <a href="../agenda/agenda.php">Agenda</a>
       <a href="../HORARIO/horario.php">Horario</a>
       <a href="#">Sobre</a>
