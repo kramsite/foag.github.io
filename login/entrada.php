@@ -67,6 +67,6 @@ if (!isset($_SESSION['usuario'])) {
     <h1>FOAG</h1>  
     <h2>Bem-vindo, <?php echo htmlspecialchars($_SESSION['usuario']); ?>!</h2>
     <p>Você está logado com sucesso.</p>
-    <a href="../inicio/inicio.php">Entrar</a>
+    <a href="../calendario/calendario.php">Entrar</a>
 </body>
 </html>

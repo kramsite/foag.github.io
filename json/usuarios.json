@@ -9,5 +9,16 @@
         "escola": "Escola Estadual Militar Dom Pedro II",
         "termos_aceitos": true,
         "cadastrado_em": "2025-11-06 21:30:22"
+    },
+    {
+        "nome": "wilyany",
+        "email": "wilyany.ns@gmail.com",
+        "senha": "$2y$10$e4zIMxjScFES\/whyYI2mTuBzPyXJuOd7XiIdT5iqHiXI9UcmMYVe.",
+        "nascimento": "2008-04-21",
+        "telefone": "(65) 98122-6920",
+        "serie": "2º ano do Ensino Médio",
+        "escola": "Escola Estadual Militar Dom Pedro II",
+        "termos_aceitos": true,
+        "cadastrado_em": "2025-11-13 15:47:23"
     }
 ]
