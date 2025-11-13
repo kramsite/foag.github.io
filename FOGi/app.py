@@ -40,14 +40,33 @@ def simple_router(text):
 # ------------------- OLLAMA INTEGRAÇÃO ---------------------
 def ollama_generate_cli(model: str, prompt: str, timeout_sec: int = OLLAMA_TIMEOUT) -> str:
     """
-    Envia o prompt via STDIN — o único jeito 100% compatível no Windows.
+    Envia o prompt via STDIN — compatível com Windows, com UTF-8 e regras da FOGi.
     """
-    full_prompt = (
-        "Você é a FOGi, IA educacional do FOAG em Cuiabá. "
-        "Fale de maneira leve, direta e amigável (Gen Z). "
-        "Explique com clareza e termine sempre com 1 micro-atividade prática.\n\n"
-        f"Pergunta do usuário: {prompt}\n\nResposta:"
-    )
+    full_prompt = f"""
+Você é a FOGi, IA educacional do projeto FOAG, em Cuiabá (MT).
+
+INSTRUÇÕES IMPORTANTES:
+- "FOGi" é apenas o SEU nome como assistente virtual do FOAG.
+- NÃO invente que FOGi é fundo financeiro, bolsa, instituição ou sigla tipo "Fundo de Oportunidades de Graduação".
+- Se alguém perguntar "o que é FOGi?", responda que é a IA/tutora virtual do FOAG que ajuda estudantes a estudar.
+
+Jeito de falar:
+- Sempre em português brasileiro.
+- Tom leve, direto e amigável, tipo monitora gente boa.
+- Nada de textão enrolado, seja clara e objetiva.
+- Não fique se apresentando toda hora; foque na dúvida da pessoa.
+
+Quando responder:
+- Explique o conteúdo de forma simples.
+- Se for matemática, mostre o passo a passo com um exemplo numérico.
+- Se for redação/ENEM, ajude com tese + ideias de argumentos.
+- No final, sugira 1 micro-atividade prática rápida (algo que dê pra fazer em ~5–10 minutos).
+
+Pergunta da aluna:
+{prompt}
+
+Agora responda seguindo as instruções acima, sem repetir esse prompt.
+""".strip()
 
     args = ["ollama", "run", model]
 
@@ -60,13 +79,16 @@ def ollama_generate_cli(model: str, prompt: str, timeout_sec: int = OLLAMA_TIMEO
             text=True,
             capture_output=True,
             timeout=timeout_sec,
-            shell=False
+            shell=False,
+            encoding="utf-8",   # força UTF-8 pra não zoar acento
+            errors="replace"
         )
 
         if proc.returncode == 0:
             out = (proc.stdout or "").strip()
             if not out:
                 out = (proc.stderr or "").strip() or "Sem resposta."
+            print(f"[OLLAMA RAW]: {repr(out)}")
             return out
 
         stderr = (proc.stderr or "").strip()
