@@ -27,7 +27,7 @@ session_start();
 
   <div class="container">
     <nav class="menu">
-      <a href="../inicio/inicio.php">Início</a>
+      <a href="../inicio/sla.php">Início</a>
       <a href="../calendario/calendario.php">Calendário</a>
       <a href="../HORARIO/horario.php">Horário</a>
       <a href="../sobre/sobre.html">Sobre Nós</a>
