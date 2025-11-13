@@ -82,6 +82,30 @@ body.dark-mode .sem-notas {
   color: #94a3b8 !important;
 }
 
+/* ==================== MODAL DE EXCLUSÃO - MODO ESCURO ==================== */
+body.dark-mode .modal-excluir .modal-content {
+    background: var(--dark-surface) !important;
+    color: var(--dark-text) !important;
+    border-top: 5px solid #ff5c5c !important;
+}
+
+body.dark-mode .modal-excluir h3 {
+    color: #ff5c5c !important;
+}
+
+body.dark-mode .modal-excluir p {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .modal-excluir .btn-cancelar {
+    background: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+body.dark-mode .modal-excluir .btn-cancelar:hover {
+    background: var(--dark-primary) !important;
+}
+
 /* ==================== BOTÕES ==================== */
 body.dark-mode button,
 body.dark-mode .btn-pequeno,

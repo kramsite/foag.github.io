@@ -165,6 +165,20 @@ session_start();
     </div>
   </div>
 
+  <div id="modal-excluir" class="modal-excluir">
+    <div class="modal-content">
+        <div class="excluir-icon">
+            <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <h3 id="excluir-titulo">Excluir Item</h3>
+        <p id="excluir-mensagem">Tem certeza que deseja excluir este item?</p>
+        <div class="modal-buttons">
+            <button id="confirmar-exclusao" class="btn-excluir-confirmar">Excluir</button>
+            <button id="cancelar-exclusao" class="btn-cancelar">Cancelar</button>
+        </div>
+    </div>
+</div>
+
   <!-- Modal da FOGi -->
   <div id="fogi-modal">
     <div class="fogi-container">

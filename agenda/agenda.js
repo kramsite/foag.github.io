@@ -6,13 +6,68 @@ document.addEventListener('DOMContentLoaded', function() {
     const textareaNotas = document.querySelector('#notas textarea');
     const noteList = document.getElementById('noteList');
     
-    // Elementos do modal de nomear nota
+    // Elementos dos modais
     const modalNomearNota = document.getElementById('modal-nomear-nota');
     const inputNomeNota = document.getElementById('nome-nota');
     const btnConfirmarNomeNota = document.getElementById('confirmar-nome-nota');
     const btnCancelarNomeNota = document.getElementById('cancelar-nome-nota');
     
+    // Elementos do modal de exclusão
+    const modalExcluir = document.getElementById('modal-excluir');
+    const excluirTitulo = document.getElementById('excluir-titulo');
+    const excluirMensagem = document.getElementById('excluir-mensagem');
+    const btnConfirmarExclusao = document.getElementById('confirmar-exclusao');
+    const btnCancelarExclusao = document.getElementById('cancelar-exclusao');
+    
     let notaPendente = null;
+    let itemParaExcluir = null;
+    let tipoExclusao = ''; // 'nota', 'tarefa', 'nao-esquecer'
+    let dadosExclusao = null;
+
+    // =============================================
+    // FUNÇÕES PARA OS MODAIS
+    // =============================================
+
+    function abrirModalNomearNota() {
+        modalNomearNota.style.display = 'flex';
+        inputNomeNota.value = '';
+        inputNomeNota.focus();
+    }
+    
+    function fecharModalNomearNota() {
+        modalNomearNota.style.display = 'none';
+        notaPendente = null;
+    }
+
+    function abrirModalExclusao(titulo, mensagem, tipo, dados) {
+        excluirTitulo.textContent = titulo;
+        excluirMensagem.textContent = mensagem;
+        tipoExclusao = tipo;
+        dadosExclusao = dados;
+        modalExcluir.style.display = 'flex';
+    }
+    
+    function fecharModalExclusao() {
+        modalExcluir.style.display = 'none';
+        itemParaExcluir = null;
+        tipoExclusao = '';
+        dadosExclusao = null;
+    }
+
+    function executarExclusao() {
+        switch (tipoExclusao) {
+            case 'nota':
+                excluirNota(dadosExclusao.id);
+                break;
+            case 'tarefa':
+                excluirTarefa(dadosExclusao.linha);
+                break;
+            case 'nao-esquecer':
+                excluirNaoEsquecer(dadosExclusao.linha);
+                break;
+        }
+        fecharModalExclusao();
+    }
 
     // =============================================
     // FUNÇÕES PARA TAREFAS E "NÃO ESQUECER"
@@ -44,15 +99,28 @@ document.addEventListener('DOMContentLoaded', function() {
         btnExcluir.className = 'btn-excluir';
         
         btnExcluir.addEventListener('click', function() {
-            if (confirm('Deseja realmente excluir esta linha?')) {
-                lista.deleteRow(row.rowIndex - 1);
-                // Atualiza os índices e salva
-                atualizarIndices(lista);
-                salvarDados();
-            }
+            const texto = cellConteudo.textContent || 'Item sem título';
+            const tipo = lista.id === 'lista-tarefas' ? 'tarefa' : 'nao-esquecer';
+            const titulo = tipo === 'tarefa' ? 'Excluir Tarefa' : 'Excluir Item';
+            const mensagem = `Tem certeza que deseja excluir "${texto.substring(0, 50)}${texto.length > 50 ? '...' : ''}"?`;
+            
+            abrirModalExclusao(titulo, mensagem, tipo, { linha: row });
         });
 
         cellAcoes.appendChild(btnExcluir);
+        return row;
+    }
+
+    function excluirTarefa(linha) {
+        listaTarefas.deleteRow(linha.rowIndex - 1);
+        atualizarIndices(listaTarefas);
+        salvarDados();
+    }
+
+    function excluirNaoEsquecer(linha) {
+        listaNaoEsquecer.deleteRow(linha.rowIndex - 1);
+        atualizarIndices(listaNaoEsquecer);
+        salvarDados();
     }
 
     function atualizarIndices(lista) {
@@ -91,38 +159,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // Carregar tarefas
         const tarefas = JSON.parse(localStorage.getItem('tarefas-salvas') || '[]');
         tarefas.forEach(tarefa => {
-            criarLinha(listaTarefas);
-            const linhas = listaTarefas.querySelectorAll('tr');
-            const ultimaLinha = linhas[linhas.length - 1];
-            ultimaLinha.cells[1].textContent = tarefa.texto;
-            ultimaLinha.cells[2].querySelector('input').value = tarefa.data;
+            const linha = criarLinha(listaTarefas);
+            linha.cells[1].textContent = tarefa.texto;
+            linha.cells[2].querySelector('input').value = tarefa.data;
         });
 
         // Carregar "Não Esquecer"
         const itens = JSON.parse(localStorage.getItem('nao-esquecer-salvos') || '[]');
         itens.forEach(item => {
-            criarLinha(listaNaoEsquecer);
-            const linhas = listaNaoEsquecer.querySelectorAll('tr');
-            const ultimaLinha = linhas[linhas.length - 1];
-            ultimaLinha.cells[1].textContent = item.texto;
-            ultimaLinha.cells[2].querySelector('input').value = item.data;
+            const linha = criarLinha(listaNaoEsquecer);
+            linha.cells[1].textContent = item.texto;
+            linha.cells[2].querySelector('input').value = item.data;
         });
     }
 
     // =============================================
     // FUNÇÕES PARA NOTAS (COM MODAL)
     // =============================================
-
-    function abrirModalNomearNota() {
-        modalNomearNota.style.display = 'flex';
-        inputNomeNota.value = '';
-        inputNomeNota.focus();
-    }
-    
-    function fecharModalNomearNota() {
-        modalNomearNota.style.display = 'none';
-        notaPendente = null;
-    }
     
     function salvarNotaComTitulo(texto, titulo) {
         if (!titulo.trim()) {
@@ -136,11 +189,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Verificar se já existe uma nota com o mesmo título
         const notaExistente = notas.find(nota => nota.titulo === titulo);
         if (notaExistente) {
-            if (!confirm('Já existe uma nota com esse título. Deseja sobrescrever?')) {
-                return false;
-            }
-            // Remover a nota existente
-            notas = notas.filter(nota => nota.titulo !== titulo);
+            abrirModalExclusao(
+                'Sobrescrever Nota', 
+                `Já existe uma nota com o título "${titulo}". Deseja sobrescrever?`, 
+                'sobrescrever', 
+                { titulo: titulo, texto: texto }
+            );
+            return false;
         }
         
         // Adicionar nova nota com título e data/hora
@@ -183,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="nota-conteudo">${nota.texto}</div>
                 <div class="nota-acoes">
                     <button class="btn-nota btn-editar" data-id="${nota.id}">Editar</button>
-                    <button class="btn-nota btn-excluir-nota" data-id="${nota.id}">Excluir</button>
+                    <button class="btn-nota btn-excluir-nota" data-id="${nota.id}" data-titulo="${nota.titulo}">Excluir</button>
                     <button class="btn-nota btn-pequeno" data-title="${nota.titulo}">Baixar PDF</button>
                 </div>
             `;
@@ -195,7 +250,13 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.btn-excluir-nota').forEach(btn => {
             btn.addEventListener('click', function() {
                 const id = parseInt(this.getAttribute('data-id'));
-                excluirNota(id);
+                const titulo = this.getAttribute('data-titulo');
+                abrirModalExclusao(
+                    'Excluir Nota', 
+                    `Tem certeza que deseja excluir a nota "${titulo}"? Esta ação não pode ser desfeita.`, 
+                    'nota', 
+                    { id: id, titulo: titulo }
+                );
             });
         });
         
@@ -219,12 +280,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function excluirNota(id) {
-        if (confirm('Tem certeza que deseja excluir esta nota?')) {
-            let notas = JSON.parse(localStorage.getItem('notas')) || [];
-            notas = notas.filter(nota => nota.id !== id);
-            localStorage.setItem('notas', JSON.stringify(notas));
-            carregarNotas();
-        }
+        let notas = JSON.parse(localStorage.getItem('notas')) || [];
+        notas = notas.filter(nota => nota.id !== id);
+        localStorage.setItem('notas', JSON.stringify(notas));
+        carregarNotas();
     }
     
     function editarNota(id) {
@@ -323,10 +382,20 @@ document.addEventListener('DOMContentLoaded', function() {
         fecharModalNomearNota();
     });
     
-    // Fechar modal ao clicar fora dele
+    // Modal de exclusão
+    btnConfirmarExclusao.addEventListener('click', executarExclusao);
+    btnCancelarExclusao.addEventListener('click', fecharModalExclusao);
+    
+    // Fechar modais ao clicar fora
     modalNomearNota.addEventListener('click', function(e) {
         if (e.target === modalNomearNota) {
             fecharModalNomearNota();
+        }
+    });
+    
+    modalExcluir.addEventListener('click', function(e) {
+        if (e.target === modalExcluir) {
+            fecharModalExclusao();
         }
     });
 
