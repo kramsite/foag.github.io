@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit("Senha inválida. Deve ter ao menos 8 caracteres, 1 letra maiúscula, 1 número e 1 símbolo.");
     }
 
-    $arquivo = __DIR__ . '../json/usuarios.json';
+    $arquivo = __DIR__ . '/../json/usuarios.json';
 
     // Carregar dados existentes
     $usuarios = [];
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Salvar no JSON
     file_put_contents($arquivo, json_encode($usuarios, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
-    exibirMensagem("Cadastro realizado com sucesso :)", "../inicio/inicio.php");
+    exibirMensagem("Cadastro realizado com sucesso :)", "../login/login.php");
     exit;
 } else {
     exit("Acesso inválido.");

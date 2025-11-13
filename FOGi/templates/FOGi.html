@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FOGi — Tutora ODS 4</title>
+  <style>
+    :root{ --azul:#38a5ff; }
+    body{ font-family: Poppins, system-ui, Arial; margin:0; background:#f4f8ff; }
+    .wrap{ max-width:900px; margin:24px auto; padding:16px; }
+    .card{ background:#fff; border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.06); padding:16px; }
+    h2{ margin:8px 0 12px; }
+    .msgs{ height:60vh; overflow:auto; padding:8px; display:flex; flex-direction:column; gap:6px;}
+    .m{ margin:2px 0; padding:12px 14px; border-radius:14px; line-height:1.45 }
+    .user{ background:#e7f3ff; align-self:flex-end }
+    .bot{ background:#f6f8ff; }
+    .row{ display:flex; gap:8px; margin-top:12px }
+    input{ flex:1; padding:12px; border:1px solid #cfe3ff; border-radius:12px; outline:none }
+    input:focus{ border-color:var(--azul); box-shadow:0 0 0 3px rgba(56,165,255,.15) }
+    button{ padding:12px 16px; border:0; border-radius:12px; background:var(--azul); color:#fff; font-weight:600; cursor:pointer }
+    button:disabled{ opacity:.6; cursor:not-allowed }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h2>FOGi — Tutora grátis da ODS 4 (Cuiabá)</h2>
+      <div id="msgs" class="msgs"></div>
+      <div class="row">
+        <input id="msg" placeholder="Digite sua pergunta..." />
+        <button id="send">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+    const msgs = document.getElementById("msgs");
+    const input = document.getElementById("msg");
+    const sendBtn = document.getElementById("send");
+    let assembling = null;
+
+    function push(text, who){
+      const div = document.createElement("div");
+      div.className = "m " + (who || "bot");
+      div.textContent = text;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+      return div;
+    }
+
+    push("Oi! Eu sou a FOGi. Me diz seu tema de estudo ou dúvida sobre a ODS 4 que eu te ajudo.", "bot");
+
+    sendBtn.onclick = () => {
+      const text = input.value.trim();
+      if(!text) return;
+      push(text, "user");
+      input.value = "";
+      assembling = push("...", "bot");
+      sendBtn.disabled = true;
+      socket.emit("user_message", { text });
+    };
+
+    socket.on("assistant_chunk", ({text}) => {
+      if(assembling) assembling.textContent += text;
+    });
+
+    socket.on("assistant_done", ({full}) => {
+      if(assembling) assembling.textContent = full;
+      assembling = null;
+      sendBtn.disabled = false;
+    });
+
+    socket.on("assistant_error", ({message}) => {
+      push("Erro: " + message, "bot");
+      assembling = null;
+      sendBtn.disabled = false;
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") sendBtn.click();
+    });
+  </script>
+</body>
+</html>

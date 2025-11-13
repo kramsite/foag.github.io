@@ -82,23 +82,71 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-  <script>
-    // Choices para selects
-    const selectEscola = document.getElementById('escola');
-    const selectSerie = document.getElementById('serie');
+<script>
+  // Choices para selects
+  const selectEscola = document.getElementById('escola');
+  const selectSerie  = document.getElementById('serie');
 
-    const choicesEscola = new Choices(selectEscola, { searchEnabled: true, itemSelectText: '', shouldSort: false, placeholderValue: 'Digite para buscar...' });
-    const choicesSerie = new Choices(selectSerie, { searchEnabled: true, itemSelectText: '', shouldSort: false, placeholderValue: 'Digite para buscar...' });
+  const choicesEscola = new Choices(selectEscola, {
+    searchEnabled: true,
+    itemSelectText: '',
+    shouldSort: false,
+    placeholderValue: 'Digite para buscar...'
+  });
 
-    function popularChoices(choicesInstance, dados) {
-      choicesInstance.clearChoices();
-      choicesInstance.setChoices([{value: '', label: 'Selecione...', selected: true}], 'value', 'label');
-      const opcoes = dados.map(nome => ({value: nome, label: nome}));
-      choicesInstance.setChoices(opcoes, 'value', 'label', false);
+  const choicesSerie = new Choices(selectSerie, {
+    searchEnabled: true,
+    itemSelectText: '',
+    shouldSort: false,
+    placeholderValue: 'Digite para buscar...'
+  });
+
+  async function carregarJSON(url) {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`Erro ao buscar ${url}: ${res.status}`);
+    return res.json();
+  }
+
+  function popularChoices(choicesInstance, dados) {
+    // dados é um array de strings -> convertemos para {value,label}
+    const opcoes = (dados || []).map(nome => ({ value: nome, label: nome }));
+    // Limpa e coloca um placeholder selecionado
+    choicesInstance.clearStore();
+    choicesInstance.setChoices(
+      [{ value: '', label: 'Selecione...', selected: true, disabled: true }],
+      'value',
+      'label',
+      true // <- substitui as opções existentes
+    );
+    // Adiciona as opções do JSON
+    choicesInstance.setChoices(opcoes, 'value', 'label', false);
+  }
+
+  (async function init() {
+    try {
+      // Ajuste os caminhos RELATIVOS corretos:
+      const [escolas, series] = await Promise.all([
+        carregarJSON('../json/escolas.json'),
+        carregarJSON('../json/series.json')
+      ]);
+
+      // (Opcional) Remover duplicatas de escolas, só para garantir
+      const uniq = arr => [...new Set(arr)];
+      popularChoices(choicesEscola, uniq(escolas));
+      popularChoices(choicesSerie,  uniq(series));
+
+      // Log para depurar
+      console.log('Escolas carregadas:', escolas.length);
+      console.log('Séries carregadas:', series.length);
+    } catch (err) {
+      console.error(err);
+      // Fallback visual caso dê erro
+      choicesEscola.clearStore();
+      choicesEscola.setChoices([{ value:'', label:'Erro ao carregar escolas', selected:true, disabled:true }], 'value', 'label', true);
+      choicesSerie.clearStore();
+      choicesSerie.setChoices([{ value:'', label:'Erro ao carregar séries', selected:true, disabled:true }], 'value', 'label', true);
     }
-
-    fetch('escolas.json').then(res => res.json()).then(data => popularChoices(choicesEscola, data));
-    fetch('series.json').then(res => res.json()).then(data => popularChoices(choicesSerie, data));
+  })();
 
     // Validação senha + confirmação
     const form = document.querySelector('form');

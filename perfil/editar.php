@@ -1,77 +1,88 @@
 <?php
-// Simulando o usuário logado
-$email_logado = "rafa@gmail.com";
-
 // Caminhos
-$caminho_json = "../json/usuarios.json";
-$pasta_fotos = "../img/perfil/";
-$foto_padrao = "foto_padrao.png";
+$caminho_json  = "../json/usuarios.json";
+$pasta_fotos   = "../img/perfil/";              // garanta permissão de escrita
+$foto_padrao   = "foto_padrao.png";
 
-$escolas_json = "../json/escolas.json";
-$series_json = "../json/series.json";
+$escolas_json  = "../json/escolas.json";
+$series_json   = "../json/series.json";
 
+// Carrega listas de escolas/séries (vazias se não existir)
 $opcoes_escolas = file_exists($escolas_json) ? json_decode(file_get_contents($escolas_json), true) : [];
-$opcoes_series = file_exists($series_json) ? json_decode(file_get_contents($series_json), true) : [];
+$opcoes_series  = file_exists($series_json)  ? json_decode(file_get_contents($series_json),  true) : [];
 
-
-// Carregando os dados
+// Carrega usuários
 if (!file_exists($caminho_json)) {
-    echo "Arquivo de usuários não encontrado!";
-    exit;
+  exit("Arquivo de usuários não encontrado!");
 }
-
 $usuarios = json_decode(file_get_contents($caminho_json), true);
-$usuario_index = null;
-
-foreach ($usuarios as $index => $usuario) {
-    if ($usuario["email"] === $email_logado) {
-        $usuario_index = $index;
-        break;
-    }
+if (!is_array($usuarios) || empty($usuarios)) {
+  exit("Nenhum usuário cadastrado!");
 }
 
-if ($usuario_index === null) {
-    echo "Usuário não encontrado!";
-    exit;
-}
-
-// Atualizar dados se enviado
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $usuarios[$usuario_index]["nome"] = $_POST["nome"];
-    $usuarios[$usuario_index]["nascimento"] = $_POST["nascimento"];
-    $usuarios[$usuario_index]["telefone"] = $_POST["telefone"];
-    $usuarios[$usuario_index]["serie"] = $_POST["serie"];
-    $usuarios[$usuario_index]["escola"] = $_POST["escola"];
-
-    // Upload da nova foto
-    if (isset($_FILES["foto"]) && $_FILES["foto"]["error"] === 0) {
-        $ext = pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION);
-        $nome_foto = uniqid() . "." . $ext;
-        move_uploaded_file($_FILES["foto"]["tmp_name"], $pasta_fotos . $nome_foto);
-        $usuarios[$usuario_index]["foto"] = $nome_foto;
-    }
-
-    // Salvar alterações
-    file_put_contents($caminho_json, json_encode($usuarios, JSON_PRETTY_PRINT));
-    header("Location: perfil.php");
-    exit;
-}
-
+// Seleciona o ÚLTIMO usuário do array
+$usuario_index = array_key_last($usuarios);
 $usuario = $usuarios[$usuario_index];
-$foto_perfil = (!empty($usuario["foto"]) && file_exists($pasta_fotos . $usuario["foto"]))
-    ? $usuario["foto"]
-    : $foto_padrao;
+
+// Atualização (POST)
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  // Sanitização básica
+  $usuarios[$usuario_index]["nome"]        = trim($_POST["nome"] ?? $usuario["nome"]);
+  $usuarios[$usuario_index]["nascimento"]  = trim($_POST["nascimento"] ?? $usuario["nascimento"]);
+  $usuarios[$usuario_index]["telefone"]    = trim($_POST["telefone"] ?? $usuario["telefone"]);
+  $usuarios[$usuario_index]["serie"]       = trim($_POST["serie"] ?? $usuario["serie"]);
+  $usuarios[$usuario_index]["escola"]      = trim($_POST["escola"] ?? $usuario["escola"]);
+
+  // Upload de foto (opcional)
+  if (isset($_FILES["foto"]) && is_uploaded_file($_FILES["foto"]["tmp_name"]) && $_FILES["foto"]["error"] === 0) {
+    // Garante pasta
+    if (!is_dir($pasta_fotos)) {
+      @mkdir($pasta_fotos, 0775, true);
+    }
+
+    $ext_permitidas = ['jpg','jpeg','png','webp','gif'];
+    $ext = strtolower(pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION));
+    if (in_array($ext, $ext_permitidas, true)) {
+      $nome_foto = uniqid('pf_', true) . "." . $ext;
+
+      // Remove foto antiga (se existir e não for a padrão)
+      if (!empty($usuarios[$usuario_index]["foto"])) {
+        $antiga = $pasta_fotos . $usuarios[$usuario_index]["foto"];
+        if (is_file($antiga) && basename($antiga) !== $foto_padrao) {
+          @unlink($antiga);
+        }
+      }
+
+      if (move_uploaded_file($_FILES["foto"]["tmp_name"], $pasta_fotos . $nome_foto)) {
+        $usuarios[$usuario_index]["foto"] = $nome_foto;
+      }
+    }
+  }
+
+  // Salva JSON
+  file_put_contents($caminho_json, json_encode($usuarios, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+
+  header("Location: perfil.php");
+  exit;
+}
+
+// Define foto para exibição
+$foto_perfil = (!empty($usuario["foto"]) && is_file($pasta_fotos . $usuario["foto"]))
+  ? $usuario["foto"]
+  : $foto_padrao;
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <title>Editar Perfil</title>
-  <link rel="stylesheet" href="edit.css">
+  <link rel="stylesheet" href="editar.css">
  <link rel="stylesheet" href="dark-per.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
   <script src="../m.escuro/dark-mode.js"></script>
 </head>
 <body>
@@ -132,5 +143,31 @@ $foto_perfil = (!empty($usuario["foto"]) && file_exists($pasta_fotos . $usuario[
       </div>
     </div>
   </form>
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+  // Pega os selects
+  const escolaEl = document.getElementById('escola');
+  const serieEl  = document.getElementById('serie');
+
+  // Inicializa Choices com busca ativada
+  const escolaChoice = new Choices(escolaEl, {
+    searchEnabled: true,
+    itemSelectText: '',
+    shouldSort: false,
+    placeholderValue: 'Digite para buscar...'
+  });
+
+  const serieChoice = new Choices(serieEl, {
+    searchEnabled: true,
+    itemSelectText: '',
+    shouldSort: false,
+    placeholderValue: 'Digite para buscar...'
+  });
+
+  // Se por algum motivo o "selected" do PHP não for respeitado, força a seleção:
+  // escolaChoice.setChoiceByValue('<?= addslashes($usuario["escola"]) ?>');
+  // serieChoice.setChoiceByValue('<?= addslashes($usuario["serie"]) ?>');
+</script>
+
 </body>
 </html>

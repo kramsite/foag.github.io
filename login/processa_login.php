@@ -23,17 +23,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['usuario'] = $usuario['nome'] ?: $usuario['email'];
 
                 // Mostra tela de sucesso com gato feliz 😺
-                exibirMensagem("Login realizado com sucesso!", "entrada.php", "gato5.png");
+                exibirMensagem("Login realizado com sucesso!", "entrada.php");
                 exit;
             }
         }
 
         // Mensagem de erro (email ou senha incorretos) → gato triste
-        exibirMensagem("Vish... e-mail ou senha incorretos :(", "index.php", "gato6.png");
+        exibirMensagem("Vish... e-mail ou senha incorretos :(", "index.php");
         exit;
     } else {
         // Dados incompletos → gato desconfiado
-        exibirMensagem("Ops... preencha o e-mail e a senha corretamente.", "login6", "gato_desconfiado.png");
+        exibirMensagem("Ops... preencha o e-mail e a senha corretamente.", "login6");
         exit;
     }
 } else {
