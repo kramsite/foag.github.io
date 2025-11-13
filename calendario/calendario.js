@@ -36,34 +36,47 @@ document.querySelectorAll('.mes').forEach(mes => {
   });
 });
 
-// ========= Seleção de cor =========
-document.querySelectorAll('.mes').forEach(mes=>{
+// ========= Seleção de cor - VERSÃO CORRIGIDA =========
+document.querySelectorAll('.mes').forEach(mes => {
   mes.__corSelecionada = null;
   const botoesCor = mes.querySelectorAll('.btn-cor');
 
-  function atualizarBotoesCorLocal(){
-    botoesCor.forEach(botao=>{
-      if (botao.dataset.cor === mes.__corSelecionada){
+  function atualizarBotoesCorLocal() {
+    botoesCor.forEach(botao => {
+      if (botao.dataset.cor === mes.__corSelecionada) {
+        botao.classList.add('selecionado');
         botao.style.outline = '3px solid #555';
         botao.style.transform = 'scale(1.3)';
       } else {
+        botao.classList.remove('selecionado');
         botao.style.outline = 'none';
         botao.style.transform = 'scale(1)';
       }
     });
   }
+  
   mes.__atualizarBotoesCor = atualizarBotoesCorLocal;
 
-  botoesCor.forEach(botao=>{
-    botao.addEventListener('click', e=>{
+  botoesCor.forEach(botao => {
+    botao.addEventListener('click', e => {
       e.stopPropagation();
       const cor = botao.dataset.cor;
-      mes.__corSelecionada = (mes.__corSelecionada === cor ? null : cor);
+      
+      // Remove seleção anterior
+      botoesCor.forEach(b => b.classList.remove('selecionado'));
+      
+      // Alterna seleção
+      if (mes.__corSelecionada === cor) {
+        mes.__corSelecionada = null;
+      } else {
+        mes.__corSelecionada = cor;
+        botao.classList.add('selecionado');
+      }
+      
       atualizarBotoesCorLocal();
     });
   });
 });
-function atualizarBotoesCor(mes){ mes?.__atualizarBotoesCor?.(); }
 
 // ========= Clique nos dias =========
 document.querySelectorAll('.mes').forEach(mes=>{
@@ -257,6 +270,31 @@ window.addEventListener('load', ()=>{
   document.querySelectorAll('.calendario .dia').forEach(atualizarDots);
   const primeiro = document.querySelector('.mes');
   if (primeiro) recalcularMetricasDoMes(primeiro);
+});
+
+// ========= VERIFICAÇÃO DE INICIALIZAÇÃO =========
+window.addEventListener('load', () => {
+  document.querySelectorAll('.calendario .dia').forEach(atualizarDots);
+  const primeiro = document.querySelector('.mes');
+  if (primeiro) recalcularMetricasDoMes(primeiro);
+  
+  // GARANTIR que o painel de metas está visível
+  document.querySelectorAll('.mes.expanded .painel-metas').forEach(metas => {
+    metas.style.display = 'flex';
+    metas.style.visibility = 'visible';
+    metas.style.opacity = '1';
+  });
+});
+
+// Chamar essa verificação quando um mês expandir
+document.querySelectorAll('.mes').forEach(mes => {
+  mes.addEventListener('click', () => {
+    setTimeout(() => {
+      if (mes.classList.contains('expanded')) {
+        verificarVisibilidadeMeta(mes);
+      }
+    }, 100);
+  });
 });
 
 // ========= Header ícones =========
