@@ -1,5 +1,5 @@
 # app.py — FOGi + Ollama (versão final, compatível Windows)
-# Caminho: C:\xampp\htdocs\foag.github.io\Fogi\app.py
+# Caminho: C:\xampp\htdocs\foag.github.io\FOGi\app.py
 
 import os
 import json
@@ -12,8 +12,8 @@ from flask_socketio import SocketIO
 
 # ------------------------- CONFIG -------------------------
 TEMPLATE_NAME = "FOGi.html"    # arquivo do seu templates/
-OLLAMA_MODEL = "llama3"        # troque para "phi3" se preferir
-OLLAMA_TIMEOUT = 60            # tempo máximo pra IA responder
+OLLAMA_MODEL = "fogi"          # modelo criado via Modelfile
+OLLAMA_TIMEOUT = 60            # tempo máximo pra IA responder (s)
 KB_PATH = Path("kb.json")      # fallback opcional
 # ----------------------------------------------------------
 
@@ -24,86 +24,76 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 # ------------------------ FALLBACK KB -----------------------
 KB = [
     {"tags": ["ods", "ods4"], "answer": "ODS 4 é sobre educação inclusiva e de qualidade."},
-    {"tags": ["estudo"], "answer": "Dica rápida: 25–40 min de foco + 5 min pausa."},
-    {"tags": ["enem"], "answer": "Redação: tese clara, 2 argumentos + proposta final."}
+    {"tags": ["estudo"], "answer": "Dica rápida: 25–40 min de foco + 5 min de pausa ajudam bastante."},
+    {"tags": ["enem"], "answer": "Redação: tese clara, 2 argumentos bem explicados e uma proposta final."}
 ]
 
-def simple_router(text):
+# se quiser, pode carregar kb.json aqui futuramente
+if KB_PATH.exists():
+    try:
+        with KB_PATH.open("r", encoding="utf-8") as f:
+            kb_loaded = json.load(f)
+            if isinstance(kb_loaded, list) and kb_loaded:
+                KB = kb_loaded
+                print(f"[KB] carregado {len(KB)} itens de {KB_PATH}")
+    except Exception:
+        print("[KB] erro ao ler kb.json:")
+        traceback.print_exc()
+
+
+def simple_router(text: str) -> str:
+    """Fallback simples caso o Ollama quebre."""
     t = text.lower()
     if any(x in t for x in ["oi", "ola", "olá", "bom dia", "boa tarde", "boa noite"]):
-        return "Oi! Eu sou a FOGi — tua tutora virtual. Pode mandar dúvidas sobre estudos, matemática, escrita ou ODS 4."
+        return "Oi! Eu sou a FOGi — tua tutora virtual. Pode mandar dúvidas sobre estudos, matemática, escrita ou o que você estiver aprendendo."
     for item in KB:
-        if any(tag in t for tag in item["tags"]):
+        if any(tag in t for tag in item.get("tags", [])):
             return item["answer"]
-    return "Me explica rapidinho o tema e o objetivo do estudo que eu monto algo pra você."
+    return "Me conta rapidinho o tema e o objetivo do estudo (prova, trabalho, redação...) que eu te ajudo melhor."
+
 
 # ------------------- OLLAMA INTEGRAÇÃO ---------------------
 def ollama_generate_cli(model: str, prompt: str, timeout_sec: int = OLLAMA_TIMEOUT) -> str:
     """
-    Envia o prompt via STDIN — compatível com Windows, com UTF-8 e regras da FOGi.
+    Chama: ollama run <modelo>
+    Manda o prompt via STDIN.
+    O SYSTEM da FOGi já está definido no Modelfile do modelo 'fogi'.
     """
-    full_prompt = f"""
-Você é a FOGi, IA educacional do projeto FOAG, em Cuiabá (MT).
-
-INSTRUÇÕES IMPORTANTES:
-- "FOGi" é apenas o SEU nome como assistente virtual do FOAG.
-- NÃO invente que FOGi é fundo financeiro, bolsa, instituição ou sigla tipo "Fundo de Oportunidades de Graduação".
-- Se alguém perguntar "o que é FOGi?", responda que é a IA/tutora virtual do FOAG que ajuda estudantes a estudar.
-
-Jeito de falar:
-- Sempre em português brasileiro.
-- Tom leve, direto e amigável, tipo monitora gente boa.
-- Nada de textão enrolado, seja clara e objetiva.
-- Não fique se apresentando toda hora; foque na dúvida da pessoa.
-
-Quando responder:
-- Explique o conteúdo de forma simples.
-- Se for matemática, mostre o passo a passo com um exemplo numérico.
-- Se for redação/ENEM, ajude com tese + ideias de argumentos.
-- No final, sugira 1 micro-atividade prática rápida (algo que dê pra fazer em ~5–10 minutos).
-
-Pergunta da aluna:
-{prompt}
-
-Agora responda seguindo as instruções acima, sem repetir esse prompt.
-""".strip()
+    user_prompt = f"Aluno: {prompt}\nFOGi:"
 
     args = ["ollama", "run", model]
-
     try:
         print(f"[OLLAMA] Executando (stdin): {' '.join(args)}")
-
         proc = subprocess.run(
             args,
-            input=full_prompt,
-            text=True,
+            input=user_prompt,
             capture_output=True,
+            text=True,
+            encoding="utf-8",      # 👈 garante acentuação certa
             timeout=timeout_sec,
-            shell=False,
-            encoding="utf-8",   # força UTF-8 pra não zoar acento
-            errors="replace"
+            shell=False
         )
 
         if proc.returncode == 0:
             out = (proc.stdout or "").strip()
             if not out:
-                out = (proc.stderr or "").strip() or "Sem resposta."
-            print(f"[OLLAMA RAW]: {repr(out)}")
+                out = (proc.stderr or "").strip() or "Sem resposta do modelo."
             return out
-
-        stderr = (proc.stderr or "").strip()
-        stdout = (proc.stdout or "").strip()
-        return f"[ERRO OLLAMA] {stderr or stdout}"
-
+        else:
+            err = (proc.stderr or "").strip()
+            stdout = (proc.stdout or "").strip()
+            return f"[ERRO OLLAMA CLI] {err or stdout}"
     except FileNotFoundError:
-        return "[ERRO] Ollama não encontrado no PATH."
+        return "[ERRO] Ollama não encontrado."
     except subprocess.TimeoutExpired:
-        return "[ERRO] Modelo demorou demais."
+        return "[ERRO] Tempo esgotado. Aumente OLLAMA_TIMEOUT."
     except Exception as e:
-        return f"[EXCEÇÃO] {e}"
+        return f"[EXCEÇÃO OLLAMA] {e}"
+
 
 # ----------------------- STREAM ----------------------------
 def stream_text_emit(text: str):
+    """Envia resposta em pedacinhos pro front (efeito 'digitando')."""
     chunk = ""
     for ch in text:
         chunk += ch
@@ -117,6 +107,7 @@ def stream_text_emit(text: str):
 
     socketio.emit("assistant_done", {"full": text})
 
+
 # ----------------------- ROTAS -----------------------------
 @app.route("/")
 def index():
@@ -125,6 +116,7 @@ def index():
     except Exception:
         traceback.print_exc()
         return "<h2>Erro ao carregar FOGi.html</h2>", 500
+
 
 # ----------------------- SOCKET ----------------------------
 @socketio.on("user_message")
@@ -137,14 +129,15 @@ def handle_user_message(data):
 
         print(f"[MSG] Usuário: {user_text}")
 
-        # tenta IA real
+        # 1) tenta IA real
         reply = ollama_generate_cli(OLLAMA_MODEL, user_text)
 
-        # se deu erro, usa fallback
+        # 2) se deu erro, usa fallback
         if reply.startswith("[ERRO") or reply.startswith("[EXCE"):
             print("[FOGi] fallback ativado")
             reply = simple_router(user_text)
 
+        # 3) envia pro front
         stream_text_emit(reply)
 
     except Exception as e:
