@@ -17,13 +17,15 @@ session_start();
 
 <body>
   <header class="cabecalho">
-    FOAG
-    <div class="header-icons">
+  FOAG
+  <div class="header-icons">
     <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
     <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
+    <i id="icon-fogi" class="fa-solid fa-robot" title="Assistente FOAG — FOGi"></i>
     <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
   </div>
-  </header>
+</header>
+
 
   <div class="container">
     <nav class="menu">
@@ -82,9 +84,56 @@ session_start();
     </div>
   </div>
 
+  <!-- Modal FOGi -->
+<div id="fogi-modal" style="display:none; position:fixed; inset:0; z-index:9999; backdrop-filter: blur(6px); background:rgba(0,0,0,.45); align-items:center; justify-content:center;">
+  <div style="width:90%; max-width:1100px; height:80vh; background:white; border-radius:14px; overflow:hidden; position:relative;">
+    
+    <!-- topo com botão sair -->
+    <div style="display:flex; justify-content:space-between; align-items:center; background:#38a5ff; color:white; padding:10px 16px; font-weight:600;">
+      <span>FOGi — Assistente de Estudos</span>
+      <button id="fogi-close" style="background:white; border:0; padding:6px 10px; border-radius:6px; cursor:pointer;">Sair</button>
+    </div>
+
+    <!-- iframe com IA -->
+    <iframe id="fogi-iframe" src="about:blank" style="width:100%; height:100%; border:none;"></iframe>
+  </div>
+</div>
+
+
   <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="./agenda.js"></script>
+  <script>
+   
+  const fogiBtn = document.getElementById("icon-fogi");
+  const fogiModal = document.getElementById("fogi-modal");
+  const fogiFrame = document.getElementById("fogi-iframe");
+  const fogiClose = document.getElementById("fogi-close");
+
+  // abre IA
+  fogiBtn.addEventListener("click", () => {
+    fogiFrame.src = "http://127.0.0.1:5000";  // Flask/Ollama rodando
+    fogiModal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  });
+
+  // fecha IA
+  fogiClose.addEventListener("click", () => {
+    fogiModal.style.display = "none";
+    fogiFrame.src = "about:blank"; // limpa sessão
+    document.body.style.overflow = "";
+  });
+
+  // sair da IA via postMessage (botão Sair dentro da própria FOGi)
+  window.addEventListener("message", (ev) => {
+    if (ev.data?.type === "FOGI_CLOSE") {
+      fogiModal.style.display = "none";
+      fogiFrame.src = "about:blank";
+      document.body.style.overflow = "";
+    }
+  });
+</script>
+
 </body>
 </html>

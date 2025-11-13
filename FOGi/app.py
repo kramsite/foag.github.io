@@ -1,68 +1,130 @@
+# app.py — FOGi + Ollama (Windows-safe)
+# Salva em: C:\xampp\htdocs\foag.github.io\Fogi\app.py
+
+import os
+import json
 import time
+import subprocess
+import traceback
+from pathlib import Path
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 
-app = Flask(__name__, template_folder="templates", static_folder="static")
-app.config["SECRET_KEY"] = "dev"
+# ---------------- CONFIG ----------------
+TEMPLATE_NAME = "FOGi.html"
+OLLAMA_MODEL = "llama3"        # ou "phi3" se preferir
+OLLAMA_TIMEOUT = 60
+KB_PATH = Path("kb.json")
+# ----------------------------------------
 
-# Usar threading evita problemas com eventlet em Python 3.14
+app = Flask(__name__, template_folder="templates", static_folder="static")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev_secret_key")
+app.debug = True
+
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
-FOGI_INTRO = (
-    "Oi! Eu sou a FOGi, tutora grátis da ODS 4. Manda a dúvida de estudo ou de educação "
-    "e eu respondo curtinho, direto e com 1 atividade rápida."
-)
-
 KB = [
-    {"tags": ["ods", "ods4", "educação"], "answer": "ODS 4 = educação de qualidade. Diga o tema e eu resumo."},
-    {"tags": ["cuiabá", "mt"], "answer": "Contexto Cuiabá: infraestrutura, calor, projetos de leitura. Diga a escola/nível."},
-    {"tags": ["estudo", "rotina", "pomodoro"], "answer": "Tenta 25–40min estudo + 5min pausa. Me diz prazo e eu monto um plano."},
-    {"tags": ["enem", "redação"], "answer": "ENEM: interpretação + gestão do tempo. Quer mini-plano pra redação?"},
-    {"tags": ["fontes", "referências"], "answer": "Fontes úteis: UNESCO, MEC/INEP, IBGE. Quer links pra tema X?"}
+    {"tags": ["ods", "ods4", "educacao"], "answer": "ODS 4: garantir educação inclusiva e de qualidade."},
+    {"tags": ["estudo", "rotina"], "answer": "Use Pomodoro: 25min foco + 5min pausa."},
+    {"tags": ["enem", "redacao"], "answer": "Redação: tese clara + dois argumentos + proposta de intervenção."}
 ]
 
+# ---------------- AUXILIARES ----------------
 def simple_router(text: str) -> str:
     t = text.lower()
-    if any(w in t for w in ["oi", "olá", "bom dia", "boa tarde", "boa noite"]):
-        return FOGI_INTRO
-    if "plano" in t or "cronograma" in t:
-        return "Plano 7 dias: 1-2 teoria, 3-4 exercícios, 5 revisão, 6 simulado curto, 7 revisar erros. Me diz matéria."
-    words = set(t.replace(",", " ").replace(".", " ").split())
-    best = None; best_score = 0
+    if any(x in t for x in ["oi", "ola", "olá", "bom dia", "boa tarde", "boa noite"]):
+        return "Oi! Eu sou a FOGi — tutora virtual do FOAG. Pergunte sobre estudos ou ODS 4."
     for item in KB:
-        score = len(set(item["tags"]) & words)
-        if score > best_score:
-            best_score = score; best = item
-    if best:
-        return best["answer"]
-    return "Ficou vago. Diz: tema + objetivo (trabalho/prova) e data. Eu já te mando mini-plano."
+        if any(tag in t for tag in item["tags"]):
+            return item["answer"]
+    return "Não entendi muito bem. Fala o tema e o objetivo do estudo pra eu te ajudar melhor."
 
-def stream_emit(text: str):
-    chunk = ""
-    for ch in text:
-        chunk += ch
-        if len(chunk) >= 10:
+def ollama_generate_cli(model: str, prompt: str, timeout_sec: int = OLLAMA_TIMEOUT) -> str:
+    full_prompt = (
+        "Você é a FOGi, tutora de estudos e ODS 4 em Cuiabá. "
+        "Seu tom é leve, direto e amigável (Gen Z). "
+        "Explique de forma clara e curta, e finalize com uma micro-atividade prática.\n\n"
+        f"Pergunta do usuário: {prompt}\n\nResposta:"
+    )
+
+    args = ["ollama", "run", model, "--prompt", full_prompt]
+    try:
+        print(f"[OLLAMA] Executando: {' '.join(args)}")
+        proc = subprocess.run(
+            args,
+            capture_output=True,
+            text=True,
+            timeout=timeout_sec,
+            shell=False
+        )
+        if proc.returncode == 0:
+            out = (proc.stdout or "").strip()
+            if not out:
+                out = (proc.stderr or "").strip() or "Sem resposta do modelo."
+            return out
+        else:
+            stderr = (proc.stderr or "").strip()
+            stdout = (proc.stdout or "").strip()
+            return f"[ERRO OLLAMA CLI] {stderr or stdout}"
+    except FileNotFoundError:
+        return "[ERRO] Ollama não encontrado. Reabra o terminal ou reinstale."
+    except subprocess.TimeoutExpired:
+        return "[ERRO] Tempo esgotado. Aumente OLLAMA_TIMEOUT."
+    except Exception as e:
+        return f"[EXCEÇÃO OLLAMA] {e}"
+
+def stream_text_emit(text: str):
+    try:
+        chunk = ""
+        for ch in text:
+            chunk += ch
+            if len(chunk) >= 12:
+                socketio.emit("assistant_chunk", {"text": chunk})
+                chunk = ""
+                time.sleep(0.01)
+        if chunk:
             socketio.emit("assistant_chunk", {"text": chunk})
-            chunk = ""
-            time.sleep(0.01)
-    if chunk:
-        socketio.emit("assistant_chunk", {"text": chunk})
-    socketio.emit("assistant_done", {"full": text})
+        socketio.emit("assistant_done", {"full": text})
+    except Exception:
+        traceback.print_exc()
 
+# ---------------- ROTAS ----------------
 @app.route("/")
 def index():
-    return render_template("FOGi.html")
+    try:
+        tpl_path = Path(app.template_folder) / TEMPLATE_NAME
+        if not tpl_path.exists():
+            return f"<h3>Arquivo {TEMPLATE_NAME} não encontrado em {tpl_path}</h3>", 500
+        return render_template(TEMPLATE_NAME)
+    except Exception:
+        traceback.print_exc()
+        return "<h3>Erro ao renderizar template</h3>", 500
 
-
+# ---------------- SOCKET ----------------
 @socketio.on("user_message")
 def handle_user_message(data):
-    user_text = (data or {}).get("text", "").strip()
-    if not user_text:
-        socketio.emit("assistant_error", {"message": "Mensagem vazia."})
-        return
-    reply = simple_router(user_text)
-    stream_emit(reply)
+    try:
+        user_text = (data or {}).get("text", "").strip()
+        if not user_text:
+            socketio.emit("assistant_error", {"message": "Mensagem vazia."})
+            return
 
+        print(f"[MSG] Usuário: {user_text}")
+        reply = ollama_generate_cli(OLLAMA_MODEL, user_text, timeout_sec=OLLAMA_TIMEOUT)
+
+        if reply.startswith("[ERRO") or reply.startswith("[EXCE"):
+            print(f"[OLLAMA] fallback: {reply}")
+            reply = simple_router(user_text)
+
+        stream_text_emit(reply)
+
+    except Exception:
+        traceback.print_exc()
+        socketio.emit("assistant_error", {"message": "Erro interno."})
+
+# ---------------- RUN ----------------
 if __name__ == "__main__":
-    # threading mode => não precisa de eventlet/gevent; bom pra dev local
-    socketio.run(app, host="0.0.0.0", port=5000)
+    print("Rodando FOGi (Flask + SocketIO)")
+    print(f"Template: {TEMPLATE_NAME} | Modelo: {OLLAMA_MODEL}")
+    print("Teste rápido: ollama run llama3 --prompt \"oi\"")
+    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
