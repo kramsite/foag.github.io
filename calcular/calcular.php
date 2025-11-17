@@ -23,7 +23,32 @@ if (!isset($_SESSION['media_aprovacao'])) {
    ===================== */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // 1) Configurações de nota máxima e média de aprovação
+    /* 0) SEMPRE salvar o que já está digitado na tela
+          (independente de qual botão apertou) */
+    foreach ($_POST as $key => $value) {
+        // Matéria
+        if (strpos($key, 'materia_') === 0) {
+            $linha = (int) substr($key, 8); // depois de "materia_"
+            $_SESSION['materias'][$linha] = $value;
+        }
+
+        // Nota: nota_linha_avaliacao
+        if (strpos($key, 'nota_') === 0) {
+            $parte = substr($key, 5); // tira "nota_"
+            list($linha, $avaliacao) = explode('_', $parte);
+            $linha     = (int)$linha;
+            $avaliacao = (int)$avaliacao;
+
+            if (!isset($_SESSION['notas'][$linha])) {
+                $_SESSION['notas'][$linha] = [1 => null, 2 => null, 3 => null, 4 => null];
+            }
+
+            $value = trim($value);
+            $_SESSION['notas'][$linha][$avaliacao] = $value === '' ? null : (float)$value;
+        }
+    }
+
+    /* 1) Configurações de nota máxima e média de aprovação */
     if (isset($_POST['salvar_config'])) {
         $notaMax = isset($_POST['nota_maxima']) ? (float)$_POST['nota_maxima'] : 10;
         $mediaAp = isset($_POST['media_aprovacao']) ? (float)$_POST['media_aprovacao'] : 6;
@@ -35,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['media_aprovacao'] = $mediaAp;
     }
 
-    // 2) Adicionar / remover linhas
+    /* 2) Adicionar / remover linhas */
     if (isset($_POST['adicionar_linha'])) {
         $_SESSION['materias'][] = '';
         $_SESSION['notas'][]    = [1 => null, 2 => null, 3 => null, 4 => null];
@@ -46,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         array_pop($_SESSION['notas']);
     }
 
-    // 3) Limpar linha específica
+    /* 3) Limpar linha específica */
     if (isset($_POST['limpar_linha']) && isset($_POST['linha_index'])) {
         $idx = (int)$_POST['linha_index'];
         if (isset($_SESSION['materias'][$idx])) {
@@ -55,37 +80,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // 4) Limpar tudo
+    /* 4) Limpar tudo */
     if (isset($_POST['limpar_tudo'])) {
         $_SESSION['materias'] = [];
         $_SESSION['notas']    = [];
     }
 
-    // 5) Salvar edições de matérias e notas
-    if (isset($_POST['salvar_edicoes'])) {
-        foreach ($_POST as $key => $value) {
-            // Matéria
-            if (strpos($key, 'materia_') === 0) {
-                $linha = (int) substr($key, 8);
-                $_SESSION['materias'][$linha] = $value;
-            }
-            // Nota: nota_linha_avaliacao
-            if (strpos($key, 'nota_') === 0) {
-                $parte = substr($key, 5); // ex: 0_1
-                list($linha, $avaliacao) = explode('_', $parte);
-                $linha     = (int)$linha;
-                $avaliacao = (int)$avaliacao;
-
-                if (!isset($_SESSION['notas'][$linha])) {
-                    $_SESSION['notas'][$linha] = [1 => null, 2 => null, 3 => null, 4 => null];
-                }
-
-                $value = trim($value);
-                $_SESSION['notas'][$linha][$avaliacao] = $value === '' ? null : (float)$value;
-            }
-        }
-    }
+    /* 5) Se tiver botão salvar_edicoes, beleza, mas agora é opcional
+          porque já salvamos tudo lá no bloco 0 */
+    // pode até remover esse if se quiser
 }
+
 
 /* =====================
    FUNÇÕES AUXILIARES
