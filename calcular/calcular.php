@@ -1,225 +1,385 @@
 <?php
 session_start();
 
-// Inicializar a variável de matérias e notas se não existir
+/* =====================
+   CONFIG PADRÃO
+   ===================== */
 if (!isset($_SESSION['materias'])) {
     $_SESSION['materias'] = [];
 }
-
 if (!isset($_SESSION['notas'])) {
     $_SESSION['notas'] = [];
 }
+// nota máxima e média de aprovação (pode ser 10 / 7, 100 / 60, etc)
+if (!isset($_SESSION['nota_maxima'])) {
+    $_SESSION['nota_maxima'] = 10;
+}
+if (!isset($_SESSION['media_aprovacao'])) {
+    $_SESSION['media_aprovacao'] = 6;
+}
 
-// Adicionar ou remover matérias e notas
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['adicionar_linha'])) {
-        // Adicionar uma nova linha para o horário
-        $_SESSION['materias'][] = '';  // Adiciona uma nova matéria vazia
-        $_SESSION['notas'][] = [null, null, null, null];  // 4 bimestres (inicializados como null)
+/* =====================
+   TRATAMENTO POST
+   ===================== */
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // 1) Configurações de nota máxima e média de aprovação
+    if (isset($_POST['salvar_config'])) {
+        $notaMax = isset($_POST['nota_maxima']) ? (float)$_POST['nota_maxima'] : 10;
+        $mediaAp = isset($_POST['media_aprovacao']) ? (float)$_POST['media_aprovacao'] : 6;
+
+        if ($notaMax <= 0) $notaMax = 10;
+        if ($mediaAp <= 0) $mediaAp = 6;
+
+        $_SESSION['nota_maxima']     = $notaMax;
+        $_SESSION['media_aprovacao'] = $mediaAp;
     }
-    
+
+    // 2) Adicionar / remover linhas
+    if (isset($_POST['adicionar_linha'])) {
+        $_SESSION['materias'][] = '';
+        $_SESSION['notas'][]    = [1 => null, 2 => null, 3 => null, 4 => null];
+    }
+
     if (isset($_POST['remover_linha']) && count($_SESSION['materias']) > 0) {
-        // Remover a última linha de matéria e notas
         array_pop($_SESSION['materias']);
         array_pop($_SESSION['notas']);
     }
-    
+
+    // 3) Limpar linha específica
+    if (isset($_POST['limpar_linha']) && isset($_POST['linha_index'])) {
+        $idx = (int)$_POST['linha_index'];
+        if (isset($_SESSION['materias'][$idx])) {
+            $_SESSION['materias'][$idx] = '';
+            $_SESSION['notas'][$idx]    = [1 => null, 2 => null, 3 => null, 4 => null];
+        }
+    }
+
+    // 4) Limpar tudo
+    if (isset($_POST['limpar_tudo'])) {
+        $_SESSION['materias'] = [];
+        $_SESSION['notas']    = [];
+    }
+
+    // 5) Salvar edições de matérias e notas
     if (isset($_POST['salvar_edicoes'])) {
-        // Salvar as edições feitas pelo usuário
         foreach ($_POST as $key => $value) {
+            // Matéria
             if (strpos($key, 'materia_') === 0) {
-                // Atribuir as matérias
-                $linha = substr($key, 8);  // Extrai o índice da linha
+                $linha = (int) substr($key, 8);
                 $_SESSION['materias'][$linha] = $value;
             }
+            // Nota: nota_linha_avaliacao
             if (strpos($key, 'nota_') === 0) {
-                // Atribuir as notas
-                list($linha, $bimestre) = explode('_', substr($key, 5)); // Extrai linha e bimestre
-                $_SESSION['notas'][$linha][$bimestre] = $value;
+                $parte = substr($key, 5); // ex: 0_1
+                list($linha, $avaliacao) = explode('_', $parte);
+                $linha     = (int)$linha;
+                $avaliacao = (int)$avaliacao;
+
+                if (!isset($_SESSION['notas'][$linha])) {
+                    $_SESSION['notas'][$linha] = [1 => null, 2 => null, 3 => null, 4 => null];
+                }
+
+                $value = trim($value);
+                $_SESSION['notas'][$linha][$avaliacao] = $value === '' ? null : (float)$value;
             }
         }
     }
 }
-?>
 
+/* =====================
+   FUNÇÕES AUXILIARES
+   ===================== */
+$notaMaxima     = $_SESSION['nota_maxima'];
+$mediaAprovacao = $_SESSION['media_aprovacao'];
+
+// Calcula média e status de uma matéria
+function calcularMediaEStatus(array $notas, float $mediaAprovacao) {
+    $validas = [];
+    foreach ($notas as $n) {
+        if ($n !== null && $n !== '') {
+            $validas[] = (float)$n;
+        }
+    }
+
+    if (count($validas) === 0) {
+        return ['media' => 0, 'status' => '-', 'precisa' => null];
+    }
+
+    $soma  = array_sum($validas);
+    $media = $soma / count($validas);
+
+    // status básico
+    if ($media >= $mediaAprovacao) {
+        $status = 'Aprovado';
+    } elseif ($media >= $mediaAprovacao * 0.5) {
+        $status = 'Recuperação';
+    } else {
+        $status = 'Reprovado';
+    }
+
+    return ['media' => $media, 'status' => $status, 'precisa' => null];
+}
+
+// Calcula quanto falta na "próxima avaliação" (considerando 4 avaliações)
+function calcularQuantoPrecisa(array $notas, float $mediaAlvo, float $notaMaxima) {
+    // Próxima = a primeira avaliação vazia (1 a 4)
+    $totalAvaliacoes = 4;
+    $indiceProxima   = null;
+    $somaFeitas      = 0;
+    $feitas          = 0;
+
+    for ($i = 1; $i <= $totalAvaliacoes; $i++) {
+        $n = $notas[$i] ?? null;
+        if ($n !== null && $n !== '') {
+            $somaFeitas += (float)$n;
+            $feitas++;
+        } else if ($indiceProxima === null) {
+            $indiceProxima = $i;
+        }
+    }
+
+    // Se já fez todas ou nenhuma -> não tem "próxima prova" clara
+    if ($indiceProxima === null || $feitas === 0) {
+        return null;
+    }
+
+    // (somaFeitas + x) / totalAvaliacoes = mediaAlvo
+    $necessaria = $mediaAlvo * $totalAvaliacoes - $somaFeitas;
+
+    if ($necessaria < 0) $necessaria = 0;
+
+    // Se passa da nota máxima, significa que não dá pra alcançar só com essa prova
+    if ($necessaria > $notaMaxima) {
+        return 'Impossível';
+    }
+
+    return $necessaria;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notas e Médias</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FOAG — Notas e Médias</title>
 
-        .container {
-            width: 90%;
-            margin: 0 auto;
-        }
+  <link rel="stylesheet" href="notas.css" />
+  <link rel="stylesheet" href="dark_agenda.css">
 
-        header {
-            background-color: #4E93F5;
-            padding: 20px;
-            text-align: center;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
-        header h1 {
-            color: white;
-        }
-
-        .table-container {
-            margin-top: 20px;
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table-container th, .table-container td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
-        .table-container th {
-            background-color: #4E93F5;
-            color: white;
-        }
-
-        .table-container input {
-            width: 100%;
-            padding: 5px;
-            margin: 4px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-
-        .buttons {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .buttons button {
-            margin: 5px;
-            padding: 10px;
-            background-color: #4E93F5;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .buttons button:hover {
-            background-color: #357ad6;
-        }
-
-        .resultados {
-            margin-top: 30px;
-        }
-
-        .resultados table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .resultados th, .resultados td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        .resultados th {
-            background-color: #4E93F5;
-            color: white;
-        }
-
-        .resultados td {
-            text-align: center;
-        }
-    </style>
+  <script src="../m.escuro/dark-mode.js"></script>
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <h1>Notas e Cálculo de Médias</h1>
-        </header>
-        
-        <form method="POST">
-            <table class="table-container">
-                <thead>
-                    <tr>
-                        <th>Matéria</th>
-                        <th>1º Bimestre</th>
-                        <th>2º Bimestre</th>
-                        <th>3º Bimestre</th>
-                        <th>4º Bimestre</th>
-                        <th>Média</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    // Exibir as matérias e notas armazenadas na sessão
-                    $max_linhas = count($_SESSION['materias']); // Quantidade de matérias
-
-                    for ($i = 0; $i < $max_linhas; $i++) {
-                        echo '<tr>';
-                        echo '<td><input type="text" name="materia_' . $i . '" value="' . htmlspecialchars((string)$_SESSION['materias'][$i]) . '" placeholder="Matéria"></td>';
-
-                        // Exibir os campos para as notas (4 bimestres por matéria)
-                        for ($b = 1; $b <= 4; $b++) {
-                            $nota = isset($_SESSION['notas'][$i][$b]) ? (string)$_SESSION['notas'][$i][$b] : '';
-                            echo '<td><input type="number" name="nota_' . $i . '_' . $b . '" value="' . htmlspecialchars($nota) . '" placeholder="Nota ' . $b . '"></td>';
-                        }
-
-                        // Calcular a média
-                        $notas = $_SESSION['notas'][$i] ?? [];
-                        $media = count($notas) > 0 ? array_sum($notas) / count($notas) : 0;
-                        echo '<td>' . number_format($media, 2) . '</td>';
-                        echo '</tr>';
-                    }
-                    ?>
-                </tbody>
-            </table>
-
-            <div class="buttons">
-                <button type="submit" name="adicionar_linha">Adicionar Linha</button>
-                <button type="submit" name="remover_linha">Remover Linha</button>
-                <button type="submit" name="salvar_edicoes">Salvar Edições</button>
-            </div>
-        </form>
-
-        <div class="resultados">
-            <h2>Resultados e Médias</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Matéria</th>
-                        <th>1º Bimestre</th>
-                        <th>2º Bimestre</th>
-                        <th>3º Bimestre</th>
-                        <th>4º Bimestre</th>
-                        <th>Média</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    foreach ($_SESSION['materias'] as $index => $materia) {
-                        $notas = $_SESSION['notas'][$index] ?? [];
-                        $media = count($notas) > 0 ? array_sum($notas) / count($notas) : 0;
-                        echo "<tr>
-                                <td>" . htmlspecialchars($materia) . "</td>
-                                <td>" . (isset($notas[1]) ? $notas[1] : '') . "</td>
-                                <td>" . (isset($notas[2]) ? $notas[2] : '') . "</td>
-                                <td>" . (isset($notas[3]) ? $notas[3] : '') . "</td>
-                                <td>" . (isset($notas[4]) ? $notas[4] : '') . "</td>
-                                <td>" . number_format($media, 2) . "</td>
-                              </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </div>
+  <header class="cabecalho">
+    FOAG
+    <div class="header-icons">
+      <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
+      <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
+      <i id="icon-fogi" class="fa-solid fa-robot" title="Assistente FOAG — FOGi"></i>
+      <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
     </div>
+  </header>
+
+  <div class="container">
+    <nav class="menu">
+      <a href="../inicio/sla.php">Início</a>
+      <a href="../calendario/calendario.php">Calendário</a>
+      <a href="../HORARIO/horario.php">Horário</a>
+      <a href="../sobre/sobre.html">Sobre Nós</a>
+      <a href="../contato/contato.php">Contato</a>
+      <a href="#" class="ativo">Notas & Médias</a>
+    </nav>
+
+    <main class="main-content">
+
+      <!-- CARD CONFIGURAÇÕES -->
+      <section class="card-notas card-config">
+        <h2 class="titulo-tabela">Configurações de notas</h2>
+        <p class="sub-notas">
+          Ajuste a nota máxima e a média mínima para aprovação.  
+          Serve tanto pra escola quanto pra faculdade (ex.: 10/7, 100/60…).
+        </p>
+        <form method="POST" class="config-form">
+          <div class="config-field">
+            <label for="nota_maxima">Nota máxima</label>
+            <input type="number" step="0.01" id="nota_maxima" name="nota_maxima"
+                   value="<?php echo htmlspecialchars($notaMaxima); ?>" min="1">
+          </div>
+          <div class="config-field">
+            <label for="media_aprovacao">Média para aprovação</label>
+            <input type="number" step="0.01" id="media_aprovacao" name="media_aprovacao"
+                   value="<?php echo htmlspecialchars($mediaAprovacao); ?>" min="0">
+          </div>
+          <button type="submit" name="salvar_config" class="btn-destaque">Salvar configurações</button>
+        </form>
+      </section>
+
+      <!-- CARD PRINCIPAL DE NOTAS -->
+      <section class="card-notas">
+        <h2 class="titulo-tabela">Notas e cálculo de médias</h2>
+        <p class="sub-notas">
+          Preencha apenas as avaliações que já aconteceram.  
+          Deixe em branco o que ainda não teve prova/trabalho. A média é calculada só com o que já existe.
+        </p>
+
+        <form method="POST">
+          <table class="tabela-notas">
+            <thead>
+              <tr>
+                <th>Matéria / Disciplina</th>
+                <th>Avaliação 1</th>
+                <th>Avaliação 2</th>
+                <th>Avaliação 3</th>
+                <th>Avaliação 4</th>
+                <th>Média</th>
+                <th>Situação</th>
+                <th>Precisa (próx.)</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              $materias = $_SESSION['materias'];
+              $notasAll = $_SESSION['notas'];
+
+              if (count($materias) === 0) {
+                  echo '<tr class="linha-vazia">
+                          <td colspan="9">
+                            Nenhuma matéria cadastrada ainda. Clique em <strong>Adicionar matéria</strong> para começar.
+                          </td>
+                        </tr>';
+              } else {
+                  foreach ($materias as $i => $materia) {
+                      $materia = htmlspecialchars((string)$materia);
+                      $notas   = $notasAll[$i] ?? [1 => null, 2 => null, 3 => null, 4 => null];
+
+                      $dados = calcularMediaEStatus($notas, $mediaAprovacao);
+                      $media = $dados['media'];
+                      $status = $dados['status'];
+
+                      // quanto precisa na próxima aval.
+                      $precisa = calcularQuantoPrecisa($notas, $mediaAprovacao, $notaMaxima);
+
+                      // classes de status pra colorir
+                      $statusClass = '';
+                      if ($status === 'Aprovado') $statusClass = 'status-aprovado';
+                      elseif ($status === 'Recuperação') $statusClass = 'status-recuperacao';
+                      elseif ($status === 'Reprovado') $statusClass = 'status-reprovado';
+
+                      echo '<tr>';
+                      echo '<td><input type="text" name="materia_' . $i . '" value="' . $materia . '" placeholder="Ex: Cálculo I"></td>';
+
+                      for ($a = 1; $a <= 4; $a++) {
+                          $notaVal = $notas[$a] ?? null;
+                          $notaStr = ($notaVal !== null && $notaVal !== '') ? (string)$notaVal : '';
+                          echo '<td><input type="number" step="0.01" name="nota_' . $i . '_' . $a . '" value="' . htmlspecialchars($notaStr) . '" placeholder="Ex: 7.5" max="' . htmlspecialchars($notaMaxima) . '"></td>';
+                      }
+
+                      echo '<td class="celula-media">' . number_format($media, 2, ',', '.') . '</td>';
+                      echo '<td class="celula-status"><span class="badge-status ' . $statusClass . '">' . $status . '</span></td>';
+
+                      echo '<td class="celula-precisa">';
+                      if ($precisa === null) {
+                          echo '-';
+                      } elseif ($precisa === 'Impossível') {
+                          echo '<span class="badge-precisa impossivel">Impossível</span>';
+                      } else {
+                          echo '≈ ' . number_format($precisa, 2, ',', '.');
+                      }
+                      echo '</td>';
+
+                      // botão limpar linha
+                      echo '<td>
+                              <button type="submit" name="limpar_linha" value="1" class="btn-linha"
+                                      onclick="document.getElementById(\'linha_index\').value=' . $i . ';">
+                                Limpar
+                              </button>
+                            </td>';
+
+                      echo '</tr>';
+                  }
+              }
+              ?>
+            </tbody>
+          </table>
+
+          <!-- hidden pra saber qual linha limpar -->
+          <input type="hidden" id="linha_index" name="linha_index" value="">
+
+          <div class="buttons-notas">
+            <button type="submit" name="adicionar_linha">Adicionar matéria</button>
+            <button type="submit" name="remover_linha">Remover última</button>
+            <button type="submit" name="limpar_tudo">Limpar tudo</button>
+            <button type="submit" name="salvar_edicoes" class="btn-destaque">Salvar alterações</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- CARD RESUMO GERAL -->
+      <section class="card-notas">
+        <h2 class="titulo-tabela">Resumo geral</h2>
+        <?php
+        $totalMaterias = count($materias);
+        $aprovadas = $recuperacao = $reprovadas = 0;
+        $somaMedias = 0;
+        $contMedias = 0;
+
+        foreach ($materias as $i => $materia) {
+            $notas  = $notasAll[$i] ?? [1 => null, 2 => null, 3 => null, 4 => null];
+            $dados  = calcularMediaEStatus($notas, $mediaAprovacao);
+            $media  = $dados['media'];
+            $status = $dados['status'];
+
+            if ($status === 'Aprovado') $aprovadas++;
+            if ($status === 'Recuperação') $recuperacao++;
+            if ($status === 'Reprovado') $reprovadas++;
+
+            if ($media > 0) {
+                $somaMedias += $media;
+                $contMedias++;
+            }
+        }
+
+        $mediaGeral = $contMedias > 0 ? $somaMedias / $contMedias : 0;
+        ?>
+        <div class="resumo-grid">
+          <div class="resumo-card">
+            <span class="resumo-label">Matérias cadastradas</span>
+            <span class="resumo-valor"><?php echo $totalMaterias; ?></span>
+          </div>
+          <div class="resumo-card aprovado">
+            <span class="resumo-label">Aprovado</span>
+            <span class="resumo-valor"><?php echo $aprovadas; ?></span>
+          </div>
+          <div class="resumo-card recuperacao">
+            <span class="resumo-label">Recuperação</span>
+            <span class="resumo-valor"><?php echo $recuperacao; ?></span>
+          </div>
+          <div class="resumo-card reprovado">
+            <span class="resumo-label">Reprovado</span>
+            <span class="resumo-valor"><?php echo $reprovadas; ?></span>
+          </div>
+          <div class="resumo-card geral">
+            <span class="resumo-label">Média geral</span>
+            <span class="resumo-valor"><?php echo number_format($mediaGeral, 2, ',', '.'); ?></span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
+
+  <script>
+    // só pra garantir que limpar linha envia o índice certo
+    // (já preenchi no onclick, mas se quiser usar JS depois tá aqui o gancho)
+  </script>
 </body>
 </html>

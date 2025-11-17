@@ -1,0 +1,476 @@
+/* ===========================
+   RESET + BASE
+   =========================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    color: #111827;
+}
+
+/* ===========================
+   CABEÇALHO FOAG
+   =========================== */
+header.cabecalho {
+    font-family: 'Snap ITC', cursive, sans-serif;
+    width: 100%;
+    background-color: #38a5ff;
+    color: white;
+    text-align: left;
+    padding: 15px 20px;
+    font-size: 24px;
+    font-weight: bold;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.header-icons {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 15px;
+    font-size: 22px;
+    color: #ffffff;
+    cursor: pointer;
+    user-select: none;
+}
+
+.header-icons i {
+    transition: color 0.2s, transform 0.2s;
+}
+
+.header-icons i:hover {
+    color: #006cc5;
+    transform: translateY(-13%) scale(1.1);
+}
+
+/* ===========================
+   LAYOUT (MENU + MAIN)
+   =========================== */
+.container {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+nav.menu {
+    width: 16%;
+    min-width: 180px;
+    background-color: #38a5ff;
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.12);
+}
+
+nav.menu a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    transition: background-color 0.2s, transform 0.15s;
+}
+
+nav.menu a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(2px);
+}
+
+nav.menu a.ativo {
+    background-color: rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    overflow-x: auto;
+}
+
+/* ===========================
+   CARDS
+   =========================== */
+.card-notas {
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+    border: 1px solid #e3e8ef;
+}
+
+.card-notas:first-of-type::before {
+    content: "";
+    display: block;
+    width: 70px;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #38a5ff, #0a76d9);
+    margin-bottom: 10px;
+}
+
+.titulo-tabela {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.sub-notas {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 12px;
+}
+
+/* ===========================
+   CARD CONFIGURAÇÕES
+   =========================== */
+.card-config {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.config-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    align-items: flex-end;
+}
+
+.config-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 150px;
+}
+
+.config-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.config-field input {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    background-color: #f9fafb;
+    transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+.config-field input:focus {
+    outline: none;
+    border-color: #38a5ff;
+    box-shadow: 0 0 0 2px rgba(56,165,255,0.25);
+    background-color: #ffffff;
+}
+
+/* ===========================
+   TABELA DE NOTAS
+   =========================== */
+.tabela-notas {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.tabela-notas th,
+.tabela-notas td {
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    text-align: center;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+.tabela-notas th {
+    background-color: #38a5ff;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.tabela-notas td {
+    background-color: #ffffff;
+}
+
+/* highlight linha ativa / hover */
+.tabela-notas tbody tr:hover {
+    background-color: #f3f4ff;
+}
+
+.tabela-notas tbody tr:focus-within {
+    background-color: #e5efff;
+}
+
+/* inputs */
+.tabela-notas td input {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 13px;
+    background-color: #f9fafb;
+    transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+.tabela-notas td input:focus {
+    outline: none;
+    border-color: #38a5ff;
+    box-shadow: 0 0 0 2px rgba(56,165,255,0.25);
+    background-color: #ffffff;
+}
+
+/* estado vazio */
+.linha-vazia td {
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* média */
+.celula-media {
+    font-weight: 600;
+    color: #111827;
+}
+
+/* status badges */
+.celula-status {
+    text-align: center;
+}
+
+.badge-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-aprovado {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-recuperacao {
+    background-color: #fef9c3;
+    color: #854d0e;
+}
+
+.status-reprovado {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* quanto precisa */
+.celula-precisa {
+    font-size: 13px;
+    color: #111827;
+}
+
+.badge-precisa.impossivel {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* botão limpar linha */
+.btn-linha {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: #e5e7eb;
+    color: #111827;
+    cursor: pointer;
+    transition: background-color 0.15s, transform 0.15s;
+}
+
+.btn-linha:hover {
+    background-color: #d1d5db;
+    transform: translateY(-1px);
+}
+
+/* ===========================
+   BOTÕES GERAIS (EMBAIXO DA TABELA)
+   =========================== */
+.buttons-notas {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.buttons-notas button {
+    padding: 9px 14px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background-color: #38a5ff;
+    color: #ffffff;
+    transition: background-color 0.2s, transform 0.15s, box-shadow 0.15s;
+    width: auto;
+}
+
+.buttons-notas button:hover {
+    background-color: #2691c8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(56, 165, 255, 0.4);
+}
+
+.buttons-notas .btn-destaque,
+.config-form .btn-destaque {
+    background: linear-gradient(90deg, #38a5ff, #0a76d9);
+}
+
+/* ===========================
+   RESUMO GERAL
+   =========================== */
+.resumo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.resumo-card {
+    border-radius: 10px;
+    padding: 10px 12px;
+    background-color: #f9fafb;
+    border: 1px solid #e3e8ef;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.resumo-label {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.resumo-valor {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.resumo-card.aprovado {
+    background-color: #dcfce7;
+    border-color: #bbf7d0;
+}
+
+.resumo-card.recuperacao {
+    background-color: #fef9c3;
+    border-color: #fef3c7;
+}
+
+.resumo-card.reprovado {
+    background-color: #fee2e2;
+    border-color: #fecaca;
+}
+
+.resumo-card.geral {
+    background-color: #e0f2fe;
+    border-color: #bae6fd;
+}
+
+/* ===========================
+   RODAPÉ
+   =========================== */
+footer {
+    background-color: #232323;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+/* ===========================
+   RESPONSIVO
+   =========================== */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+    }
+
+    nav.menu {
+        width: 100%;
+        padding: 12px 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: 8px;
+    }
+
+    nav.menu a {
+        font-size: 14px;
+        padding: 7px 10px;
+    }
+
+    .main-content {
+        padding: 18px 12px 22px;
+    }
+
+    .card-notas {
+        padding: 16px 14px;
+    }
+
+    .tabela-notas th,
+    .tabela-notas td {
+        padding: 8px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    header.cabecalho {
+        font-size: 20px;
+        padding: 12px 14px;
+    }
+
+    .header-icons {
+        right: 12px;
+        gap: 10px;
+        font-size: 18px;
+    }
+
+    nav.menu {
+        padding: 10px 6px;
+    }
+
+    .buttons-notas {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .buttons-notas button {
+        width: 100%;
+        justify-content: center;
+    }
+}

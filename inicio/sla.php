@@ -1,295 +1,355 @@
+<?php
+date_default_timezone_set('America/Sao_Paulo');
+
+// ====== LER ÚLTIMO USUÁRIO DO JSON ======
+$caminhoJson = __DIR__ . '/../json/usuarios.json';
+
+$usuario = null;
+if (file_exists($caminhoJson)) {
+    $conteudo = file_get_contents($caminhoJson);
+    $lista = json_decode($conteudo, true);
+
+    if (is_array($lista) && count($lista) > 0) {
+        $usuario = end($lista); // último cadastro
+    }
+}
+
+// Nome (ajusta o campo se for diferente)
+$nome = $usuario['nome'] ?? 'Aluno FOAG';
+
+// ====== SAUDAÇÃO PELO HORÁRIO ======
+$hora = (int) date('H');
+if ($hora >= 5 && $hora < 12) {
+    $saudacao = 'Bom dia';
+} elseif ($hora >= 12 && $hora < 18) {
+    $saudacao = 'Boa tarde';
+} else {
+    $saudacao = 'Boa noite';
+}
+
+// ====== FREQUÊNCIA / FALTAS ======
+$frequenciaGeral = $usuario['frequencia_geral'] ?? null;
+$faltasMes       = $usuario['faltas_mes'] ?? null;
+
+// ====== AGENDA HOJE / PRÓXIMOS DIAS ======
+$hoje = date('Y-m-d');
+$itensHoje = [];
+$proximosEventos = [];
+
+if (!empty($usuario['agenda']) && is_array($usuario['agenda'])) {
+    foreach ($usuario['agenda'] as $item) {
+        if (empty($item['data'])) continue;
+
+        if ($item['data'] === $hoje) {
+            $itensHoje[] = $item;
+        } elseif ($item['data'] > $hoje) {
+            $proximosEventos[] = $item;
+        }
+    }
+
+    // Ordena próximos eventos por data
+    usort($proximosEventos, function($a, $b) {
+        return strcmp($a['data'], $b['data']);
+    });
+}
+
+// Textos de resumo
+if ($frequenciaGeral !== null) {
+    $textoFrequencia = "Sua frequência geral está em <strong>{$frequenciaGeral}%</strong>.";
+} else {
+    $textoFrequencia = "Sua frequência ainda não foi cadastrada no sistema.";
+}
+
+if ($faltasMes !== null) {
+    $textoFaltas = "Neste mês, você tem <strong>{$faltasMes}</strong> falta(s) registrada(s).";
+} else {
+    $textoFaltas = "Ainda não há registro de faltas neste mês.";
+}
+
+if (count($itensHoje) > 0) {
+    $textoAgenda = "Hoje você tem <strong>" . count($itensHoje) . "</strong> compromisso(s) marcado(s).";
+} else {
+    $textoAgenda = "Hoje não há nada marcado no seu FOAG. Bom momento pra organizar os estudos. 😉";
+}
+
+// ====== RESUMO DA SEMANA (horas de estudo) ======
+$horasSemana = $usuario['horas_estudo_semana'] ?? 0;
+$metaHoras   = $usuario['meta_horas_semana'] ?? 10;
+$diasSemana  = $usuario['dias_estudados_semana'] ?? 0;
+
+if ($metaHoras > 0) {
+    $percEstudo = min(100, max(0, round(($horasSemana / $metaHoras) * 100)));
+} else {
+    $percEstudo = 0;
+}
+
+// ====== MATÉRIAS EM ALERTA (notas baixas) ======
+$notasBaixas = [];
+if (!empty($usuario['notas_baixas']) && is_array($usuario['notas_baixas'])) {
+    $notasBaixas = $usuario['notas_baixas'];
+}
+?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>FOAG — Início</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Organizador</title>
+  <link rel="stylesheet" href="inicio.css" />
+  <link rel="stylesheet" href="dark_agenda.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="../m.escuro/dark-mode.js"></script>
 
-<!-- Fonte Poppins -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Estilos básicos do modal da FOGi -->
+  <style>
+    #icon-fogi {
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    #icon-fogi:hover {
+      color: #38a5ff;
+      transform: scale(1.1);
+    }
 
-<style>
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #aad5f8;
-  font-family: "Poppins", sans-serif;
-}
+    /* Modal full-screen da FOGi */
+    #fogi-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+    }
 
-/* CONTAINER PRINCIPAL */
-.foag-wrapper {
-  width: 80%;
-  max-width: 900px;
-  margin: 40px auto;
-  display: flex;
-  border-radius: 20px;
-  overflow: hidden;
-  background-color: white;
-  box-shadow: 0 0 15px rgba(0,0,0,0.12);
-}
+    #fogi-modal .fogi-container {
+      background: #ffffff;
+      width: 90%;
+      max-width: 1100px;
+      height: 80vh;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+    }
 
-/* LADO ESQUERDO */
-.left {
-  background-color: #38a5ff;
-  flex: 1;
-  color: white;
-  padding: 40px 25px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+    #fogi-modal .fogi-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #38a5ff;
+      color: #fff;
+      padding: 8px 14px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
 
-.left h1 {
-  font-size: 1.8rem;
-  margin: 0 0 8px 0;
-}
+    #fogi-close {
+      border: none;
+      background: #ffffff;
+      color: #333;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
 
-.left p {
-  font-size: .9rem;
-  opacity: .95;
-  max-width: 350px;
-}
+    #fogi-close:hover {
+      background: #f1f1f1;
+    }
 
-.badge {
-  padding: 6px 12px;
-  width: fit-content;
-  background: rgba(255,255,255,0.25);
-  border-radius: 999px;
-  font-size: .75rem;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.badge-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34,197,94,0.3);
-}
-
-.stats {
-  margin-top: 25px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.stat-box {
-  background: rgba(255,255,255,0.22);
-  padding: 10px;
-  border-radius: 12px;
-}
-
-.stat-label {
-  font-size: .75rem;
-  opacity: .9;
-}
-
-.stat-value {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-top: 3px;
-}
-
-/* FOGI */
-.fogi {
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
-  gap: 10px;
-  background: rgba(255,255,255,0.18);
-  padding: 10px 12px;
-  border-radius: 12px;
-  font-size: .85rem;
-}
-
-.fogi-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: white;
-  color: #38a5ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-}
-
-/* LADO DIREITO */
-.right {
-  flex: 1.1;
-  background: #f3f7ff;
-  padding: 30px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.right h2 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-.sub {
-  font-size: .85rem;
-  color: #4b5563;
-  margin-bottom: 5px;
-}
-
-/* TABELA */
-table {
-  width: 100%;
-  font-size: .8rem;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #cbd5e1;
-}
-
-thead {
-  background: #e2ecff;
-}
-
-th, td {
-  padding: 8px;
-}
-
-tbody tr:nth-child(even) {
-  background: #f8faff;
-}
-
-.tag {
-  padding: 2px 7px;
-  border-radius: 999px;
-  font-size: .7rem;
-}
-
-.tag-alerta { background: #fde04755; color: #b45309; }
-.tag-ok { background: #7dd3fc55; color: #0369a1; }
-.tag-danger { background: #fca5a555; color: #b91c1c; }
-
-/* ATALHOS */
-.shortcuts {
-  display: grid;
-  grid-template-columns: repeat(2,1fr);
-  gap: 10px;
-}
-
-.shortcut {
-  background: white;
-  border: 1px solid #cbd5e1;
-  padding: 10px 12px;
-  border-radius: 12px;
-  font-size: .85rem;
-  cursor: pointer;
-}
-
-.shortcut:hover {
-  background: #eef6ff;
-  border-color: #38a5ff;
-}
-</style>
-
+    #fogi-iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
+
 <body>
-
-<div class="foag-wrapper">
-
-  <!-- ESQUERDA -->
-  <div class="left">
-    <div>
-      <div class="badge">
-        <div class="badge-dot"></div>
-        Semana ativa
-      </div>
-
-      <h1>Oi, <span style="font-weight:700;">Aluno</span> 👋</h1>
-      <p>Aqui é seu painel FOAG. Você acompanha tudo da escola sem surtar.</p>
-
-      <div class="stats">
-        <div class="stat-box">
-          <div class="stat-label">Provas</div>
-          <div class="stat-value">3</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Tarefas</div>
-          <div class="stat-value">5</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Faltas</div>
-          <div class="stat-value">1</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Média</div>
-          <div class="stat-value">8.4</div>
-        </div>
-      </div>
+  <header class="cabecalho">
+    FOAG
+    <div class="header-icons">
+      <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
+      <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
+      <i id="icon-fogi" class="fa-solid fa-robot" title="Assistente FOAG — FOGi"></i>
+      <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
     </div>
+  </header>
 
-    <div class="fogi">
-      <div class="fogi-avatar">😼</div>
-      “Quer ajuda no estudo da próxima prova?”
+<main>
+    <div class="home-wrapper">
+
+        <!-- CARD PRINCIPAL -->
+        <section class="home-card">
+            <div class="home-card-inner">
+                <div class="pill-dia">
+                    <span class="pill-ponto"></span>
+                    Hoje é <?= date('d/m') ?> • FOAG ligado
+                </div>
+
+                <div class="home-greeting">
+                    <?= $saudacao ?>, <span><?= htmlspecialchars($nome) ?></span> 👋
+                </div>
+                <p class="home-sub">
+                    Esse é o seu painel inicial do FOAG. Aqui você vê sua frequência, compromissos do dia
+                    e acessa rapidinho o que mais usa.
+                </p>
+
+                <div class="home-resumo-grid">
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Frequência geral</div>
+                        <div class="mini-stat-value">
+                            <?= $frequenciaGeral !== null ? $frequenciaGeral . '%' : '--' ?>
+                        </div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Faltas no mês</div>
+                        <div class="mini-stat-value">
+                            <?= $faltasMes !== null ? $faltasMes : '--' ?>
+                        </div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-label">Compromissos hoje</div>
+                        <div class="mini-stat-value">
+                            <?= count($itensHoje) ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fogi-tip">
+                    <div class="fogi-avatar">😼</div>
+                    <div>
+                        <strong>FOGi por aqui</strong><br>
+                        <span>“Se quiser, eu te ajudo a montar um plano de estudo só pra essa semana.”</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COLUNA DIREITA -->
+        <div class="home-side">
+
+            <!-- SEU DIA HOJE -->
+            <section class="home-card-dia">
+                <div class="home-section-title">Seu dia hoje</div>
+                <div class="home-section-sub">Resumo rápido do que importa.</div>
+
+                <p><?= $textoFrequencia ?></p>
+                <p><?= $textoFaltas ?></p>
+                <p><?= $textoAgenda ?></p>
+
+                <?php if (count($itensHoje) > 0): ?>
+                    <ul class="home-agenda-list">
+                        <?php foreach ($itensHoje as $evento): ?>
+                            <li class="home-agenda-item">
+                                • <?= htmlspecialchars($evento['descricao'] ?? 'Compromisso') ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+
+                <?php if (count($proximosEventos) > 0): ?>
+                    <div style="margin-top:10px; font-size:13px; color:var(--texto-secundario);">
+                        Próximos dias:
+                    </div>
+                    <ul class="home-agenda-list">
+                        <?php foreach (array_slice($proximosEventos, 0, 3) as $evento): ?>
+                            <li class="home-agenda-item">
+                                <?= date('d/m', strtotime($evento['data'])) ?> — 
+                                <?= htmlspecialchars($evento['descricao'] ?? 'Compromisso') ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </section>
+
+            <!-- RESUMO DA SEMANA -->
+            <section class="home-week-card">
+                <div class="home-section-title">Resumo da semana</div>
+                <div class="home-section-sub">
+                    Como está seu ritmo de estudos por enquanto.
+                </div>
+
+                <div style="font-size:14px;">
+                    Horas de estudo: <strong><?= $horasSemana ?></strong> / <?= $metaHoras ?>h
+                </div>
+                <div class="progress-wrap">
+                    <div class="progress-bar" style="width: <?= $percEstudo ?>%;"></div>
+                </div>
+                <div class="week-info">
+                    Meta cumprida em <strong><?= $percEstudo ?>%</strong>.
+                    <?php if ($diasSemana > 0): ?>
+                        Você já estudou em <strong><?= $diasSemana ?></strong> dia(s) nesta semana.
+                    <?php else: ?>
+                        Ainda não tem dias de estudo registrados nessa semana.
+                    <?php endif; ?>
+                </div>
+
+                <div class="week-info" style="margin-top:8px;">
+                    <?php if (!empty($notasBaixas)): ?>
+                        Matérias em alerta:
+                        <ul class="alerta-lista">
+                            <?php foreach ($notasBaixas as $alerta): ?>
+                                <li class="alerta-item">
+                                    <span class="materia">
+                                        <?= htmlspecialchars($alerta['materia'] ?? 'Matéria') ?>
+                                    </span> — 
+                                    média <span class="nota">
+                                        <?= isset($alerta['media']) ? htmlspecialchars($alerta['media']) : '--' ?>
+                                    </span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        Nenhuma matéria em alerta cadastrada por enquanto.
+                    <?php endif; ?>
+                </div>
+            </section>
+
+            <!-- NAVEGAÇÃO -->
+            <section class="home-nav-card">
+                <div class="home-nav-title">Navegar pelo FOAG</div>
+                <div class="home-nav-grid">
+                    <button class="home-nav-btn" onclick="window.location.href='calendario.php'">
+                        <span class="emoji">📅</span>
+                        <span>Calendário</span>
+                    </button>
+                    <button class="home-nav-btn" onclick="window.location.href='tarefas.php'">
+                        <span class="emoji">📝</span>
+                        <span>Tarefas</span>
+                    </button>
+                    <button class="home-nav-btn" onclick="window.location.href='notas.php'">
+                        <span class="emoji">📊</span>
+                        <span>Notas & médias</span>
+                    </button>
+                    <button class="home-nav-btn" onclick="window.location.href='frequencia.php'">
+                        <span class="emoji">✅</span>
+                        <span>Frequência</span>
+                    </button>
+                    <button class="home-nav-btn" onclick="window.location.href='perfil.php'">
+                        <span class="emoji">👤</span>
+                        <span>Meu perfil</span>
+                    </button>
+                    <button class="home-nav-btn" onclick="window.location.href='fogi.php'">
+                        <span class="emoji">😼</span>
+                        <span>FOGi (IA)</span>
+                    </button>
+                </div>
+            </section>
+
+        </div>
     </div>
-  </div>
+</main>
 
-  <!-- DIREITA -->
-  <div class="right">
-
-    <div>
-      <h2>Próximas atividades</h2>
-      <p class="sub">Fica ligado nos prazos 👇</p>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Matéria</th>
-            <th>Tipo</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>18/11</td>
-            <td>Matemática</td>
-            <td>Prova</td>
-            <td><span class="tag tag-alerta">em 3 dias</span></td>
-          </tr>
-          <tr>
-            <td>19/11</td>
-            <td>História</td>
-            <td>Trabalho</td>
-            <td><span class="tag tag-ok">prazo ok</span></td>
-          </tr>
-          <tr>
-            <td>21/11</td>
-            <td>Português</td>
-            <td>Redação</td>
-            <td><span class="tag tag-danger">não iniciado</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div>
-      <h2>Atalhos rápidos</h2>
-      <p class="sub">Vá direto ao ponto:</p>
-
-      <div class="shortcuts">
-        <button class="shortcut">📅 Calendário</button>
-        <button class="shortcut">📊 Notas</button>
-        <button class="shortcut">📝 Tarefas</button>
-        <button class="shortcut">👤 Perfil</button>
-      </div>
-    </div>
-
-  </div>
-
-</div>
+<footer>
+    FOAG — foco, organização e boas notas.
+</footer>
 
 </body>
 </html>
