@@ -141,6 +141,22 @@ nav.menu a.ativo {
     margin-bottom: 12px;
 }
 
+.config-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.pill-tipo {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: #e0f2fe;
+    color: #0f172a;
+    border: 1px solid #bae6fd;
+}
+
 /* ===========================
    CARD CONFIGURAÇÕES
    =========================== */
@@ -151,26 +167,31 @@ nav.menu a.ativo {
 }
 
 .config-form {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 12px 18px;
     align-items: flex-end;
+    margin-top: 6px;
 }
 
-.config-field {
+.config-field,
+.config-field-periodo {
     display: flex;
     flex-direction: column;
     gap: 4px;
     min-width: 150px;
 }
 
-.config-field label {
+.config-field label,
+.config-field-periodo label {
     font-size: 13px;
     font-weight: 600;
     color: #374151;
 }
 
-.config-field input {
+.config-field input,
+.config-field-periodo select,
+.config-field-periodo input {
     padding: 8px 10px;
     border-radius: 8px;
     border: 1px solid #d1d5db;
@@ -179,11 +200,52 @@ nav.menu a.ativo {
     transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
 }
 
-.config-field input:focus {
+.config-field input:focus,
+.config-field-periodo select:focus,
+.config-field-periodo input:focus {
     outline: none;
     border-color: #38a5ff;
     box-shadow: 0 0 0 2px rgba(56,165,255,0.25);
     background-color: #ffffff;
+}
+
+.tipo-curso-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.tipo-curso-group span {
+    font-weight: 600;
+}
+
+.tipo-curso-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+}
+
+/* botão destaque */
+.btn-destaque {
+    border: none;
+    padding: 9px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #38a5ff, #0a76d9);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    justify-self: flex-end;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.btn-destaque:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(56, 165, 255, 0.4);
+    opacity: 0.95;
 }
 
 /* ===========================
@@ -223,8 +285,8 @@ nav.menu a.ativo {
     background-color: #e5efff;
 }
 
-/* inputs */
-.tabela-notas td input {
+/* inputs de nota */
+.input-nota {
     width: 100%;
     padding: 6px 8px;
     border-radius: 8px;
@@ -234,11 +296,16 @@ nav.menu a.ativo {
     transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
 }
 
-.tabela-notas td input:focus {
+.input-nota:focus {
     outline: none;
     border-color: #38a5ff;
     box-shadow: 0 0 0 2px rgba(56,165,255,0.25);
     background-color: #ffffff;
+}
+
+.input-nota.nota-invalida {
+    border-color: #dc2626;
+    background-color: #fef2f2;
 }
 
 /* estado vazio */
@@ -307,6 +374,7 @@ nav.menu a.ativo {
     color: #111827;
     cursor: pointer;
     transition: background-color 0.15s, transform 0.15s;
+    width: 100%;
 }
 
 .btn-linha:hover {
@@ -341,11 +409,6 @@ nav.menu a.ativo {
     background-color: #2691c8;
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(56, 165, 255, 0.4);
-}
-
-.buttons-notas .btn-destaque,
-.config-form .btn-destaque {
-    background: linear-gradient(90deg, #38a5ff, #0a76d9);
 }
 
 /* ===========================
@@ -398,6 +461,26 @@ nav.menu a.ativo {
     border-color: #bae6fd;
 }
 
+.resumo-extra {
+    margin-top: 14px;
+    font-size: 14px;
+    color: #111827;
+}
+
+.resumo-extra p {
+    margin-bottom: 4px;
+}
+
+.dica-foag {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #4b5563;
+    background-color: #eff6ff;
+    border-radius: 8px;
+    padding: 8px 10px;
+    border: 1px solid #bfdbfe;
+}
+
 /* ===========================
    RODAPÉ
    =========================== */
@@ -445,6 +528,11 @@ footer {
     .tabela-notas td {
         padding: 8px;
         font-size: 13px;
+    }
+
+    .config-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
 
