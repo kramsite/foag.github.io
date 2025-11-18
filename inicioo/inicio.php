@@ -50,10 +50,14 @@ session_start();
             </nav>
         </div>
         <div class="header-icons">
-            <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
-            <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
-            <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
-        </div>
+      <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
+      <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
+
+      <!-- ÍCONE DA IA -->
+      <i id="icon-fogi" class="fa-solid fa-robot" title="Assistente FOAG — FOGi"></i>
+
+      <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
+    </div>
     </header>
 
     <main class="main-content">
@@ -221,6 +225,18 @@ session_start();
         </div>
     </div>
 
+    <!-- Modal da FOGi -->
+    <div id="fogi-modal">
+        <div class="fogi-container">
+        <div class="fogi-header">
+            <span>FOGi — Assistente de Estudos</span>
+            <button id="fogi-close">Fechar</button>
+        </div>
+        <iframe id="fogi-iframe" src="about:blank"></iframe>
+        </div>
+    </div>
+
+
     <footer>
         <div class="footer-content">
             <p>&copy; 2025 FOAG. Todos os direitos reservados.</p>
@@ -229,5 +245,35 @@ session_start();
     </footer>
 
     <script src="inicio.js"></script>
+    <script>
+  const fogiBtn = document.getElementById("icon-fogi");
+  const fogiModal = document.getElementById("fogi-modal");
+  const fogiFrame = document.getElementById("fogi-iframe");
+  const fogiClose = document.getElementById("fogi-close");
+
+  // ABRE IA
+  fogiBtn.addEventListener("click", () => {
+    fogiFrame.src = "http://127.0.0.1:5000";
+    fogiModal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  });
+
+  // FECHA IA pelo botão Fechar
+  fogiClose.addEventListener("click", () => {
+    fogiModal.style.display = "none";
+    fogiFrame.src = "about:blank";
+    document.body.style.overflow = "";
+  });
+
+  // FECHA IA enviado de dentro do FOGi.html
+  window.addEventListener("message", (ev) => {
+    if (ev.data?.type === "FOGI_CLOSE") {
+      fogiModal.style.display = "none";
+      fogiFrame.src = "about:blank";
+      document.body.style.overflow = "";
+    }
+  });
+</script>
+
 </body>
 </html>

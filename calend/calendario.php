@@ -150,7 +150,7 @@ function gerarCalendario() {
 
   <div class="container">
     <nav class="menu">
-  <a href="../inicio/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
+  <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
     <i class="fa-solid fa-house"></i> Início
   </a>
 
