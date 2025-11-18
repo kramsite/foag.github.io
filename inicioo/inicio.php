@@ -23,15 +23,23 @@ session_start();
                     <i class="fa-solid fa-house"></i>
                     Início
                 </a>
-                <a href="../agenda/agenda.php">
-                    <i class="fa-solid fa-book"></i>
-                    Agenda
-                </a>
-                <a href="../calendario/calendario.php">
+                <a href="../calend/calendario.php">
                     <i class="fa-solid fa-calendar-days"></i>
                     Calendário
                 </a>
-                <a href="../HORARIO/horario.php">
+                <a href="../bloco/agenda.php">
+                    <i class="fa-solid fa-book"></i>
+                    Agenda
+                </a>
+                <a href="../pomodoro/pomodoro.php">
+                    <i class="fa-solid fa-stopwatch"></i>
+                    Pomodoro
+                </a>
+                <a href="../notas/notas.php">
+                    <i class="fa-solid fa-check-double"></i>
+                    Notas
+                </a>
+                <a href="../horario/horario.php">
                     <i class="fa-solid fa-clock"></i>
                     Horário
                 </a>
