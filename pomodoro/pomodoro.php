@@ -1,3 +1,6 @@
+<?php
+  $current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -25,11 +28,34 @@
   <div class="container">
     <!-- Menu lateral -->
     <nav class="menu">
-      <a href="../agenda/agenda.php"><i class="fa-regular fa-square-check"></i> Tarefas</a>
-      <a href="../calendario/calendario.php"><i class="fa-regular fa-calendar"></i> Faltas / Calendário</a>
-      <a href="../HORARIO/horario.php"><i class="fa-regular fa-clock"></i> Horários</a>
-      <a class="active" href="#"><i class="fa-solid fa-book"></i> Controle de Estudos</a>
-    </nav>
+  <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-house"></i> Início
+  </a>
+
+  <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-calendar-days"></i> Calendário
+  </a>
+
+  <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-book"></i> Agenda
+  </a>
+
+  <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-stopwatch"></i> Pomodoro
+  </a>
+
+  <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-check-double"></i> Notas
+  </a>
+
+  <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-clock"></i> Horário
+  </a>
+
+  <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
+    <i class="fa-solid fa-circle-info"></i> Sobre
+  </a>
+</nav>
 
     <!-- Conteúdo -->
     <main class="conteudo">

@@ -1,5 +1,7 @@
 <?php
 // Carrega os feriados do JSON
+  $current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
+
 $feriados = json_decode(file_get_contents(__DIR__ . '/../json/feriados.json'), true);
 
 // Função para gerar os dias de cada mês
@@ -148,12 +150,34 @@ function gerarCalendario() {
 
   <div class="container">
     <nav class="menu">
-      <a href="../inicio/sla.php">Início</a>
-      <a href="../agenda/agenda.php">Agenda</a>
-      <a href="../HORARIO/horario.php">Horario</a>
-      <a href="#">Sobre</a>
-      <a href="#">Contato</a>
-    </nav>
+  <a href="../inicio/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-house"></i> Início
+  </a>
+
+  <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-calendar-days"></i> Calendário
+  </a>
+
+  <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-book"></i> Agenda
+  </a>
+
+  <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-stopwatch"></i> Pomodoro
+  </a>
+
+  <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-check-double"></i> Boletim
+  </a>
+
+  <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-clock"></i> Horário
+  </a>
+
+  <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
+    <i class="fa-solid fa-circle-info"></i> Sobre
+  </a>
+</nav>
 
     <div class="conteudo">
       <div class="calendario-container">

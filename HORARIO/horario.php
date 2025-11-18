@@ -1,10 +1,15 @@
+<?php
+session_start();
+
+  $current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horário Escolar</title>
-    <link rel="stylesheet" href="babuino.css">
+    <link rel="stylesheet" href="horario.css">
     <link rel="stylesheet" href="dark_hora.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
@@ -97,12 +102,34 @@
     <div class="container">
         <!-- Menu lateral -->
         <nav class="menu">
-            <a href="../inicio/sla.html">Início</a>
-            <a href="../agenda/agenda.php">Agenda</a>
-            <a href="../calendario/calendario.php">Calendario</a>
-            <a href="../sobre/sobre.html">Sobre Nós</a>
-            <a href="#">Contato</a>
-        </nav>
+  <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-house"></i> Início
+  </a>
+
+  <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-calendar-days"></i> Calendário
+  </a>
+
+  <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-book"></i> Agenda
+  </a>
+
+  <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-stopwatch"></i> Pomodoro
+  </a>
+
+  <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-check-double"></i> Boletim
+  </a>
+
+  <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-clock"></i> Horário
+  </a>
+
+  <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
+    <i class="fa-solid fa-circle-info"></i> Sobre
+  </a>
+</nav>
 
         <!-- Área principal para conteúdo -->
         <div class="main-content">

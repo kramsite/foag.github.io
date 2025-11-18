@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+  $current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -7,7 +9,7 @@ session_start();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Organizador</title>
-  <link rel="stylesheet" href="agenda.css" />
+  <link rel="stylesheet" href="bloco.css" />
   <link rel="stylesheet" href="dark_agenda.css">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
@@ -96,12 +98,35 @@ session_start();
 
   <div class="container">
     <nav class="menu">
-      <a href="../inicio/sla.php">Início</a>
-      <a href="../calendario/calendario.php">Calendário</a>
-      <a href="../HORARIO/horario.php">Horário</a>
-      <a href="../sobre/sobre.html">Sobre Nós</a>
-      <a href="#">Contato</a>
-    </nav>
+  <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-house"></i> Início
+  </a>
+
+  <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-calendar-days"></i> Calendário
+  </a>
+
+  <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-book"></i> Agenda
+  </a>
+
+  <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-stopwatch"></i> Pomodoro
+  </a>
+
+  <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-check-double"></i> Boletim
+  </a>
+
+  <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-clock"></i> Horário
+  </a>
+
+  <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
+    <i class="fa-solid fa-circle-info"></i> Sobre
+  </a>
+</nav>
+
 
     <main class="main-content">
       <div id="container-notas">

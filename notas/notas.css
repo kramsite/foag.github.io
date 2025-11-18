@@ -67,35 +67,32 @@ header.cabecalho {
     min-height: 0;
 }
 
+
+
 nav.menu {
-    width: 16%;
-    min-width: 180px;
-    background-color: #38a5ff;
-    padding: 20px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.12);
+  width: 260px;
+  background: #38a5ff;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, .15);
 }
 
 nav.menu a {
-    text-decoration: none;
-    color: white;
-    font-size: 16px;
-    padding: 9px 10px;
-    border-radius: 8px;
-    transition: background-color 0.2s, transform 0.15s;
+  text-decoration: none;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background .2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-nav.menu a:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: translateX(2px);
-}
-
-nav.menu a.ativo {
-    background-color: rgba(255, 255, 255, 0.3);
-    font-weight: 600;
-}
+nav.menu a:hover,
+nav.menu a.active { background: rgba(255, 255, 255, .18); }
 
 .main-content {
     flex: 1;

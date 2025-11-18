@@ -337,13 +337,34 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
 
   <div class="container">
     <nav class="menu">
-      <a href="../inicio/sla.php">Início</a>
-      <a href="../calendario/calendario.php">Calendário</a>
-      <a href="../HORARIO/horario.php">Horário</a>
-      <a href="../sobre/sobre.html">Sobre Nós</a>
-      <a href="../contato/contato.php">Contato</a>
-      <a href="#" class="ativo">Notas & Médias</a>
-    </nav>
+  <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-house"></i> Início
+  </a>
+
+  <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-calendar-days"></i> Calendário
+  </a>
+
+  <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-book"></i> Agenda
+  </a>
+
+  <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-stopwatch"></i> Pomodoro
+  </a>
+
+  <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-check-double"></i> Notas
+  </a>
+
+  <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
+    <i class="fa-solid fa-clock"></i> Horário
+  </a>
+
+  <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
+    <i class="fa-solid fa-circle-info"></i> Sobre
+  </a>
+</nav>
 
     <main class="main-content">
 

@@ -37,7 +37,7 @@ session_start();
                 </a>
                 <a href="../notas/notas.php">
                     <i class="fa-solid fa-check-double"></i>
-                    Notas
+                    Boletim
                 </a>
                 <a href="../horario/horario.php">
                     <i class="fa-solid fa-clock"></i>

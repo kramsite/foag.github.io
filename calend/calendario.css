@@ -152,29 +152,32 @@ header.cabecalho {
 
 /* Menu lateral */
 nav.menu {
-    width: 600px;
-    background-color: #38a5ff;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+  width: 260px;
+  background: #38a5ff;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, .15);
 }
 
-/* Links do menu */
 nav.menu a {
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-    padding: 10px;
-    transition: background-color 0.3s, border-radius 0.3s;
+  text-decoration: none;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background .2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Hover dos links */
-nav.menu a:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+nav.menu a:hover,
+nav.menu a.active {
+  background: rgba(255, 255, 255, .18);
 }
+
 
 /* Conteúdo principal */
 .conteudo {
@@ -199,11 +202,12 @@ nav.menu a:hover {
     background-color: transparent;
     border-radius: 10px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 colunas */
-    grid-template-rows: repeat(3, 1fr); /* 3 linhas */
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas por linha */
+    grid-auto-rows: minmax(300px, 1fr);    /* AQUI eles crescem */
     gap: 10px;
     padding: 20px;
 }
+
 
 /* Estilo dos meses */
 .mes {
@@ -221,7 +225,7 @@ nav.menu a:hover {
     margin-right: 7px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     border: 1px solid #e0e0e0;
-    padding: 15px;
+    padding: 22px;
     position: relative;
 }
 
@@ -372,8 +376,8 @@ nav.menu a:hover {
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    height: 35px;
-    width: 30px;
+    height: 40px;
+    width: 35px;
 }
 
 /* Dias só clicáveis se mês expandido */
