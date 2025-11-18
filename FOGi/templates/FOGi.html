@@ -186,34 +186,26 @@
     input.value = "";
     assembling = addBubble("...", "bot");
     sendBtn.disabled = true;
-    socket.emit("user_message", { text });
+
+    // evento certo + payload certo
+    socket.emit("message", { message: text });
   });
 
   input.addEventListener("keydown", e=>{
     if(e.key === "Enter") sendBtn.click();
   });
 
-  socket.on("assistant_chunk", ({text})=>{
-    if(assembling){
-      if(assembling.textContent === "...") assembling.textContent = text;
-      else assembling.textContent += text;
-      msgs.scrollTop = msgs.scrollHeight;
+  // resposta do back-end
+  socket.on("response", ({ message }) => {
+    if (assembling) {
+      assembling.textContent = message;
+      assembling = null;
+    } else {
+      addBubble(message, "bot");
     }
-  });
-
-  socket.on("assistant_done", ({full})=>{
-    if(assembling) assembling.textContent = full;
-    assembling = null;
     sendBtn.disabled = false;
   });
 
-  socket.on("assistant_error", ({message})=>{
-    addBubble("Erro: " + message, "bot");
-    assembling = null;
-    sendBtn.disabled = false;
-  });
-
-  // botão X para fechar o modal/iframe
   exitBtn.addEventListener("click", ()=>{
     if(window.parent !== window){
       window.parent.postMessage({ type:"FOGI_CLOSE" }, "*");
@@ -224,6 +216,7 @@
 
   input.focus();
 </script>
+
 
 </body>
 </html>
