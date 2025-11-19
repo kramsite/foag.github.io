@@ -126,7 +126,7 @@ function gerarCalendario() {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calendário</title>
-  <link rel="stylesheet" href="calendario.css">
+  <link rel="stylesheet" href="calendarioo.css">
   <link rel="stylesheet" href="dark_calend.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
@@ -140,13 +140,18 @@ function gerarCalendario() {
 
 <body>
   <header class="cabecalho">
-    FOAG
-    <div class="header-icons">
-      <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
-      <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
-      <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
-    </div>
-  </header>
+  FOAG
+  <div class="header-icons">
+    <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
+    <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
+
+    <!-- ÍCONE DA IA -->
+    <i id="icon-fogi" class="fa-solid fa-robot" title="Assistente FOAG — FOGi"></i>
+
+    <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
+  </div>
+</header>
+
 
   <div class="container">
     <nav class="menu">
@@ -200,9 +205,58 @@ function gerarCalendario() {
     </div>
   </div>
 
+  <!-- Modal da FOGi -->
+<div id="fogi-modal">
+  <div class="fogi-container">
+    <div class="fogi-header">
+      <span>FOGi — Assistente de Estudos</span>
+      <button id="fogi-close">Fechar</button>
+    </div>
+    <iframe id="fogi-iframe" src="about:blank"></iframe>
+  </div>
+</div>
+
+
   <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
 
   <script src="calendario.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const fogiBtn   = document.getElementById("icon-fogi");
+    const fogiModal = document.getElementById("fogi-modal");
+    const fogiFrame = document.getElementById("fogi-iframe");
+    const fogiClose = document.getElementById("fogi-close");
+
+    // Se faltar algum elemento, não tenta fazer nada
+    if (!fogiBtn || !fogiModal || !fogiFrame || !fogiClose) {
+      console.warn("FOGi: elemento não encontrado na página.");
+      return;
+    }
+
+    // abre IA
+    fogiBtn.addEventListener("click", () => {
+      fogiFrame.src = "http://127.0.0.1:5000";  // Flask/Ollama rodando
+      fogiModal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    });
+
+    // fecha IA pelo botão "Fechar" do modal
+    fogiClose.addEventListener("click", () => {
+      fogiModal.style.display = "none";
+      fogiFrame.src = "about:blank"; // limpa sessão
+      document.body.style.overflow = "";
+    });
+
+    // sair da IA via postMessage (botão X dentro do FOGi.html)
+    window.addEventListener("message", (ev) => {
+      if (ev.data && ev.data.type === "FOGI_CLOSE") {
+        fogiModal.style.display = "none";
+        fogiFrame.src = "about:blank";
+        document.body.style.overflow = "";
+      }
+    });
+  });
+</script>
 
 
 </body>

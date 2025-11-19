@@ -6,7 +6,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'connectai-local'
 
 # deixa o CORS liberado, evita dor de cabeça
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
+
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "llama3"  # confere no `ollama list` se o nome é esse

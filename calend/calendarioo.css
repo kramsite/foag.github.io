@@ -104,6 +104,72 @@ header.cabecalho {
   transition: background 0.3s;
 }
 
+#icon-fogi {
+  cursor: pointer;
+  transition: 0.2s;
+}
+#icon-fogi:hover {
+  color: #38a5ff;
+  transform: scale(1.1);
+}
+
+/* Modal full-screen */
+#fogi-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+}
+
+#fogi-modal .fogi-container {
+  background: #ffffff;
+  width: 90%;
+  max-width: 1100px;
+  height: 80vh;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+}
+
+#fogi-modal .fogi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #38a5ff;
+  color: #fff;
+  padding: 8px 14px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+#fogi-close {
+  border: none;
+  background: #ffffff;
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+#fogi-close:hover {
+  background: #f1f1f1;
+}
+
+#fogi-iframe {
+  flex: 1;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+
 /* Botão "Sim" */
 #confirm-logout {
   background-color: #38a5ff;
