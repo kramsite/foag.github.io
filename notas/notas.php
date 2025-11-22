@@ -317,8 +317,9 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FOAG — Notas e Médias</title>
-  <link rel="stylesheet" href="boletim.css" />
-  <link rel="stylesheet" href="dark_notas.css">
+  <link rel="stylesheet" href="boletim.css">
+  <link rel="stylesheet" href="../m.escuro/dark_base.css">
+  <link rel="stylesheet" href="dark_boletim.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>

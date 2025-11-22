@@ -1,73 +1,14 @@
-/* dark_notas.css — Modo escuro para a página de Boletim (notas) */
-:root {
-  --dark-bg: #0f172a;         /* Azul muito escuro */
-  --dark-surface: #1e293b;    /* Azul escuro */
-  --dark-primary: #669ada;    /* Azul vibrante */
-  --dark-secondary: #3b82f6;  /* Azul mais claro */
-  --dark-text: #e2e8f0;       /* Cinza claro */
-  --dark-border: #334155;     /* Borda azulada */
-}
+/* ============================
+   dark_notas.css — ESPECÍFICO DA PÁGINA DE NOTAS
+   (tudo do header/menu/footer/body já está no dark_base.css)
+   ============================ */
 
-/* =============== BASE =============== */
-body.dark-mode {
-  background-color: var(--dark-bg) !important;
-  color: var(--dark-text) !important;
-}
-
-/* =============== HEADER / MENU =============== */
-body.dark-mode header.cabecalho {
-  background-color: var(--dark-primary) !important;
-  box-shadow: 0 5px 18px rgba(0,0,0,.8) !important;
-}
-
-body.dark-mode .header-icons i {
-  color: var(--dark-text) !important;
-}
-
-body.dark-mode .header-icons i:hover {
-  color: #93c5fd !important;
-}
-
-/* Menu lateral/topo */
-body.dark-mode nav.menu {
-  background-color: var(--dark-primary) !important;
-  box-shadow: 5px 5px 20px rgba(0,0,0,.7) !important;
-}
-
-body.dark-mode header.cabecalho {
-  background-color: var(--dark-primary) !important;
-  box-shadow: 0 5px 18px rgba(0,0,0,.8) !important;
-}
-
-body.dark-mode .header-icons i {
-  color: var(--dark-text) !important;
-}
-
-body.dark-mode .header-icons i:hover {
-  color: #93c5fd !important;
-}
-
-/* Menu lateral/topo */
-body.dark-mode nav.menu {
-  background-color: var(--dark-primary) !important;
-  box-shadow: 5px 5px 20px rgba(0,0,0,.7) !important;
-}
-
-body.dark-mode nav.menu a {
-  color: var(--dark-text) !important;
-}
-
-body.dark-mode nav.menu a:hover,
-body.dark-mode nav.menu a.active {
-  background: rgba(148, 197, 253, 0.22) !important;
-}
-
-/* Main */
+/* =============== MAIN / FUNDO INTERNO =============== */
 body.dark-mode .main-content {
   background: radial-gradient(circle at top, #111827 0, #020617 60%) !important;
 }
 
-/* =============== CARDS / CONTAINERS =============== */
+/* =============== CARDS =============== */
 body.dark-mode .card-notas {
   background-color: var(--dark-surface) !important;
   border: 1px solid var(--dark-border) !important;
@@ -88,7 +29,7 @@ body.dark-mode .pill-tipo {
   color: #e0f2fe !important;
 }
 
-/* =============== FORM / CONFIG =============== */
+/* =============== FORM CONFIGURAÇÕES =============== */
 body.dark-mode .config-field label,
 body.dark-mode .config-field-periodo label,
 body.dark-mode .tipo-curso-group span,
@@ -104,8 +45,7 @@ body.dark-mode .config-field-periodo input {
   border: 1px solid var(--dark-border) !important;
 }
 
-body.dark-mode .config-field input::placeholder,
-body.dark-mode .config-field-periodo input::placeholder {
+body.dark-mode .config-field input::placeholder {
   color: #6b7280 !important;
 }
 
@@ -114,29 +54,37 @@ body.dark-mode .config-field-periodo select:focus,
 body.dark-mode .config-field-periodo input:focus {
   border-color: var(--dark-primary) !important;
   box-shadow: 0 0 0 2px rgba(56,165,255,0.35) !important;
-  background-color: #020617 !important;
 }
 
-/* =============== BOTÕES =============== */
-body.dark-mode .btn-destaque {
-  background: linear-gradient(90deg, #38a5ff, #0a76d9) !important;
-  color: #0b1120 !important;
-  box-shadow: 0 8px 20px rgba(56,165,255,.45) !important;
+/* Botão específico “salvar configurações” */
+body.dark-mode .btn-config {
+  background: linear-gradient(135deg, #3b82f6, #0ea5e9) !important;
+  color: #e5f3ff !important;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.5) !important;
 }
 
-body.dark-mode .btn-destaque:hover {
-  filter: brightness(1.05) !important;
-}
-
-/* botões gerais abaixo da tabela */
-body.dark-mode .buttons-notas button {
+/* =============== BOTÕES (EXCLUSIVOS DA PÁGINA) =============== */
+/* botões gerais da área de notas (exceto limpar tudo) */
+body.dark-mode .buttons-notas button:not([name="limpar_tudo"]) {
   background: linear-gradient(90deg, #3b82f6, #38bdf8) !important;
   color: #020617 !important;
   box-shadow: 0 8px 20px rgba(56,165,255,.45) !important;
 }
 
-body.dark-mode .buttons-notas button:hover {
+body.dark-mode .buttons-notas button:not([name="limpar_tudo"]):hover {
   filter: brightness(1.05) !important;
+}
+
+/* “Limpar tudo” (danger) */
+body.dark-mode .buttons-notas button[name="limpar_tudo"] {
+  background-color: #450a0a !important;
+  border-color: #b91c1c !important;
+  color: #fecaca !important;
+  box-shadow: 0 6px 16px rgba(127,29,29,0.7) !important;
+}
+
+body.dark-mode .buttons-notas button[name="limpar_tudo"]:hover {
+  background-color: #7f1d1d !important;
 }
 
 /* botão limpar linha */
@@ -166,7 +114,6 @@ body.dark-mode .tabela-notas td {
   color: var(--dark-text) !important;
 }
 
-/* hover/linha ativa */
 body.dark-mode .tabela-notas tbody tr:hover {
   background-color: #111827 !important;
 }
@@ -175,17 +122,19 @@ body.dark-mode .tabela-notas tbody tr:focus-within {
   background-color: #1f2937 !important;
 }
 
-/* inputs de nota */
+/* inputs da tabela */
+body.dark-mode .tabela-notas td input[type="text"],
+body.dark-mode .tabela-notas td input[type="number"],
 body.dark-mode .input-nota {
   background-color: #020617 !important;
   color: var(--dark-text) !important;
   border: 1px solid var(--dark-border) !important;
 }
 
+body.dark-mode .tabela-notas td input:focus,
 body.dark-mode .input-nota:focus {
   border-color: var(--dark-primary) !important;
   box-shadow: 0 0 0 2px rgba(56,165,255,0.35) !important;
-  background-color: #020617 !important;
 }
 
 body.dark-mode .input-nota.nota-invalida {
@@ -193,14 +142,9 @@ body.dark-mode .input-nota.nota-invalida {
   background-color: #450a0a !important;
 }
 
-/* ===========================
-   STATUS / MÉDIA / PRECISA
-   =========================== */
-body.dark-mode .celula-media {
-  color: #f9fafb !important;
-}
+/* =============== STATUS / MÉDIA / PRECISA =============== */
+body.dark-mode .celula-media { color: #f9fafb !important; }
 
-/* mantém as cores de status, só com um pouco mais de contraste no dark */
 body.dark-mode .status-aprovado {
   background-color: #166534 !important;
   color: #dcfce7 !important;
@@ -214,10 +158,6 @@ body.dark-mode .status-recuperacao {
 body.dark-mode .status-reprovado {
   background-color: #991b1b !important;
   color: #fee2e2 !important;
-}
-
-body.dark-mode .celula-precisa {
-  color: var(--dark-text) !important;
 }
 
 body.dark-mode .badge-precisa.impossivel {
@@ -239,7 +179,6 @@ body.dark-mode .resumo-valor {
   color: var(--dark-text) !important;
 }
 
-/* mantêm as cores de “estado”, só ajusta um pouco */
 body.dark-mode .resumo-card.aprovado {
   background-color: #166534 !important;
   border-color: #15803d !important;
@@ -264,18 +203,8 @@ body.dark-mode .resumo-card.geral {
   color: #dbeafe !important;
 }
 
-body.dark-mode .resumo-extra {
-  color: var(--dark-text) !important;
-}
-
 body.dark-mode .dica-foag {
   background-color: #0b1120 !important;
   border-color: #1d4ed8 !important;
   color: #e5e7eb !important;
-}
-
-/* =============== FOOTER =============== */
-body.dark-mode footer {
-  background-color: #020617 !important;
-  color: var(--dark-text-soft) !important;
 }

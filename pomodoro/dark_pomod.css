@@ -1,49 +1,9 @@
-/* pomodoro_dark.css - modo noturno FOAG baseado no dark_calend.css */
-:root {
-  --dark-bg: #0f172a;         /* Azul muito escuro */
-  --dark-surface: #1e293b;    /* Azul escuro */
-  --dark-primary: #669ada;    /* Azul vibrante */
-  --dark-secondary: #3b82f6;  /* Azul mais claro */
-  --dark-text: #e2e8f0;       /* Cinza claro */
-  --dark-border: #334155;     /* Borda azulada */
-}
+/* pomodoro_dark.css — MODO ESCURO ESPECÍFICO DO POMODORO */
+/* (variáveis, body, header, menu e footer ficam no dark_base.css) */
 
-/* ============= BASE ============= */
-body.dark-mode {
-  background-color: var(--dark-bg) !important;
-  color: var(--dark-text) !important;
-}
-
-/* ============= HEADER / MENU ============= */
-body.dark-mode header.cabecalho {
-  background-color: var(--dark-primary) !important;
-  box-shadow: 0 6px 20px rgba(0,0,0,.7);
-}
-
+/* ============= HEADER EXTRA (LOGO) ============= */
 body.dark-mode .logo {
   color: var(--dark-text) !important;
-}
-
-body.dark-mode .header-icons i {
-  color: var(--dark-text) !important;
-}
-
-body.dark-mode .header-icons i:hover {
-  color: #93c5fd !important;
-}
-
-body.dark-mode nav.menu {
-  background-color: var(--dark-primary) !important;
-  box-shadow: 6px 0 22px rgba(0,0,0,.7);
-}
-
-body.dark-mode nav.menu a {
-  color: var(--dark-text) !important;
-}
-
-body.dark-mode nav.menu a:hover,
-body.dark-mode nav.menu a.active {
-  background: rgba(148, 197, 253, 0.2) !important;
 }
 
 /* ============= MAIN / LAYOUT ============= */
@@ -136,7 +96,7 @@ body.dark-mode .tab-btn.active {
   color: #0b1120 !important;
 }
 
-/* ============= LIST / TAGS / LAPs ============= */
+/* ============= LIST / TAGS / TAREFAS ============= */
 body.dark-mode .task {
   background-color: #020617 !important;
   border: 1px solid var(--dark-border) !important;
@@ -163,26 +123,17 @@ body.dark-mode .table th {
   background: #020617 !important;
 }
 
-body.dark-mode .table tr:nth-child(even) td {
-  background: #020617 !important;
-}
-
+body.dark-mode .table tr:nth-child(even) td,
 body.dark-mode .table tr:nth-child(odd) td {
   background: #020617 !important;
 }
 
-/* ============= MODAL SAIR ============= */
+/* ============= MODAL SAIR (ESPECÍFICO DO POMODORO) ============= */
 body.dark-mode .modal-content {
   background-color: var(--dark-surface) !important;
   color: var(--dark-text) !important;
   border: 1px solid var(--dark-border) !important;
   box-shadow: 0 18px 45px rgba(0,0,0,.9) !important;
-}
-
-/* ============= FOOTER ============= */
-body.dark-mode footer {
-  background-color: #020617 !important;
-  color: #9ca3af !important;
 }
 
 /* ============= GRÁFICOS ============= */
