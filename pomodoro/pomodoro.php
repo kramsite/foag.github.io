@@ -1,5 +1,56 @@
 <?php
-  $current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
+session_start();
+
+// 1) Garantir que o usuário está logado
+if (!isset($_SESSION['user_id'])) {
+  header("Location: ../login/index.php");
+  exit;
+}
+
+$userId = $_SESSION['user_id'];
+
+// 2) Caminho da pasta e arquivo de pomodoro desse usuário
+$baseJsonDir    = __DIR__ . '/../json/usuarios';
+$pastaUsuario   = $baseJsonDir . '/' . $userId;
+$arquivoPomodoro = $pastaUsuario . '/pomodoro.json';
+
+// Garante que a pasta exista
+if (!is_dir($pastaUsuario)) {
+  mkdir($pastaUsuario, 0755, true);
+}
+
+// 3) Se não existir pomodoro.json, cria com estrutura básica
+if (!file_exists($arquivoPomodoro)) {
+  $estadoInicial = [
+    'disciplines' => ['Geral'],
+    'sessions'    => [],
+    'goals'       => []
+  ];
+
+  file_put_contents(
+    $arquivoPomodoro,
+    json_encode($estadoInicial, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+  );
+}
+
+// 4) Carrega os dados do pomodoro
+$pomodoroData = json_decode(file_get_contents($arquivoPomodoro), true);
+
+// Normaliza estrutura
+if (!is_array($pomodoroData)) {
+  $pomodoroData = [];
+}
+if (!isset($pomodoroData['disciplines']) || !is_array($pomodoroData['disciplines'])) {
+  $pomodoroData['disciplines'] = ['Geral'];
+}
+if (!isset($pomodoroData['sessions']) || !is_array($pomodoroData['sessions'])) {
+  $pomodoroData['sessions'] = [];
+}
+if (!isset($pomodoroData['goals']) || !is_array($pomodoroData['goals'])) {
+  $pomodoroData['goals'] = [];
+}
+
+$current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -15,6 +66,12 @@
   <!-- Chart.js para os gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="../m.escuro/dark-mode.js"></script>
+
+  <!-- Passa o estado inicial do Pomodoro para o JS -->
+  <script>
+    window.POMODORO_DATA = <?= json_encode($pomodoroData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    window.POMODORO_SAVE_URL = "salvar_pomodoro.php";
+  </script>
 </head>
 <body>
   <!-- Cabeçalho -->
@@ -30,34 +87,34 @@
   <div class="container">
     <!-- Menu lateral -->
     <nav class="menu">
-  <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-house"></i> Início
-  </a>
+      <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
+        <i class="fa-solid fa-house"></i> Início
+      </a>
 
-  <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-calendar-days"></i> Calendário
-  </a>
+      <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
+        <i class="fa-solid fa-calendar-days"></i> Calendário
+      </a>
 
-  <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-book"></i> Agenda
-  </a>
+      <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
+        <i class="fa-solid fa-book"></i> Agenda
+      </a>
 
-  <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-stopwatch"></i> Pomodoro
-  </a>
+      <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
+        <i class="fa-solid fa-stopwatch"></i> Pomodoro
+      </a>
 
-  <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-check-double"></i> Boletim
-  </a>
+      <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
+        <i class="fa-solid fa-check-double"></i> Boletim
+      </a>
 
-  <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-clock"></i> Horário
-  </a>
+      <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
+        <i class="fa-solid fa-clock"></i> Horário
+      </a>
 
-  <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
-    <i class="fa-solid fa-circle-info"></i> Sobre
-  </a>
-</nav>
+      <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
+        <i class="fa-solid fa-circle-info"></i> Sobre
+      </a>
+    </nav>
 
     <!-- Conteúdo -->
     <main class="conteudo">
@@ -187,6 +244,6 @@
   <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
 
   <!-- Lógica do módulo -->
-  <script defer src="pomodoro.js"></script>
+  <script defer src="pomodoro.js?v=<?= time() ?>"></script>
 </body>
 </html>

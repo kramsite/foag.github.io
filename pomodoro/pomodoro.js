@@ -1,15 +1,24 @@
-// ===== Persistência =====
-const KEY = 'foag_study_v1';
-const state = JSON.parse(localStorage.getItem(KEY) || '{}');
-if (!state.disciplines) state.disciplines = ['Geral'];
-if (!state.sessions) state.sessions = [];
-if (!state.goals) state.goals = {};
+// ===== Persistência (via servidor / pomodoro.json do usuário) =====
+const SAVE_URL = window.POMODORO_SAVE_URL || 'salvar_pomodoro.php';
+
+const state = (window.POMODORO_DATA && typeof window.POMODORO_DATA === 'object')
+  ? window.POMODORO_DATA
+  : {};
+
+if (!Array.isArray(state.disciplines)) state.disciplines = ['Geral'];
+if (!Array.isArray(state.sessions)) state.sessions = [];
+if (!state.goals || typeof state.goals !== 'object') state.goals = {};
+
 function save() {
   try {
-    localStorage.setItem(KEY, JSON.stringify(state));
+    fetch(SAVE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(state)
+    }).catch(() => {});
   } catch (e) {}
 }
-save();
+
 
 // ===== Header actions =====
 const logoutModal = document.getElementById('logout-modal');

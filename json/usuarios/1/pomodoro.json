@@ -1,1 +1,29 @@
-[]
+{
+    "disciplines": [
+        "Geral",
+        "Matematica",
+        "Portugues",
+        "Biologia"
+    ],
+    "sessions": [
+        {
+            "ts": 1763850810770,
+            "minutes": 2,
+            "mode": "focus",
+            "discipline": "Portugues"
+        },
+        {
+            "ts": 1763851086315,
+            "minutes": 2,
+            "mode": "focus",
+            "discipline": "Matematica"
+        },
+        {
+            "ts": 1763851172632,
+            "minutes": 1,
+            "mode": "short",
+            "discipline": "Matematica"
+        }
+    ],
+    "goals": []
+}
