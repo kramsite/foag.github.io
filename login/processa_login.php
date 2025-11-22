@@ -17,8 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $usuarios = json_decode($conteudo, true) ?? [];
 
         foreach ($usuarios as $usuario) {
+            // confere email
             if ($usuario['email'] === $email && password_verify($senha, $usuario['senha'])) {
-                
+
+                // guarda infos na sessão
+                // (IMPORTANTE: agora vai o id também)
+                $_SESSION['user_id']    = $usuario['id'] ?? null;
+                $_SESSION['user_nome']  = $usuario['nome'] ?? '';
+                $_SESSION['user_email'] = $usuario['email'] ?? '';
+
+                // mantém o que você já usava
                 $_SESSION['usuario'] = $usuario['nome'] ?? $usuario['email'];
 
                 exibirMensagem("Login realizado com sucesso!", "entrada.php");

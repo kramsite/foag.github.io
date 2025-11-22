@@ -1,4 +1,39 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('agenda.js carregado, DOM pronto');
+
+    // Dados vindos do PHP (agenda.php)
+    let agendaData = window.AGENDA_DATA || {
+        notas: [],
+        tarefas: [],
+        nao_esquecer: []
+    };
+    console.log('AGENDA_DATA inicial:', agendaData);
+
+    const SAVE_URL = window.AGENDA_SAVE_URL || 'salvar_agenda.php';
+    console.log('SAVE_URL:', SAVE_URL);
+
+    // -----------------------------------------
+    // Função para salvar no servidor (JSON)
+    // -----------------------------------------
+    function salvarNoServidor() {
+        console.log('Salvando no servidor...', SAVE_URL, agendaData);
+
+        fetch(SAVE_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(agendaData)
+        })
+        .then(async (res) => {
+            const txt = await res.text();
+            console.log('Resposta do salvar_agenda.php:', res.status, txt);
+        })
+        .catch(err => {
+            console.error('Erro ao salvar agenda:', err);
+        });
+    }
+
     // Elementos do DOM
     const listaTarefas = document.getElementById('lista-tarefas');
     const listaNaoEsquecer = document.getElementById('lista-nao-esquecer');
@@ -20,8 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnCancelarExclusao = document.getElementById('cancelar-exclusao');
     
     let notaPendente = null;
-    let itemParaExcluir = null;
-    let tipoExclusao = ''; // 'nota', 'tarefa', 'nao-esquecer'
+    let tipoExclusao = ''; // 'nota', 'tarefa', 'nao-esquecer', 'sobrescrever'
     let dadosExclusao = null;
 
     // =============================================
@@ -49,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function fecharModalExclusao() {
         modalExcluir.style.display = 'none';
-        itemParaExcluir = null;
         tipoExclusao = '';
         dadosExclusao = null;
     }
@@ -64,6 +97,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
             case 'nao-esquecer':
                 excluirNaoEsquecer(dadosExclusao.linha);
+                break;
+            case 'sobrescrever':
+                sobrescreverNota(dadosExclusao.titulo, dadosExclusao.texto);
                 break;
         }
         fecharModalExclusao();
@@ -134,42 +170,46 @@ document.addEventListener('DOMContentLoaded', function() {
     // =============================================
 
     function salvarDados() {
-        // Salvar tarefas
-        const tarefas = [];
-        document.querySelectorAll('#lista-tarefas tr').forEach(linha => {
-            tarefas.push({
-                texto: linha.cells[1].textContent,
-                data: linha.cells[2].querySelector('input').value
-            });
-        });
-        localStorage.setItem('tarefas-salvas', JSON.stringify(tarefas));
+        console.log('salvarDados() chamado');
 
-        // Salvar "Não Esquecer"
-        const itens = [];
-        document.querySelectorAll('#lista-nao-esquecer tr').forEach(linha => {
-            itens.push({
+        // Atualiza tarefas em agendaData
+        agendaData.tarefas = [];
+        document.querySelectorAll('#lista-tarefas tr').forEach(linha => {
+            agendaData.tarefas.push({
                 texto: linha.cells[1].textContent,
                 data: linha.cells[2].querySelector('input').value
             });
         });
-        localStorage.setItem('nao-esquecer-salvos', JSON.stringify(itens));
+
+        // Atualiza "Não Esquecer" em agendaData
+        agendaData.nao_esquecer = [];
+        document.querySelectorAll('#lista-nao-esquecer tr').forEach(linha => {
+            agendaData.nao_esquecer.push({
+                texto: linha.cells[1].textContent,
+                data: linha.cells[2].querySelector('input').value
+            });
+        });
+
+        salvarNoServidor();
     }
 
     function carregarDados() {
+        console.log('carregarDados() chamado com:', agendaData);
+
         // Carregar tarefas
-        const tarefas = JSON.parse(localStorage.getItem('tarefas-salvas') || '[]');
-        tarefas.forEach(tarefa => {
+        listaTarefas.innerHTML = '';
+        (agendaData.tarefas || []).forEach(tarefa => {
             const linha = criarLinha(listaTarefas);
-            linha.cells[1].textContent = tarefa.texto;
-            linha.cells[2].querySelector('input').value = tarefa.data;
+            linha.cells[1].textContent = tarefa.texto || '';
+            linha.cells[2].querySelector('input').value = tarefa.data || '';
         });
 
         // Carregar "Não Esquecer"
-        const itens = JSON.parse(localStorage.getItem('nao-esquecer-salvos') || '[]');
-        itens.forEach(item => {
+        listaNaoEsquecer.innerHTML = '';
+        (agendaData.nao_esquecer || []).forEach(item => {
             const linha = criarLinha(listaNaoEsquecer);
-            linha.cells[1].textContent = item.texto;
-            linha.cells[2].querySelector('input').value = item.data;
+            linha.cells[1].textContent = item.texto || '';
+            linha.cells[2].querySelector('input').value = item.data || '';
         });
     }
 
@@ -183,11 +223,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
-        // Recuperar notas existentes
-        let notas = JSON.parse(localStorage.getItem('notas')) || [];
-        
         // Verificar se já existe uma nota com o mesmo título
-        const notaExistente = notas.find(nota => nota.titulo === titulo);
+        const notaExistente = (agendaData.notas || []).find(nota => nota.titulo === titulo);
         if (notaExistente) {
             abrirModalExclusao(
                 'Sobrescrever Nota', 
@@ -198,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
-        // Adicionar nova nota com título e data/hora
         const novaNota = {
             id: Date.now(),
             titulo: titulo,
@@ -206,18 +242,38 @@ document.addEventListener('DOMContentLoaded', function() {
             data: new Date().toLocaleString('pt-BR')
         };
         
-        notas.push(novaNota);
-        
-        // Salvar no localStorage
-        localStorage.setItem('notas', JSON.stringify(notas));
-        
-        // Atualizar a exibição
+        if (!Array.isArray(agendaData.notas)) {
+            agendaData.notas = [];
+        }
+
+        agendaData.notas.push(novaNota);
+        salvarNoServidor();
         carregarNotas();
         return true;
     }
+
+    function sobrescreverNota(titulo, texto) {
+        if (!Array.isArray(agendaData.notas)) {
+            agendaData.notas = [];
+        }
+
+        // remove nota antiga
+        agendaData.notas = agendaData.notas.filter(nota => nota.titulo !== titulo);
+
+        const novaNota = {
+            id: Date.now(),
+            titulo: titulo,
+            texto: texto,
+            data: new Date().toLocaleString('pt-BR')
+        };
+
+        agendaData.notas.push(novaNota);
+        salvarNoServidor();
+        carregarNotas();
+    }
     
     function carregarNotas() {
-        const notas = JSON.parse(localStorage.getItem('notas')) || [];
+        const notas = Array.isArray(agendaData.notas) ? agendaData.notas : [];
         noteList.innerHTML = '';
         
         if (notas.length === 0) {
@@ -270,8 +326,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.btn-pequeno').forEach(btn => {
             btn.addEventListener('click', function() {
                 const title = this.getAttribute('data-title');
-                const notas = JSON.parse(localStorage.getItem('notas')) || [];
-                const nota = notas.find(n => n.titulo === title);
+                const notasAtual = Array.isArray(agendaData.notas) ? agendaData.notas : [];
+                const nota = notasAtual.find(n => n.titulo === title);
                 if (nota) {
                     baixarPdf(nota.titulo, nota.texto);
                 }
@@ -280,30 +336,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function excluirNota(id) {
-        let notas = JSON.parse(localStorage.getItem('notas')) || [];
-        notas = notas.filter(nota => nota.id !== id);
-        localStorage.setItem('notas', JSON.stringify(notas));
+        if (!Array.isArray(agendaData.notas)) {
+            agendaData.notas = [];
+        }
+        agendaData.notas = agendaData.notas.filter(nota => nota.id !== id);
+        salvarNoServidor();
         carregarNotas();
     }
     
     function editarNota(id) {
-        let notas = JSON.parse(localStorage.getItem('notas')) || [];
-        const nota = notas.find(nota => nota.id === id);
-        
-        if (nota) {
-            // Preencher o textarea com o conteúdo da nota
-            textareaNotas.value = nota.texto;
-            
-            // Preencher o campo de título no modal
-            inputNomeNota.value = nota.titulo;
-            
-            // Abrir o modal para edição
-            notaPendente = nota.texto;
-            abrirModalNomearNota();
-            
-            // Excluir a nota antiga
-            excluirNota(id);
+        if (!Array.isArray(agendaData.notas)) {
+            agendaData.notas = [];
         }
+
+        const idx = agendaData.notas.findIndex(nota => nota.id === id);
+        if (idx === -1) return;
+
+        const nota = agendaData.notas[idx];
+
+        // Preencher o textarea com o conteúdo da nota
+        textareaNotas.value = nota.texto;
+
+        // Preencher o campo de título no modal
+        inputNomeNota.value = nota.titulo;
+
+        // Abrir o modal para edição
+        notaPendente = nota.texto;
+
+        // remove a antiga (vai ser recriada ao salvar)
+        agendaData.notas.splice(idx, 1);
+        salvarNoServidor();
+        carregarNotas();
+
+        abrirModalNomearNota();
     }
     
     function baixarPdf(title, content) {
@@ -357,13 +422,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const textoNota = textareaNotas.value.trim();
         
         if (textoNota) {
-            // Salvar o texto da nota temporariamente
             notaPendente = textoNota;
-            
-            // Limpar o campo de texto
             textareaNotas.value = '';
-            
-            // Abrir modal para nomear a nota
             abrirModalNomearNota();
         } else {
             alert('Por favor, escreva algo na nota antes de salvar.');
@@ -415,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         document.getElementById('confirm-logout').addEventListener('click', () => {
-            window.location.href = '../index/index.php';
+            window.location.href = '../login/index.php';
         });
 
         document.getElementById('cancel-logout').addEventListener('click', () => {
@@ -428,4 +488,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Expor funções pra debug no console
+    window._debugSalvar = salvarNoServidor;
+    window._debugAgenda = agendaData;
+    console.log('Debug pronto: use _debugSalvar() e veja window._debugAgenda');
 });
