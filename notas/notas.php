@@ -307,36 +307,107 @@ if (!isset($_SESSION['periodos'][$periodoAtual])) {
 $materias = $_SESSION['periodos'][$periodoAtual]['materias'];
 $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
+ 
+    
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FOAG — Notas e Médias</title>
-
-  <link rel="stylesheet" href="notas.css" />
+  <link rel="stylesheet" href="boletim.css" />
   <link rel="stylesheet" href="dark_notas.css">
-
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
   <script src="../m.escuro/dark-mode.js"></script>
 </head>
+<style>
+      #icon-fogi {
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      #icon-fogi:hover {
+        color: #38a5ff;
+        transform: scale(1.1);
+      }
+
+      /* Modal full-screen da FOGi */
+      #fogi-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        align-items: center;
+        justify-content: center;
+      }
+
+      #fogi-modal .fogi-container {
+        background: #ffffff;
+        width: 90%;
+        max-width: 1100px;
+        height: 80vh;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+      }
+
+      #fogi-modal .fogi-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #38a5ff;
+        color: #fff;
+        padding: 8px 14px;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      #fogi-close {
+        border: none;
+        background: #ffffff;
+        color: #333;
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+      }
+
+      #fogi-close:hover {
+        background: #f1f1f1;
+      }
+
+      #fogi-iframe {
+        flex: 1;
+        border: none;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+</head>
 
 <body>
-  <header class="cabecalho">
-    FOAG
-    <div class="header-icons">
-      <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
-      <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
-      <i id="icon-fogi" class="fa-solid fa-robot" title="Assistente FOAG — FOGi"></i>
-      <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
-    </div>
-  </header>
+    <header class="cabecalho">
+      FOAG
+      <div class="header-icons">
+        <i id="themeToggle" class="fa-solid fa-moon" title="Modo Escuro"></i>
+        <i id="icon-perfil" class="fa-regular fa-user" title="Perfil"></i>
+        <i id="icon-fogi" class="fa-solid fa-robot" title="Assistente FOAG — FOGi"></i>
+        <i id="icon-sair" class="fa-solid fa-right-from-bracket" title="Sair"></i>
+      </div>
+    </header>
 
-  <div class="container">
-    <nav class="menu">
+    <div class="container">
+        <!-- Menu lateral -->
+        <nav class="menu">
   <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
     <i class="fa-solid fa-house"></i> Início
   </a>
@@ -453,7 +524,7 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
           <!-- período alvo oculto -->
           <input type="hidden" name="periodo_atual_form" value="<?php echo htmlspecialchars($periodoAtual); ?>">
 
-          <button type="submit" name="salvar_config" class="btn-destaque">Salvar configurações</button>
+          <button type="submit" name="salvar_config" class="btn-config">Salvar configurações</button>
         </form>
       </section>
 
@@ -685,6 +756,9 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
     </main>
   </div>
 
-  <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
+<footer>
+        &copy; 2025 FOAG. Todos os direitos reservados.
+    </footer>
+
 </body>
 </html>
