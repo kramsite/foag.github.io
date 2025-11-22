@@ -7,11 +7,11 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FOAG - Início</title>
-    <link rel="stylesheet" href="inicio.css">
+    <link rel="stylesheet" href="inicioo.css">
     <link rel="stylesheet" href="dark_ini.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="../m.escuro/dark-mode.js"></script>
+   
 </head>
 <body>
     <header class="cabecalho">
@@ -245,35 +245,79 @@ session_start();
     </footer>
 
     <script src="inicio.js"></script>
-    <script>
-  const fogiBtn = document.getElementById("icon-fogi");
-  const fogiModal = document.getElementById("fogi-modal");
-  const fogiFrame = document.getElementById("fogi-iframe");
-  const fogiClose = document.getElementById("fogi-close");
-
-  // ABRE IA
-  fogiBtn.addEventListener("click", () => {
-    fogiFrame.src = "http://127.0.0.1:5000";
-    fogiModal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-  });
-
-  // FECHA IA pelo botão Fechar
-  fogiClose.addEventListener("click", () => {
-    fogiModal.style.display = "none";
-    fogiFrame.src = "about:blank";
-    document.body.style.overflow = "";
-  });
-
-  // FECHA IA enviado de dentro do FOGi.html
-  window.addEventListener("message", (ev) => {
-    if (ev.data?.type === "FOGI_CLOSE") {
-      fogiModal.style.display = "none";
-      fogiFrame.src = "about:blank";
-      document.body.style.overflow = "";
+   
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // --------- PERFIL ----------
+    const iconPerfil = document.getElementById('icon-perfil');
+    if (iconPerfil) {
+        iconPerfil.addEventListener('click', function() {
+            // troca o caminho aqui se seu perfil for outro arquivo
+            window.location.href = '../perfil/perfil.php';
+        });
     }
-  });
-</script>
 
+    // --------- MODAL DE SAIR ----------
+    const iconSair = document.getElementById('icon-sair');
+    const logoutModal = document.getElementById('logout-modal');
+    const confirmLogout = document.getElementById('confirm-logout');
+    const cancelLogout = document.getElementById('cancel-logout');
+
+    if (iconSair && logoutModal) {
+        iconSair.addEventListener('click', function() {
+            logoutModal.style.display = 'flex';
+        });
+    }
+
+    if (cancelLogout && logoutModal) {
+        cancelLogout.addEventListener('click', function() {
+            logoutModal.style.display = 'none';
+        });
+    }
+
+    if (confirmLogout) {
+        confirmLogout.addEventListener('click', function() {
+            // redireciona pra tela de login
+            window.location.href = '../index/index.php';
+        });
+    }
+
+    if (logoutModal) {
+        logoutModal.addEventListener('click', function(e) {
+            if (e.target === logoutModal) {
+                logoutModal.style.display = 'none';
+            }
+        });
+    }
+
+    // --------- FOGi (IA) ----------
+    const fogiBtn = document.getElementById("icon-fogi");
+    const fogiModal = document.getElementById("fogi-modal");
+    const fogiFrame = document.getElementById("fogi-iframe");
+    const fogiClose = document.getElementById("fogi-close");
+
+    if (fogiBtn && fogiModal && fogiFrame && fogiClose) {
+        fogiBtn.addEventListener("click", () => {
+            fogiFrame.src = "http://127.0.0.1:5000";
+            fogiModal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        });
+
+        fogiClose.addEventListener("click", () => {
+            fogiModal.style.display = "none";
+            fogiFrame.src = "about:blank";
+            document.body.style.overflow = "";
+        });
+
+        window.addEventListener("message", (ev) => {
+            if (ev.data?.type === "FOGI_CLOSE") {
+                fogiModal.style.display = "none";
+                fogiFrame.src = "about:blank";
+                document.body.style.overflow = "";
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>

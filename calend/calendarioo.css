@@ -1,35 +1,32 @@
-/* Reset de margens, paddings e box-sizing */
+/* =========================
+   RESET + BASE
+   ========================= */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* Corpo da página */
 body {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #ffffff;
 }
 
-/* Cabeçalho do site */
+/* =========================
+   CABEÇALHO
+   ========================= */
 header.cabecalho {
-    font-family: 'Snap ITC', sans-serif;
-    width: 100%;
-    background-color: #38a5ff;
-    color: white;
-    text-align: left;
-    padding: 15px;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-/* Container geral (menu e conteúdo principal) */
-.container {
-    display: flex;
-    flex: 1;
+  font-family: 'Snap ITC', sans-serif;
+  width: 100%;
+  background-color: #38a5ff;
+  color: #ffffff;
+  text-align: left;
+  padding: 15px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .cabecalho {
@@ -38,10 +35,9 @@ header.cabecalho {
   font-size: 24px;
   font-weight: bold;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-  /* preserve seu estilo atual */
 }
 
-/* Container dos botões no header */
+/* Ícones do header */
 .header-icons {
   position: absolute;
   top: 50%;
@@ -49,44 +45,104 @@ header.cabecalho {
   transform: translateY(-50%);
   display: flex;
   gap: 15px;
-  font-size: 22px;
+  align-items: center;
+  font-size: 1.3rem;
   color: #ffffff;
   cursor: pointer;
   user-select: none;
 }
 
-.header-icons i:hover {
-  color: #006cc5; /* muda a cor no hover, pode ajustar */
-  transform: translateY(-13%) scale(1.1);
+.header-icons i {
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
-/* Fundo escuro do modal */
+.header-icons i:hover {
+  transform: translateY(-13%) scale(1.1);
+  color: #dddddd;
+}
+
+/* Ícone FOGi */
+#icon-fogi {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#icon-fogi:hover {
+  color: #38a5ff;
+  transform: scale(1.1);
+}
+
+/* =========================
+   LAYOUT GERAL
+   ========================= */
+.container {
+  display: flex;
+  flex: 1;
+}
+
+/* Menu lateral */
+nav.menu {
+  width: 260px;
+  background: #38a5ff;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+nav.menu a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+nav.menu a:hover,
+nav.menu a.active {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Conteúdo principal */
+.conteudo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* =========================
+   MODAL GENÉRICO
+   ========================= */
 .modal {
-  display: none; /* escondido por padrão */
+  display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 2000;
   justify-content: center;
   align-items: center;
 }
 
-/* Caixa branca do modal */
 .modal-content {
-  background: #fff;
-  color: #333;
+  background: #ffffff;
+  color: #333333;
   padding: 25px;
   border-radius: 10px;
   text-align: center;
   width: 300px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
   animation: aparecer 0.3s ease;
 }
 
-/* Botões do modal */
 .modal-buttons {
   margin-top: 20px;
   display: flex;
@@ -104,16 +160,41 @@ header.cabecalho {
   transition: background 0.3s;
 }
 
-#icon-fogi {
-  cursor: pointer;
-  transition: 0.2s;
-}
-#icon-fogi:hover {
-  color: #38a5ff;
-  transform: scale(1.1);
+/* Botão "Sim" */
+#confirm-logout {
+  background-color: #38a5ff;
+  color: #ffffff;
 }
 
-/* Modal full-screen */
+#confirm-logout:hover {
+  background-color: #006cc5;
+}
+
+/* Botão "Cancelar" */
+#cancel-logout {
+  background-color: #e0e0e0;
+  color: #333333;
+}
+
+#cancel-logout:hover {
+  background-color: #bdbdbd;
+}
+
+/* Animação do modal */
+@keyframes aparecer {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   MODAL FOGi FULLSCREEN
+   ========================= */
 #fogi-modal {
   display: none;
   position: fixed;
@@ -142,7 +223,7 @@ header.cabecalho {
   align-items: center;
   justify-content: space-between;
   background: #38a5ff;
-  color: #fff;
+  color: #ffffff;
   padding: 8px 14px;
   font-weight: 600;
   font-size: 0.95rem;
@@ -151,7 +232,7 @@ header.cabecalho {
 #fogi-close {
   border: none;
   background: #ffffff;
-  color: #333;
+  color: #333333;
   padding: 4px 10px;
   border-radius: 6px;
   cursor: pointer;
@@ -169,449 +250,188 @@ header.cabecalho {
   height: 100%;
 }
 
-
-/* Botão "Sim" */
-#confirm-logout {
-  background-color: #38a5ff;
-  color: #fff;
+/* =========================
+   CALENDÁRIO – CONTAINER
+   ========================= */
+.calendario-container {
+  display: flex;
+  justify-content: center;
 }
 
-#confirm-logout:hover {
-  background-color: #006cc5;
+.calendario {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(300px, 1fr);
+  gap: 10px;
+  padding: 20px;
 }
 
-/* Botão "Cancelar" */
-#cancel-logout {
-  background-color: #e0e0e0;
-  color: #333;
-}
-
-#cancel-logout:hover {
-  background-color: #bdbdbd;
-}
-
-/* Animação */
-@keyframes aparecer {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.header-icons {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-.header-icons i {
-    color: white; /* deixa todos os ícones brancos */
-    font-size: 1.3rem;
-    cursor: pointer;
-    transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.header-icons i:hover {
-    transform: scale(1.2);
-    color: #ddd; /* cor levemente mais clara no hover */
-}
-
-
-
-/* Menu lateral */
-nav.menu {
-  width: 260px;
-  background: #38a5ff;
-  padding: 18px;
+/* =========================
+   CALENDÁRIO – MÊS (CARD)
+   ========================= */
+.mes {
+  width: auto;
+  height: auto;
+  background-color: #f1f1f1;
+  color: rgb(60, 60, 60);
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, .15);
-}
-
-nav.menu a {
-  text-decoration: none;
-  color: #fff;
-  font-size: 16px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  transition: background .2s ease;
-  display: flex;
+  justify-content: flex-start;
   align-items: center;
-  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 9px;
+  margin-right: 7px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  padding: 22px;
+  position: relative;
 }
 
-nav.menu a:hover,
-nav.menu a.active {
-  background: rgba(255, 255, 255, .18);
-}
-
-
-/* Conteúdo principal */
-.conteudo {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-
-/* Contêiner do calendário */
-.calendario-container {
-    display: flex;
-    justify-content: center;
-}
-
-/* Layout do calendário */
-.calendario {
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
-    border-radius: 10px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas por linha */
-    grid-auto-rows: minmax(300px, 1fr);    /* AQUI eles crescem */
-    gap: 10px;
-    padding: 20px;
-}
-
-
-/* Estilo dos meses */
-.mes {
-    width: auto;
-    height: auto;
-    background-color: #f1f1f1;
-    color: rgb(60, 60, 60);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 9px;
-    margin-right: 7px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e0e0e0;
-    padding: 22px;
-    position: relative;
-}
-
-/* Ajustes específicos para o calendário expandido */
-.mes.expanded {
-    position: fixed;
-    top: 10%;
-    left: 20%;
-    width: 60%;
-    height: 80%;
-    z-index: 1000;
-    background: white;
-    border: 5px solid #38a5ff;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.4);
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    overflow: hidden; /* impede scroll interno na coluna */
-}
-
-/* Coluna do calendário (lado esquerdo) ocupa metade */
-.mes.expanded .calendario-mes {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* ocupar altura total */
-}
-
-/* Título do mês fixo no topo */
-.mes.expanded .header-mes {
-    font-weight: bold;
-    font-size: 1.8em; /* maior destaque */
-    background-color: #38a5ff;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    border-radius: 5px;
-    flex-shrink: 0; /* evita reduzir altura */
-}
-
-/* Grid dos dias ocupa todo o espaço restante */
-.mes.expanded .dias {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: 1fr; /* dias se expandem igualmente */
-    gap: 8px;
-    padding: 10px 0;
-}
-
-/* Dias (semana + números) maiores */
-.mes.expanded .dia {
-    font-size: 1.2em;
-    height: auto;
-    width: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fafafa;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-}
-
-/* Dias da semana continuam não clicáveis */
-.mes.expanded .dia.header-dia {
-    background-color: transparent;
-    font-weight: bold;
-    color: #333;
-    cursor: default;
-    pointer-events: none;
-}
-
-/* Hover para os dias (números) */
-.mes.expanded .dia:not(.header-dia):hover {
-    background-color: #ebebeb;
-    color: rgb(0, 0, 0);
-}
-
-/* Coluna da direita continua para notas/eventos */
-.mes.expanded .info-mes {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background-color: #f9f9f9;
-    border-left: 2px solid #e0e0e0;
-    padding: 15px;
-    overflow-y: auto;
-}
-
-
-/* Esconde o botão de fechar e a área de info no estado normal */
-.mes .info-mes,
-.mes .fechar-btn {
-    display: none;
-}
-
-/* Só mostra quando o mês está expandido */
-.mes.expanded .info-mes {
-    display: flex;
-    flex-direction: column;
-}
-
-.mes.expanded .fechar-btn {
-    display: flex;
-}
-
-
-/* Cabeçalho do mês */
+/* Cabeçalho do mês (card fechado) */
 .header-mes {
-    font-weight: bold;
-    font-size: 1.2em;
-    margin-bottom: 5px;
-    background-color: #38a5ff;
-    color: white;
-    width: 100%;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 5px;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 5px;
+  background-color: #38a5ff;
+  color: #ffffff;
+  width: 100%;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 5px;
 }
 
-/* Dias da semana (não clicáveis) */
-.dia.header-dia {
-    cursor: default;
-    pointer-events: none;
-    background-color: transparent;
-    font-weight: bold;
-}
-
-/* Grid dos dias */
+/* Grid de dias do mês (estado normal) */
 .dias {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    width: 100%;
-    padding: 5px 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  width: 100%;
+  padding: 5px 0;
 }
 
-/* Estilo dos dias */
+/* Dia genérico */
 .dia {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fafafa;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    height: 40px;
-    width: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fafafa;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  height: 40px;
+  width: 35px;
+}
+
+/* Dias da semana (cabeçalho) */
+.dia.header-dia {
+  cursor: default;
+  pointer-events: none;
+  background-color: transparent;
+  font-weight: bold;
 }
 
 /* Dias só clicáveis se mês expandido */
 .mes:not(.expanded) .dia {
-    pointer-events: none;
-    cursor: default;
-    opacity: 0.6;
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.6;
 }
 
-/* Hover nos dias */
+/* Hover em dias */
 .dia:hover {
-    background-color: #cdcdcd;
-    color: white;
-}
-
-/* Botão fechar (X) no mês expandido */
-.mes.expanded .fechar-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: #38a5ff;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    border: none;
-    border-radius: 30%;
-    width: 35px;
-    height: 35px;
-    cursor: pointer;
-    box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease;
-}
-
-.cores-info {
-    margin-top: 15px;
-    font-size: 0.9em;
-    color: #333;
-}
-
-.botoes-cores {
-    display: flex;
-    gap: 20px;
-    margin-top: 8px;
-    flex-wrap: wrap; /* se a tela for pequena, quebra linha */
-    align-items: center;
-}
-
-.cor-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9em;
-    color: #333;
-}
-
-.btn-cor {
-    width: 25px;
-    height: 25px;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 0 5px rgba(0,0,0,0.2);
-    transition: transform 0.2s ease;
-}
-
-.btn-cor:hover {
-    transform: scale(1.2);
-    box-shadow: 0 0 8px rgba(0,0,0,0.4);
-}
-
-
-/* Marcação do dia conforme cor selecionada */
-.dia.vermelho {
-    background-color: #e74c3c !important;
-    color: white !important;
-}
-
-.dia.amarelo {
-    background-color: #f1c40f !important;
-    color: black !important;
-}
-
-.dia.azul {
-    background-color: #70befe !important;
-    color: white !important;
-}
-
-.dia.sem-aula {
-    background-color: #f39c12 !important; /* laranja / amarelo escuro */
-    color: black !important;
-}
-
-
-.dia.roxo {
-    background-color: #8e44ad !important;
-    color: white !important;
-}
-
-/* Destaque para sábados e domingos */
-.dia.fim-de-semana {
-    background-color: #e7e6e6; /* levemente mais escuro */
-}
-
-.mes.expanded .dia.fim-de-semana {
-    background-color: #f1f1f1;
-}
-
-/* Caso o dia seja marcado com cor, a marcação tem prioridade */
-.dia.fim-de-semana.vermelho,
-.dia.fim-de-semana.amarelo,
-.dia.fim-de-semana.azul,
-.dia.fim-de-semana.roxo {
-    background-color: inherit;
+  background-color: #cdcdcd;
+  color: #ffffff;
 }
 
 /* =========================
-   FOAG – Overrides finais
-   (cole no FINAL do seu CSS)
+   MÊS EXPANDIDO (MODAL DE MÊS)
    ========================= */
-:root{
-  --foag-prim:#38a5ff;
-  --foag-azul-clarinho:#dff3ff; /* feriado azul clarinho */
-  --card-bg:#ffffff;
-  --card-borda:#e9eef3;
-  --txt:#1f2937;
-  --txt-suave:#6b7280;
+.mes.expanded {
+  position: fixed;
+  top: 10%;
+  left: 20%;
+  width: 60%;
+  height: 80%;
+  z-index: 1000;
+  background: #ffffff;
+  border: 5px solid #38a5ff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  overflow: hidden; /* trava scroll no container */
 }
 
-/* 1) FERIADOS: azul clarinho + tooltip elegante */
-.dia.feriado{
-  background: var(--foag-azul-clarinho) !important;
-  color: #0b1324 !important;
-  outline: 1px solid rgba(56,165,255,.18);
-}
-.dia.feriado:hover::after{
-  content: attr(data-feriado);
-  position:absolute; z-index:10;
-  left:50%; transform:translateX(-50%);
-  bottom:100%; margin-bottom:6px;
-  background:#0f172a; color:#fff; padding:6px 8px; border-radius:6px; white-space:nowrap;
-  font-size:.78rem; box-shadow:0 6px 18px rgba(0,0,0,.18);
-}
-.dia.feriado:hover::before{
-  content:''; position:absolute; left:50%; transform:translateX(-50%);
-  bottom:100%; border:6px solid transparent; border-top-color:#0f172a; margin-bottom:-6px;
+/* Coluna esquerda (calendário do mês) */
+.mes.expanded .calendario-mes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-/* 2) INDICADORES (bolinhas) discretos */
-.dots{ position:absolute; left:6px; bottom:6px; display:flex; gap:4px; }
-.dot{ width:8px; height:8px; border-radius:50%; box-shadow:0 0 0 1px rgba(0,0,0,.06) inset; }
-.dot.vermelho{ background:#e74c3c; }
-.dot.amarelo{ background:#f1c40f; }
-.dot.semaula{ background:#f39c12; }
-.dot.roxo{ background:#8e44ad; }
+/* Título do mês em tela cheia */
+.mes.expanded .header-mes {
+  font-weight: bold;
+  font-size: 1.8em;
+  background-color: #38a5ff;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
 
-/* 3) ORGANIZAÇÃO “HARMÔNICA” DENTRO DO MÊS EXPANDIDO
-      – transforma .info-mes em grade limpa, com cartões
-*/
-.mes.expanded .info-mes{
-  background:#fafcff !important;
-  border-left: 2px solid #e0e0e0;
-  padding: 14px !important;
+/* Grid de dias ocupa toda a coluna esquerda */
+.mes.expanded .dias {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 8px;
+  padding: 10px 0;
+}
 
-  /* grid responsiva:
-     toolbar ocupa linha inteira; cores e metas à esquerda; agenda à direita */
+/* Dias dentro do mês expandido */
+.mes.expanded .dia {
+  font-size: 1.2em;
+  height: auto;
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+/* Cabeçalho de dias dentro do expandido */
+.mes.expanded .dia.header-dia {
+  background-color: transparent;
+  font-weight: bold;
+  color: #333333;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Hover em números de dia no expandido */
+.mes.expanded .dia:not(.header-dia):hover {
+  background-color: #ebebeb;
+  color: #000000;
+}
+
+/* Coluna direita (info / notas / metas) */
+.mes.expanded .info-mes {
+  flex: 1;
   display: grid !important;
   grid-template-columns: 1.2fr 1fr;
   grid-template-areas:
@@ -619,135 +439,371 @@ nav.menu a.active {
     "cores   agenda"
     "metas   agenda";
   gap: 12px;
-}
-
-/* toolbar (ano + exportar/imprimir) como card */
-.mes.expanded .info-mes .toolbar-cal{
-  grid-area: toolbar;
-  background: var(--card-bg);
-  border:1px solid var(--card-borda);
-  border-radius:12px;
-  padding:10px 12px;
-  display:flex; justify-content:space-between; align-items:center; gap:12px;
-}
-.mes.expanded .info-mes .toolbar-cal .lado-b button{
-  padding:8px 12px; border:0; border-radius:10px; cursor:pointer;
-  background:var(--foag-prim); color:#fff; font-weight:600;
-}
-.mes.expanded .info-mes .toolbar-cal label{ font-weight:600; color:var(--txt); margin-right:6px; }
-.mes.expanded .info-mes .toolbar-cal .anoSelect{
-  padding:6px 8px; border-radius:10px; border:1px solid var(--card-borda); background:#fff;
-}
-
-/* paleta de cores como card */
-.mes.expanded .info-mes .botoes-cores{
-  grid-area: cores;
-  background: var(--card-bg);
-  border:1px solid var(--card-borda);
-  border-radius:12px;
-  padding:12px;
-  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-}
-.mes.expanded .info-mes .botoes-cores .cor-item{ display:flex; align-items:center; gap:8px; color:var(--txt); }
-.mes.expanded .info-mes .botoes-cores .btn-cor{
-  width:26px; height:26px; border-radius:50%;
-  border:2px solid #fff; box-shadow:0 0 0 1px rgba(0,0,0,.08);
-  cursor:pointer; transition:transform .1s, box-shadow .1s;
-}
-.mes.expanded .info-mes .botoes-cores .btn-cor:hover{ transform:scale(1.08); box-shadow:0 4px 12px rgba(0,0,0,.08); }
-
-/* metas + contadores como card */
-.mes.expanded .info-mes .painel-metas{
-  grid-area: metas;
-  background: var(--card-bg);
-  border:1px solid var(--card-borda);
-  border-radius:12px;
-  padding:12px;
-  display:flex; flex-direction:column; gap:10px;
-}
-.mes.expanded .info-mes .painel-metas .linha{ display:flex; gap:10px; align-items:center; }
-.mes.expanded .info-mes .progress-wrap{ flex:1; background:#eef2f7; border-radius:999px; height:12px; overflow:hidden; }
-.mes.expanded .info-mes .progress-bar{ height:100%; background:var(--foag-prim); transition:width .3s; }
-.mes.expanded .info-mes .label-presenca{ width:44px; text-align:right; font-weight:700; color:var(--txt); }
-.mes.expanded .info-mes .resumos{ display:flex; flex-wrap:wrap; gap:10px; font-size:.93rem; color:var(--txt); }
-
-/* mini-agenda embutida à direita como card */
-.mes.expanded .info-mes .mini-agenda{
-  grid-area: agenda;
-  background: var(--card-bg);
-  border:1px solid var(--card-borda);
-  border-radius:12px;
-  padding:10px;
-  display:block;  /* visível quando expandido */
-}
-.mes.expanded .info-mes .mini-agenda .agenda-header{
-  display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;
-}
-.mes.expanded .info-mes .mini-agenda .agenda-data{ color:#0b1324; font-weight:600; }
-.mes.expanded .info-mes .mini-agenda .agenda-notas{
-  width:100%; min-height:110px; resize:vertical;
-  padding:10px; border:1px solid #dde3ea; border-radius:10px; font-size:.95rem;
-}
-
-/* ===== Modal backdrop para o mês expandido ===== */
-#cal-backdrop{
-  position: fixed;
-  inset: 0;                 /* top/right/bottom/left: 0 */
-  background: rgba(0,0,0,.35);
-  backdrop-filter: blur(1px);
-  z-index: 999;             /* abaixo do .mes.expanded (que já tem z-index:1000) */
-  display: none;            /* aparece só quando ativo */
-}
-#cal-backdrop.ativo{ display: block; }
-
-/* Travar o scroll do body quando modal aberto */
-body.no-scroll{
-  overflow: hidden;
-  touch-action: none;       /* melhora em mobile */
-}
-
-/* Garantir que apenas a COLUNA DIREITA role quando necessário */
-.mes.expanded{
-  /* você já tem overflow: hidden; aqui, perfeito para conter o scroll só no filho direito */
-  overflow: hidden;
-}
-.mes.expanded .calendario-mes{
-  /* lado esquerdo NÃO rola */
-  overflow: hidden;
-}
-.mes.expanded .info-mes{
-  /* lado direito PODE rolar quando necessário */
+  background-color: #fafcff !important;
+  border-left: 2px solid #e0e0e0;
+  padding: 14px !important;
   overflow-y: auto;
 }
 
-/* Em telas pequenas, quando vira coluna, deixe a info rolar também */
-@media (max-width: 768px){
-  .mes.expanded{
-    overflow: hidden;         /* mantém container sem rolagem */
-  }
-  .mes.expanded .info-mes{
-    overflow-y: auto;         /* rola os cards da direita (que ficam abaixo) */
-  }
+/* Toolbar (ano, exportar) */
+.mes.expanded .info-mes .toolbar-cal {
+  grid-area: toolbar;
+  background: var(--card-bg);
+  border: 1px solid var(--card-borda);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
+.mes.expanded .info-mes .toolbar-cal .lado-b button {
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  background: var(--foag-prim);
+  color: #ffffff;
+  font-weight: 600;
+}
 
+.mes.expanded .info-mes .toolbar-cal label {
+  font-weight: 600;
+  color: var(--txt);
+  margin-right: 6px;
+}
+
+.mes.expanded .info-mes .toolbar-cal .anoSelect {
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--card-borda);
+  background: #ffffff;
+}
+
+/* Paleta de cores */
+.mes.expanded .info-mes .botoes-cores {
+  grid-area: cores;
+  background: var(--card-bg);
+  border: 1px solid var(--card-borda);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.mes.expanded .info-mes .botoes-cores .cor-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--txt);
+}
+
+.btn-cor {
+  width: 25px;
+  height: 25px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-cor:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 8px rgba(0,0,0,0.4);
+}
+
+.mes.expanded .info-mes .botoes-cores .btn-cor {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+/* Painel de metas */
+.mes.expanded .info-mes .painel-metas {
+  grid-area: metas;
+  background: var(--card-bg);
+  border: 1px solid var(--card-borda);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mes.expanded .info-mes .painel-metas .linha {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.mes.expanded .info-mes .progress-wrap {
+  flex: 1;
+  background: #eef2f7;
+  border-radius: 999px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.mes.expanded .info-mes .progress-bar {
+  height: 100%;
+  background: var(--foag-prim);
+  transition: width 0.3s;
+}
+
+.mes.expanded .info-mes .label-presenca {
+  width: 44px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--txt);
+}
+
+.mes.expanded .info-mes .resumos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.93rem;
+  color: var(--txt);
+}
+
+/* Mini agenda à direita */
+.mes.expanded .info-mes .mini-agenda {
+  grid-area: agenda;
+  background: var(--card-bg);
+  border: 1px solid var(--card-borda);
+  border-radius: 12px;
+  padding: 10px;
+  display: block;
+}
+
+.mes.expanded .info-mes .mini-agenda .agenda-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.mes.expanded .info-mes .mini-agenda .agenda-data {
+  color: #0b1324;
+  font-weight: 600;
+}
+
+.mes.expanded .info-mes .mini-agenda .agenda-notas {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  padding: 10px;
+  border: 1px solid #dde3ea;
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+
+/* Botões da mini-agenda */
 .mes.expanded .info-mes .mini-agenda .agenda-salvar,
-.mes.expanded .info-mes .mini-agenda .agenda-fechar{
-  margin-top:8px; padding:8px 10px; border:0; border-radius:10px; cursor:pointer;
-}
-.mes.expanded .info-mes .mini-agenda .agenda-salvar{ background:var(--foag-prim); color:#fff; font-weight:600; }
-.mes.expanded .info-mes .mini-agenda .agenda-fechar{ background:#e5e7eb; color:#111827; }
-
-/* botão fechar do mês mais “clean” */
-.mes.expanded .fechar-btn{
-  background: var(--foag-prim) !important; color:#fff !important;
-  border-radius:50%; width:35px; height:35px; font-size:20px; font-weight:700;
-  box-shadow:0 6px 16px rgba(56,165,255,.35);
+.mes.expanded .info-mes .mini-agenda .agenda-fechar {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-/* responsivo: empilha os cards no expandido */
-@media (max-width: 980px){
-  .mes.expanded .info-mes{
+.mes.expanded .info-mes .mini-agenda .agenda-salvar {
+  background: var(--foag-prim);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.mes.expanded .info-mes .mini-agenda .agenda-fechar {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+/* Botão fechar do mês expandido */
+.mes.expanded .fechar-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: var(--foag-prim) !important;
+  color: #ffffff !important;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(56,165,255,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+/* =========================
+   CORES / LEGENDA
+   ========================= */
+.cores-info {
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #333333;
+}
+
+/* Marcação de cores nos dias */
+.dia.vermelho {
+  background-color: #e74c3c !important;
+  color: #ffffff !important;
+}
+
+.dia.amarelo {
+  background-color: #f1c40f !important;
+  color: #000000 !important;
+}
+
+.dia.azul {
+  background-color: #70befe !important;
+  color: #ffffff !important;
+}
+
+.dia.sem-aula {
+  background-color: #f39c12 !important;
+  color: #000000 !important;
+}
+
+.dia.roxo {
+  background-color: #8e44ad !important;
+  color: #ffffff !important;
+}
+
+/* Destaque fim de semana */
+.dia.fim-de-semana {
+  background-color: #e7e6e6;
+}
+
+.mes.expanded .dia.fim-de-semana {
+  background-color: #f1f1f1;
+}
+
+/* Se tiver cor especial, mantém a cor especial */
+.dia.fim-de-semana.vermelho,
+.dia.fim-de-semana.amarelo,
+.dia.fim-de-semana.azul,
+.dia.fim-de-semana.roxo {
+  background-color: inherit;
+}
+
+/* =========================
+   FOAG — TOKENS / FERIADOS / DOTS
+   ========================= */
+:root {
+  --foag-prim: #38a5ff;
+  --foag-azul-clarinho: #dff3ff;
+  --card-bg: #ffffff;
+  --card-borda: #e9eef3;
+  --txt: #1f2937;
+  --txt-suave: #6b7280;
+}
+
+/* Feriados com tooltip */
+.dia.feriado {
+  background: var(--foag-azul-clarinho) !important;
+  color: #0b1324 !important;
+  outline: 1px solid rgba(56,165,255,0.18);
+}
+
+.dia.feriado:hover::after {
+  content: attr(data-feriado);
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 100%;
+  margin-bottom: 6px;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-size: 0.78rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.dia.feriado:hover::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 100%;
+  border: 6px solid transparent;
+  border-top-color: #0f172a;
+  margin-bottom: -6px;
+}
+
+/* Bolinhas de indicação */
+.dots {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  display: flex;
+  gap: 4px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.06) inset;
+}
+
+.dot.vermelho { background: #e74c3c; }
+.dot.amarelo { background: #f1c40f; }
+.dot.semaula { background: #f39c12; }
+.dot.roxo { background: #8e44ad; }
+
+/* =========================
+   BACKDROP DO CALENDÁRIO
+   ========================= */
+#cal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(1px);
+  z-index: 999;
+  display: none;
+}
+
+#cal-backdrop.ativo {
+  display: block;
+}
+
+/* Travar scroll do body quando calendário aberto */
+body.no-scroll {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* =========================
+   RODAPÉ
+   ========================= */
+footer {
+  background-color: #232323;
+  color: #ffffff;
+  text-align: center;
+  padding: 5px;
+  width: 100%;
+  font-size: 1em;
+}
+
+/* =========================
+   RESPONSIVIDADE
+   ========================= */
+@media (max-width: 980px) {
+  .mes.expanded .info-mes {
     grid-template-columns: 1fr;
     grid-template-areas:
       "toolbar"
@@ -757,77 +813,65 @@ body.no-scroll{
   }
 }
 
-
-/* Rodapé */
-footer {
-    background-color: #232323;
-    color: #ffffff;
-    text-align: center;
-    padding: 5px;
-    width: 100%;
-    font-size: 1em;
-}
-
-/* Responsividade */
 @media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
+  .container {
+    flex-direction: column;
+  }
 
-    nav.menu {
-        width: 100%;
-        padding: 15px;
-    }
+  nav.menu {
+    width: 100%;
+    padding: 15px;
+  }
 
-    .calendario {
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: auto;
-    }
+  .calendario {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+  }
 
-    .mes {
-        width: 100%;
-        margin-right: 0;
-    }
+  .mes {
+    width: 100%;
+    margin-right: 0;
+  }
 
-    .mes.expanded {
-        top: 5%;
-        left: 5%;
-        width: 90%;
-        height: 80%;
-        flex-direction: column;
-    }
+  .mes.expanded {
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 80%;
+    flex-direction: column;
+  }
 
-    .mes.expanded .info-mes {
-        border-left: none;
-        border-top: 2px solid #e0e0e0;
-        padding-top: 10px;
-        margin-top: 15px;
-    }
+  .mes.expanded .info-mes {
+    border-left: none;
+    border-top: 2px solid #e0e0e0;
+    padding-top: 10px;
+    margin-top: 15px;
+  }
 }
 
 @media (max-width: 480px) {
-    .calendario {
-        grid-template-columns: 1fr;
-    }
+  .calendario {
+    grid-template-columns: 1fr;
+  }
 
-    .mes {
-        width: 100%;
-        margin-right: 0;
-    }
+  .mes {
+    width: 100%;
+    margin-right: 0;
+  }
 
-    .cabecalho {
-        font-size: 20px;
-        padding: 10px;
-    }
+  .cabecalho {
+    font-size: 20px;
+    padding: 10px;
+  }
 
-    nav.menu a {
-        font-size: 16px;
-    }
+  nav.menu a {
+    font-size: 16px;
+  }
 
-    .mes.expanded {
-        top: 2%;
-        left: 2%;
-        width: 96%;
-        height: 90%;
-    }
+  .mes.expanded {
+    top: 2%;
+    left: 2%;
+    width: 96%;
+    height: 90%;
+  }
 }

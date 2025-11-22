@@ -11,8 +11,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <!-- Estilos do módulo -->
   <link rel="stylesheet" href="pomodoro.css">
+  <link rel="stylesheet" href="dark_pomod.css">
   <!-- Chart.js para os gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="../m.escuro/dark-mode.js"></script>
 </head>
 <body>
   <!-- Cabeçalho -->
@@ -45,7 +47,7 @@
   </a>
 
   <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-check-double"></i> Notas
+    <i class="fa-solid fa-check-double"></i> Boletim
   </a>
 
   <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
@@ -185,6 +187,6 @@
   <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
 
   <!-- Lógica do módulo -->
-  <script defer src="controle.js"></script>
+  <script defer src="pomodoro.js"></script>
 </body>
 </html>

@@ -20,5 +20,17 @@
         "escola": "Escola Estadual Militar Dom Pedro II",
         "termos_aceitos": true,
         "cadastrado_em": "2025-11-13 15:47:23"
+    },
+    {
+        "nome": "Anne Sofia",
+        "email": "anne.ssd2003@gmail.com",
+        "senha": "$2y$10$VIWcwN6MIHd25FAn6STcJeWZJXupTs6dVMQFXpTIMBD\/OksdPPDTy",
+        "nascimento": "2003-03-02",
+        "telefone": "(65) 99315-4531",
+        "serie": "Direito",
+        "escola": "Universidade de Cuiabá (UNIC)",
+        "termos_aceitos": true,
+        "cadastrado_em": "2025-11-22 02:48:17",
+        "foto": "pf_69211a3fa70f11.32047008.png"
     }
 ]

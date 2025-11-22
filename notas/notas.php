@@ -315,7 +315,7 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
   <title>FOAG — Notas e Médias</title>
 
   <link rel="stylesheet" href="notas.css" />
-  <link rel="stylesheet" href="dark_agenda.css">
+  <link rel="stylesheet" href="dark_notas.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
@@ -354,7 +354,7 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
   </a>
 
   <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-check-double"></i> Notas
+    <i class="fa-solid fa-check-double"></i> Boletim
   </a>
 
   <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">

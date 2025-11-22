@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Salvar no JSON
     file_put_contents($arquivo, json_encode($usuarios, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
-    exibirMensagem("Cadastro realizado com sucesso :)", "../login/login.php");
+    exibirMensagem("Cadastro realizado com sucesso :)", "../login/index.php");
     exit;
 } else {
     exit("Acesso inválido.");
