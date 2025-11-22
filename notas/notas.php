@@ -4,51 +4,115 @@ ini_set('display_errors', 1);
 session_start();
 
 /* =====================
-   CONFIG PADRÃO / ESTRUTURA
+   LOGIN OBRIGATÓRIO
    ===================== */
-
-// nota máxima / média mínima
-if (!isset($_SESSION['nota_maxima'])) {
-    $_SESSION['nota_maxima'] = 10;
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login/index.php");
+    exit;
 }
-if (!isset($_SESSION['media_aprovacao'])) {
-    $_SESSION['media_aprovacao'] = 6;
-}
+$userId = $_SESSION['user_id'];
 
-// tipo de curso: escola ou faculdade
-if (!isset($_SESSION['tipo_curso'])) {
-    $_SESSION['tipo_curso'] = 'escola'; // 'escola' ou 'faculdade'
-}
+/* =====================
+   ARQUIVO JSON POR USUÁRIO
+   ===================== */
+$baseJsonDir   = __DIR__ . '/../json/usuarios';
+$pastaUsuario  = $baseJsonDir . '/' . $userId;
+$arquivoBoletim = $pastaUsuario . '/boletim.json';
 
-// pesos padrão das 4 avaliações
-if (!isset($_SESSION['pesos'])) {
-    $_SESSION['pesos'] = array(1 => 1, 2 => 1, 3 => 1, 4 => 1);
+if (!is_dir($pastaUsuario)) {
+    mkdir($pastaUsuario, 0755, true);
 }
 
-// estrutura por período/semestre
-if (!isset($_SESSION['periodos'])) {
-    // migra dados antigos se existirem
-    $materiasOld = isset($_SESSION['materias']) ? $_SESSION['materias'] : array();
-    $notasOld    = isset($_SESSION['notas']) ? $_SESSION['notas'] : array();
+$defaultData = [
+    'nota_maxima'     => 10,
+    'media_aprovacao' => 6,
+    'tipo_curso'      => 'escola', // 'escola' ou 'faculdade'
+    'pesos'           => [1 => 1, 2 => 1, 3 => 1, 4 => 1],
+    'periodos'        => [
+        'Padrão' => [
+            'materias' => [],
+            'notas'    => []
+        ]
+    ],
+    'periodo_atual'   => 'Padrão',
+];
 
-    $_SESSION['periodos'] = array(
-        'Padrão' => array(
-            'materias' => $materiasOld,
-            'notas'    => $notasOld
-        )
+// Carrega JSON se existir
+if (file_exists($arquivoBoletim)) {
+    $data = json_decode(file_get_contents($arquivoBoletim), true);
+    if (!is_array($data)) {
+        $data = $defaultData;
+    }
+} else {
+    // Primeira vez: tenta migrar algum dado da sessão antiga (se existir)
+    $data = $defaultData;
+
+    if (isset($_SESSION['nota_maxima'])) {
+        $data['nota_maxima'] = (float)$_SESSION['nota_maxima'];
+    }
+    if (isset($_SESSION['media_aprovacao'])) {
+        $data['media_aprovacao'] = (float)$_SESSION['media_aprovacao'];
+    }
+    if (isset($_SESSION['tipo_curso']) && in_array($_SESSION['tipo_curso'], ['escola', 'faculdade'])) {
+        $data['tipo_curso'] = $_SESSION['tipo_curso'];
+    }
+    if (isset($_SESSION['pesos']) && is_array($_SESSION['pesos'])) {
+        $data['pesos'] = $data['pesos'] + $_SESSION['pesos']; // mantém padrão se faltar algo
+    }
+    if (isset($_SESSION['periodos']) && is_array($_SESSION['periodos'])) {
+        $data['periodos'] = $_SESSION['periodos'];
+    } else {
+        // fallback para estrutura antiga (materias/notas soltas)
+        $materiasOld = isset($_SESSION['materias']) ? $_SESSION['materias'] : [];
+        $notasOld    = isset($_SESSION['notas']) ? $_SESSION['notas'] : [];
+        $data['periodos'] = [
+            'Padrão' => [
+                'materias' => $materiasOld,
+                'notas'    => $notasOld
+            ]
+        ];
+    }
+    if (isset($_SESSION['periodo_atual'])) {
+        $data['periodo_atual'] = (string)$_SESSION['periodo_atual'];
+    }
+
+    file_put_contents(
+        $arquivoBoletim,
+        json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
     );
 }
 
-if (!isset($_SESSION['periodo_atual'])) {
-    $_SESSION['periodo_atual'] = 'Padrão';
+/* Garante campos básicos na estrutura */
+if (!isset($data['nota_maxima']))     $data['nota_maxima'] = 10;
+if (!isset($data['media_aprovacao'])) $data['media_aprovacao'] = 6;
+if (!isset($data['tipo_curso']))      $data['tipo_curso'] = 'escola';
+if (!isset($data['pesos']) || !is_array($data['pesos'])) {
+    $data['pesos'] = [1 => 1, 2 => 1, 3 => 1, 4 => 1];
+}
+for ($i = 1; $i <= 4; $i++) {
+    if (!isset($data['pesos'][$i])) $data['pesos'][$i] = 1;
+}
+if (!isset($data['periodos']) || !is_array($data['periodos'])) {
+    $data['periodos'] = [
+        'Padrão' => [
+            'materias' => [],
+            'notas'    => []
+        ]
+    ];
+}
+if (!isset($data['periodo_atual']) || !isset($data['periodos'][$data['periodo_atual']])) {
+    $data['periodo_atual'] = 'Padrão';
 }
 
-$notaMaxima     = $_SESSION['nota_maxima'];
-$mediaAprovacao = $_SESSION['media_aprovacao'];
-$tipoCurso      = $_SESSION['tipo_curso'];
-$pesos          = $_SESSION['pesos'];
-$periodos       = $_SESSION['periodos'];
-$periodoAtual   = $_SESSION['periodo_atual'];
+/* =====================
+   VARIÁVEIS ATUAIS
+   ===================== */
+$notaMaxima     = $data['nota_maxima'];
+$mediaAprovacao = $data['media_aprovacao'];
+$tipoCurso      = $data['tipo_curso'];
+$pesos          = $data['pesos'];
+$periodos       = $data['periodos'];
+$periodoAtual   = $data['periodo_atual'];
 
 /* =====================
    FUNÇÕES AUXILIARES
@@ -110,12 +174,10 @@ function calcularQuantoPrecisa($notas, $mediaAlvo, $notaMaxima, $pesos)
         }
     }
 
-    // se não tem "próxima" clara ou não tem nada feito ainda
     if ($indiceProxima === null || $somaWFeitas == 0) {
         return null;
     }
 
-    // soma dos pesos de todas as avaliações
     $somaWTodas = 0;
     for ($i = 1; $i <= 4; $i++) {
         $w = isset($pesos[$i]) ? $pesos[$i] : 1;
@@ -133,7 +195,6 @@ function calcularQuantoPrecisa($notas, $mediaAlvo, $notaMaxima, $pesos)
     $necessaria = ($mediaAlvo * $somaWTodas - $somaNP) / $wProx;
 
     if ($necessaria < 0) $necessaria = 0;
-
     if ($necessaria > $notaMaxima) {
         return 'Impossível';
     }
@@ -150,18 +211,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['periodo_atual_form']) && $_POST['periodo_atual_form'] !== '') {
         $periodoAlvo = $_POST['periodo_atual_form'];
     } else {
-        $periodoAlvo = $_SESSION['periodo_atual'];
+        $periodoAlvo = $data['periodo_atual'];
     }
 
-    if (!isset($_SESSION['periodos'][$periodoAlvo])) {
-        $_SESSION['periodos'][$periodoAlvo] = array(
-            'materias' => array(),
-            'notas'    => array()
-        );
+    if (!isset($data['periodos'][$periodoAlvo])) {
+        $data['periodos'][$periodoAlvo] = [
+            'materias' => [],
+            'notas'    => []
+        ];
     }
 
-    $materiasRef =& $_SESSION['periodos'][$periodoAlvo]['materias'];
-    $notasRef    =& $_SESSION['periodos'][$periodoAlvo]['notas'];
+    $materiasRef =& $data['periodos'][$periodoAlvo]['materias'];
+    $notasRef    =& $data['periodos'][$periodoAlvo]['notas'];
 
     // 0) salvar tudo o que tá na tela (matérias e notas)
     foreach ($_POST as $key => $value) {
@@ -174,14 +235,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Nota (nota_linha_avaliacao)
         if (strpos($key, 'nota_') === 0) {
-            $parte = substr($key, 5);
+            $parte   = substr($key, 5);
             $pedacos = explode('_', $parte);
             if (count($pedacos) === 2) {
                 $linha     = (int)$pedacos[0];
                 $avaliacao = (int)$pedacos[1];
 
                 if (!isset($notasRef[$linha])) {
-                    $notasRef[$linha] = array(1 => null, 2 => null, 3 => null, 4 => null);
+                    $notasRef[$linha] = [1 => null, 2 => null, 3 => null, 4 => null];
                 }
 
                 $value = trim($value);
@@ -194,30 +255,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['salvar_config'])) {
 
         if (isset($_POST['tipo_curso']) && ($_POST['tipo_curso'] === 'escola' || $_POST['tipo_curso'] === 'faculdade')) {
-            $_SESSION['tipo_curso'] = $_POST['tipo_curso'];
+            $data['tipo_curso'] = $_POST['tipo_curso'];
         }
 
         // nota máxima / média
         if (isset($_POST['nota_maxima']) && $_POST['nota_maxima'] !== '') {
             $notaMax = (float)$_POST['nota_maxima'];
         } else {
-            $notaMax = $notaMaxima;
+            $notaMax = $data['nota_maxima'];
         }
 
         if (isset($_POST['media_aprovacao']) && $_POST['media_aprovacao'] !== '') {
             $mediaAp = (float)$_POST['media_aprovacao'];
         } else {
-            $mediaAp = $mediaAprovacao;
+            $mediaAp = $data['media_aprovacao'];
         }
 
         if ($notaMax <= 0) $notaMax = 10;
         if ($mediaAp <= 0) $mediaAp = 6;
 
-        $_SESSION['nota_maxima']     = $notaMax;
-        $_SESSION['media_aprovacao'] = $mediaAp;
+        $data['nota_maxima']     = $notaMax;
+        $data['media_aprovacao'] = $mediaAp;
 
         // pesos
-        $novosPesos = array();
+        $novosPesos = [];
         for ($i = 1; $i <= 4; $i++) {
             $campo = 'peso_' . $i;
             if (isset($_POST[$campo]) && $_POST[$campo] !== '') {
@@ -228,13 +289,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($w < 0) $w = 0;
             $novosPesos[$i] = $w;
         }
-        $_SESSION['pesos'] = $novosPesos;
+        $data['pesos'] = $novosPesos;
 
         // selecionar período
         if (isset($_POST['periodo_atual']) && $_POST['periodo_atual'] !== '') {
             $periodoSel = $_POST['periodo_atual'];
         } else {
-            $periodoSel = $_SESSION['periodo_atual'];
+            $periodoSel = $data['periodo_atual'];
         }
 
         // criar novo período se digitou
@@ -243,22 +304,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $novoPeriodo = trim($_POST['novo_periodo']);
         }
         if ($novoPeriodo !== '') {
-            if (!isset($_SESSION['periodos'][$novoPeriodo])) {
-                $_SESSION['periodos'][$novoPeriodo] = array(
-                    'materias' => array(),
-                    'notas'    => array()
-                );
+            if (!isset($data['periodos'][$novoPeriodo])) {
+                $data['periodos'][$novoPeriodo] = [
+                    'materias' => [],
+                    'notas'    => []
+                ];
             }
             $periodoSel = $novoPeriodo;
         }
 
-        $_SESSION['periodo_atual'] = $periodoSel;
+        $data['periodo_atual'] = $periodoSel;
     }
 
     // 2) adicionar/remover linhas
     if (isset($_POST['adicionar_linha'])) {
         $materiasRef[] = '';
-        $notasRef[]    = array(1 => null, 2 => null, 3 => null, 4 => null);
+        $notasRef[]    = [1 => null, 2 => null, 3 => null, 4 => null];
     }
 
     if (isset($_POST['remover_linha']) && count($materiasRef) > 0) {
@@ -271,23 +332,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idx = (int)$_POST['linha_index'];
         if (isset($materiasRef[$idx])) {
             $materiasRef[$idx] = '';
-            $notasRef[$idx]    = array(1 => null, 2 => null, 3 => null, 4 => null);
+            $notasRef[$idx]    = [1 => null, 2 => null, 3 => null, 4 => null];
         }
     }
 
     // 4) limpar tudo desse período
     if (isset($_POST['limpar_tudo'])) {
-        $materiasRef = array();
-        $notasRef    = array();
+        $materiasRef = [];
+        $notasRef    = [];
     }
 
-    // atualizar variáveis depois do POST
-    $notaMaxima     = $_SESSION['nota_maxima'];
-    $mediaAprovacao = $_SESSION['media_aprovacao'];
-    $tipoCurso      = $_SESSION['tipo_curso'];
-    $pesos          = $_SESSION['pesos'];
-    $periodos       = $_SESSION['periodos'];
-    $periodoAtual   = $_SESSION['periodo_atual'];
+    // Salva no JSON
+    file_put_contents(
+        $arquivoBoletim,
+        json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+    );
+
+    // Atualiza variáveis depois do POST
+    $notaMaxima     = $data['nota_maxima'];
+    $mediaAprovacao = $data['media_aprovacao'];
+    $tipoCurso      = $data['tipo_curso'];
+    $pesos          = $data['pesos'];
+    $periodos       = $data['periodos'];
+    $periodoAtual   = $data['periodo_atual'];
 }
 
 /* labels das colunas conforme tipo */
@@ -298,21 +365,20 @@ if ($tipoCurso === 'escola') {
 }
 
 // garantir que o período atual exista
-if (!isset($_SESSION['periodos'][$periodoAtual])) {
-    $_SESSION['periodos'][$periodoAtual] = array(
-        'materias' => array(),
-        'notas'    => array()
-    );
+if (!isset($data['periodos'][$periodoAtual])) {
+    $data['periodos'][$periodoAtual] = [
+        'materias' => [],
+        'notas'    => []
+    ];
 }
-$materias = $_SESSION['periodos'][$periodoAtual]['materias'];
-$notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
+
+$materias = $data['periodos'][$periodoAtual]['materias'];
+$notasAll = $data['periodos'][$periodoAtual]['notas'];
+
+$current = basename($_SERVER['PHP_SELF']); // pra menu ativo
 ?>
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
- 
-    
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -324,10 +390,8 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-
   <script src="../m.escuro/dark-mode.js"></script>
-</head>
-<style>
+  <style>
       #icon-fogi {
         cursor: pointer;
         transition: 0.2s;
@@ -336,8 +400,6 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
         color: #38a5ff;
         transform: scale(1.1);
       }
-
-      /* Modal full-screen da FOGi */
       #fogi-modal {
         display: none;
         position: fixed;
@@ -348,7 +410,6 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
         align-items: center;
         justify-content: center;
       }
-
       #fogi-modal .fogi-container {
         background: #ffffff;
         width: 90%;
@@ -360,7 +421,6 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
         flex-direction: column;
         box-shadow: 0 10px 35px rgba(0,0,0,0.2);
       }
-
       #fogi-modal .fogi-header {
         display: flex;
         align-items: center;
@@ -371,7 +431,6 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
         font-weight: 600;
         font-size: 0.95rem;
       }
-
       #fogi-close {
         border: none;
         background: #ffffff;
@@ -381,18 +440,16 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
         cursor: pointer;
         font-size: 0.85rem;
       }
-
       #fogi-close:hover {
         background: #f1f1f1;
       }
-
       #fogi-iframe {
         flex: 1;
         border: none;
         width: 100%;
         height: 100%;
       }
-    </style>
+  </style>
 </head>
 
 <body>
@@ -409,43 +466,43 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
     <div class="container">
         <!-- Menu lateral -->
         <nav class="menu">
-  <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-house"></i> Início
-  </a>
+          <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-house"></i> Início
+          </a>
 
-  <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-calendar-days"></i> Calendário
-  </a>
+          <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-calendar-days"></i> Calendário
+          </a>
 
-  <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-book"></i> Agenda
-  </a>
+          <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-book"></i> Agenda
+          </a>
 
-  <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-stopwatch"></i> Pomodoro
-  </a>
+          <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-stopwatch"></i> Pomodoro
+          </a>
 
-  <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-check-double"></i> Boletim
-  </a>
+          <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-check-double"></i> Boletim
+          </a>
 
-  <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-clock"></i> Horário
-  </a>
+          <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-clock"></i> Horário
+          </a>
 
-  <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
-    <i class="fa-solid fa-circle-info"></i> Sobre
-  </a>
-</nav>
+          <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
+            <i class="fa-solid fa-circle-info"></i> Sobre
+          </a>
+        </nav>
 
-    <main class="main-content">
+        <main class="main-content">
 
       <!-- CARD CONFIGURAÇÕES -->
       <section class="card-notas card-config">
         <div class="config-header">
           <h2 class="titulo-tabela">Configurações de notas</h2>
           <span class="pill-tipo">
-            Modo: <?php echo ($tipoCurso === 'escola' ? 'Escola' : 'Faculdade'); ?> · Período: <?php echo htmlspecialchars($periodoAtual); ?>
+            Modo: <?= ($tipoCurso === 'escola' ? 'Escola' : 'Faculdade'); ?> · Período: <?= htmlspecialchars($periodoAtual); ?>
           </span>
         </div>
 
@@ -455,59 +512,55 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
         </p>
 
         <form method="POST" class="config-form">
-          <!-- Tipo de curso -->
           <div class="tipo-curso-group">
             <span>Tipo:</span>
             <label>
-              <input type="radio" name="tipo_curso" value="escola" <?php echo ($tipoCurso === 'escola' ? 'checked' : ''); ?>>
+              <input type="radio" name="tipo_curso" value="escola" <?= ($tipoCurso === 'escola' ? 'checked' : ''); ?>>
               Escola
             </label>
             <label>
-              <input type="radio" name="tipo_curso" value="faculdade" <?php echo ($tipoCurso === 'faculdade' ? 'checked' : ''); ?>>
+              <input type="radio" name="tipo_curso" value="faculdade" <?= ($tipoCurso === 'faculdade' ? 'checked' : ''); ?>>
               Faculdade
             </label>
           </div>
 
-          <!-- Nota máx / média -->
           <div class="config-field">
             <label for="nota_maxima">Nota máxima</label>
             <input type="number" step="0.01" id="nota_maxima" name="nota_maxima"
-                   value="<?php echo htmlspecialchars($notaMaxima); ?>" min="1">
+                   value="<?= htmlspecialchars($notaMaxima); ?>" min="1">
           </div>
           <div class="config-field">
             <label for="media_aprovacao">Média para aprovação</label>
             <input type="number" step="0.01" id="media_aprovacao" name="media_aprovacao"
-                   value="<?php echo htmlspecialchars($mediaAprovacao); ?>" min="0">
+                   value="<?= htmlspecialchars($mediaAprovacao); ?>" min="0">
           </div>
 
-          <!-- Pesos -->
           <div class="config-field">
-            <label for="peso_1">Peso <?php echo htmlspecialchars($labelsAval[0]); ?></label>
+            <label for="peso_1">Peso <?= htmlspecialchars($labelsAval[0]); ?></label>
             <input type="number" step="0.1" id="peso_1" name="peso_1"
-                   value="<?php echo htmlspecialchars(isset($pesos[1]) ? $pesos[1] : 1); ?>" min="0">
+                   value="<?= htmlspecialchars(isset($pesos[1]) ? $pesos[1] : 1); ?>" min="0">
           </div>
           <div class="config-field">
-            <label for="peso_2">Peso <?php echo htmlspecialchars($labelsAval[1]); ?></label>
+            <label for="peso_2">Peso <?= htmlspecialchars($labelsAval[1]); ?></label>
             <input type="number" step="0.1" id="peso_2" name="peso_2"
-                   value="<?php echo htmlspecialchars(isset($pesos[2]) ? $pesos[2] : 1); ?>" min="0">
+                   value="<?= htmlspecialchars(isset($pesos[2]) ? $pesos[2] : 1); ?>" min="0">
           </div>
           <div class="config-field">
-            <label for="peso_3">Peso <?php echo htmlspecialchars($labelsAval[2]); ?></label>
+            <label for="peso_3">Peso <?= htmlspecialchars($labelsAval[2]); ?></label>
             <input type="number" step="0.1" id="peso_3" name="peso_3"
-                   value="<?php echo htmlspecialchars(isset($pesos[3]) ? $pesos[3] : 1); ?>" min="0">
+                   value="<?= htmlspecialchars(isset($pesos[3]) ? $pesos[3] : 1); ?>" min="0">
           </div>
           <div class="config-field">
-            <label for="peso_4">Peso <?php echo htmlspecialchars($labelsAval[3]); ?></label>
+            <label for="peso_4">Peso <?= htmlspecialchars($labelsAval[3]); ?></label>
             <input type="number" step="0.1" id="peso_4" name="peso_4"
-                   value="<?php echo htmlspecialchars(isset($pesos[4]) ? $pesos[4] : 1); ?>" min="0">
+                   value="<?= htmlspecialchars(isset($pesos[4]) ? $pesos[4] : 1); ?>" min="0">
           </div>
 
-          <!-- Período / semestre -->
           <div class="config-field-periodo">
             <label for="periodo_atual">Período / semestre</label>
             <select id="periodo_atual" name="periodo_atual">
               <?php
-              foreach ($_SESSION['periodos'] as $nomePeriodo => $dadosPeriodo) {
+              foreach ($data['periodos'] as $nomePeriodo => $dadosPeriodo) {
                   $selected = ($nomePeriodo === $periodoAtual) ? 'selected' : '';
                   echo '<option value="' . htmlspecialchars($nomePeriodo) . '" ' . $selected . '>'
                      . htmlspecialchars($nomePeriodo)
@@ -522,8 +575,7 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
             <input type="text" id="novo_periodo" name="novo_periodo" placeholder="Ex: 2025/1">
           </div>
 
-          <!-- período alvo oculto -->
-          <input type="hidden" name="periodo_atual_form" value="<?php echo htmlspecialchars($periodoAtual); ?>">
+          <input type="hidden" name="periodo_atual_form" value="<?= htmlspecialchars($periodoAtual); ?>">
 
           <button type="submit" name="salvar_config" class="btn-config">Salvar configurações</button>
         </form>
@@ -538,16 +590,16 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
         </p>
 
         <form method="POST">
-          <input type="hidden" name="periodo_atual_form" value="<?php echo htmlspecialchars($periodoAtual); ?>">
+          <input type="hidden" name="periodo_atual_form" value="<?= htmlspecialchars($periodoAtual); ?>">
 
           <table class="tabela-notas">
             <thead>
               <tr>
                 <th>Matéria / Disciplina</th>
-                <th><?php echo htmlspecialchars($labelsAval[0]); ?></th>
-                <th><?php echo htmlspecialchars($labelsAval[1]); ?></th>
-                <th><?php echo htmlspecialchars($labelsAval[2]); ?></th>
-                <th><?php echo htmlspecialchars($labelsAval[3]); ?></th>
+                <th><?= htmlspecialchars($labelsAval[0]); ?></th>
+                <th><?= htmlspecialchars($labelsAval[1]); ?></th>
+                <th><?= htmlspecialchars($labelsAval[2]); ?></th>
+                <th><?= htmlspecialchars($labelsAval[3]); ?></th>
                 <th>Média</th>
                 <th>Situação</th>
                 <th>Precisa (próx.)</th>
@@ -565,7 +617,7 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
               } else {
                   foreach ($materias as $i => $materia) {
                       $materia = htmlspecialchars((string)$materia);
-                      $notas   = isset($notasAll[$i]) ? $notasAll[$i] : array(1 => null, 2 => null, 3 => null, 4 => null);
+                      $notas   = isset($notasAll[$i]) ? $notasAll[$i] : [1 => null, 2 => null, 3 => null, 4 => null];
 
                       $dados   = calcularMediaEStatus($notas, $mediaAprovacao, $pesos);
                       $media   = $dados['media'];
@@ -673,7 +725,7 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
 
         foreach ($materias as $i => $materia) {
             $materiaNome = trim((string)$materia);
-            $notas  = isset($notasAll[$i]) ? $notasAll[$i] : array(1 => null, 2 => null, 3 => null, 4 => null);
+            $notas  = isset($notasAll[$i]) ? $notasAll[$i] : [1 => null, 2 => null, 3 => null, 4 => null];
             $dados  = calcularMediaEStatus($notas, $mediaAprovacao, $pesos);
             $media  = $dados['media'];
             $status = $dados['status'];
@@ -688,10 +740,10 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
 
                 if ($materiaNome !== '') {
                     if ($melhorMateria === null || $media > $melhorMateria['media']) {
-                        $melhorMateria = array('nome' => $materiaNome, 'media' => $media);
+                        $melhorMateria = ['nome' => $materiaNome, 'media' => $media];
                     }
                     if ($piorMateria === null || $media < $piorMateria['media']) {
-                        $piorMateria = array('nome' => $materiaNome, 'media' => $media);
+                        $piorMateria = ['nome' => $materiaNome, 'media' => $media];
                     }
                 }
             }
@@ -702,23 +754,23 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
         <div class="resumo-grid">
           <div class="resumo-card">
             <span class="resumo-label">Matérias cadastradas</span>
-            <span class="resumo-valor"><?php echo $totalMaterias; ?></span>
+            <span class="resumo-valor"><?= $totalMaterias; ?></span>
           </div>
           <div class="resumo-card aprovado">
             <span class="resumo-label">Aprovado</span>
-            <span class="resumo-valor"><?php echo $aprovadas; ?></span>
+            <span class="resumo-valor"><?= $aprovadas; ?></span>
           </div>
           <div class="resumo-card recuperacao">
             <span class="resumo-label">Recuperação</span>
-            <span class="resumo-valor"><?php echo $recuperacao; ?></span>
+            <span class="resumo-valor"><?= $recuperacao; ?></span>
           </div>
           <div class="resumo-card reprovado">
             <span class="resumo-label">Reprovado</span>
-            <span class="resumo-valor"><?php echo $reprovadas; ?></span>
+            <span class="resumo-valor"><?= $reprovadas; ?></span>
           </div>
           <div class="resumo-card geral">
             <span class="resumo-label">Média geral</span>
-            <span class="resumo-valor"><?php echo number_format($mediaGeral, 2, ',', '.'); ?></span>
+            <span class="resumo-valor"><?= number_format($mediaGeral, 2, ',', '.'); ?></span>
           </div>
         </div>
 
@@ -757,9 +809,86 @@ $notasAll = $_SESSION['periodos'][$periodoAtual]['notas'];
     </main>
   </div>
 
-<footer>
-        &copy; 2025 FOAG. Todos os direitos reservados.
-    </footer>
+  <!-- Modal da FOGi -->
+  <div id="fogi-modal">
+    <div class="fogi-container">
+      <div class="fogi-header">
+        <span>FOGi — Assistente de Estudos</span>
+        <button id="fogi-close">Fechar</button>
+      </div>
+      <iframe id="fogi-iframe" src="about:blank"></iframe>
+    </div>
+  </div>
 
+  <!-- Modal de Sair -->
+  <div id="logout-modal" class="modal">
+    <div class="modal-content">
+      <h3>Ah... já vai?</h3>
+      <h4>Tem certeza de que deseja sair?</h4>
+      <div class="modal-buttons">
+        <button id="confirm-logout" class="btn">Sim</button>
+        <button id="cancel-logout" class="btn secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 FOAG. Todos os direitos reservados.
+  </footer>
+
+  <script>
+    // Modal FOGi
+    const fogiBtn   = document.getElementById("icon-fogi");
+    const fogiModal = document.getElementById("fogi-modal");
+    const fogiFrame = document.getElementById("fogi-iframe");
+    const fogiClose = document.getElementById("fogi-close");
+
+    fogiBtn && fogiBtn.addEventListener("click", () => {
+      fogiFrame.src = "http://127.0.0.1:5000";
+      fogiModal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    });
+
+    fogiClose && fogiClose.addEventListener("click", () => {
+      fogiModal.style.display = "none";
+      fogiFrame.src = "about:blank";
+      document.body.style.overflow = "";
+    });
+
+    window.addEventListener("message", (ev) => {
+      if (ev.data && ev.data.type === "FOGI_CLOSE") {
+        fogiModal.style.display = "none";
+        fogiFrame.src = "about:blank";
+        document.body.style.overflow = "";
+      }
+    });
+
+    // Logout modal
+    const logoutModal = document.getElementById('logout-modal');
+    const iconPerfil = document.getElementById('icon-perfil');
+    const iconSair   = document.getElementById('icon-sair');
+    const confirmLogout = document.getElementById('confirm-logout');
+    const cancelLogout  = document.getElementById('cancel-logout');
+
+    iconPerfil && iconPerfil.addEventListener('click', () => {
+      window.location.href = '../perfil/perfil.php';
+    });
+
+    iconSair && iconSair.addEventListener('click', () => {
+      logoutModal.style.display = 'flex';
+    });
+
+    confirmLogout && confirmLogout.addEventListener('click', () => {
+      window.location.href = '../index/index.php';
+    });
+
+    cancelLogout && cancelLogout.addEventListener('click', () => {
+      logoutModal.style.display = 'none';
+    });
+
+    logoutModal && logoutModal.addEventListener('click', (e) => {
+      if (e.target === logoutModal) logoutModal.style.display = 'none';
+    });
+  </script>
 </body>
 </html>
