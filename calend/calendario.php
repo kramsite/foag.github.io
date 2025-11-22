@@ -78,14 +78,17 @@ function gerarCalendario() {
         echo "      </div>";
         echo "    </div>";
 
-        echo "    <p>Selecione a cor e depois clique no dia:</p>";
-        echo "    <div class='botoes-cores'>";
-        echo "      <div class='cor-item'><button class='btn-cor' data-cor='vermelho' style='background:#e74c3c'></button><span>Faltou</span></div>";
-        echo "      <div class='cor-item'><button class='btn-cor' data-cor='amarelo' style='background:#f1c40f'></button><span>Atestado</span></div>";
-        echo "      <div class='cor-item'><button class='btn-cor' data-cor='sem-aula' style='background:#f39c12'></button><span>Sem aula</span></div>";
-        echo "      <div class='cor-item'><button class='btn-cor' data-cor='roxo' style='background:#8e44ad'></button><span>Prova</span></div>";
-        echo "      <div class='cor-item'><button class='btn-cor limpar' data-cor='limpar' style='background:#bdc3c7'></button><span>Limpar</span></div>";
+        echo "    <div class='bloco-cores'>";
+        echo "      <p class='texto-cores'>Selecione a cor e depois clique no dia:</p>";
+        echo "      <div class='botoes-cores'>";
+        echo "        <div class='cor-item'><button class='btn-cor' data-cor='vermelho' style='background:#e74c3c'></button><span>Faltou</span></div>";
+        echo "        <div class='cor-item'><button class='btn-cor' data-cor='amarelo' style='background:#f1c40f'></button><span>Atestado</span></div>";
+        echo "        <div class='cor-item'><button class='btn-cor' data-cor='sem-aula' style='background:#f39c12'></button><span>Sem aula</span></div>";
+        echo "        <div class='cor-item'><button class='btn-cor' data-cor='roxo' style='background:#8e44ad'></button><span>Prova</span></div>";
+        echo "        <div class='cor-item'><button class='btn-cor limpar' data-cor='limpar' style='background:#bdc3c7'></button><span>Limpar</span></div>";
+        echo "      </div>";
         echo "    </div>";
+
 
         echo "    <div class='painel-metas'>";
         echo "      <div class='linha'>";
@@ -126,7 +129,7 @@ function gerarCalendario() {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calendário</title>
-  <link rel="stylesheet" href="calendarioo.css">
+  <link rel="stylesheet" href="calendario.css">
   <link rel="stylesheet" href="../m.escuro/dark_base.css">
   <link rel="stylesheet" href="dark_calend.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">

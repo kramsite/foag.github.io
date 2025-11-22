@@ -34,6 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $usuarios = json_decode($conteudo, true) ?? [];
     }
 
+    // --- GERAR ID NOVO ---
+    $ultimoId = 0;
+    if (!empty($usuarios)) {
+        $ids = array_column($usuarios, 'id');
+        $ultimoId = max($ids);
+    }
+    $novoId = $ultimoId + 1;
+
     // Verificar se o e-mail já existe
     foreach ($usuarios as $usuario) {
         if ($usuario['email'] === $email) {
@@ -45,8 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Criar hash seguro da senha
     $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
 
-    // Adicionar usuário
+    // Adicionar usuário (AGORA COM ID)
     $usuarios[] = [
+        'id' => $novoId,
         'nome' => $nome,
         'email' => $email,
         'senha' => $senha_hash,
@@ -61,8 +70,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Salvar no JSON
     file_put_contents($arquivo, json_encode($usuarios, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
+    // --- CRIAR PASTA INDIVIDUAL DO USUÁRIO ---
+    $pastaUsuario = __DIR__ . '/../json/usuarios/' . $novoId;
+
+    if (!is_dir($pastaUsuario)) {
+        mkdir($pastaUsuario, 0755, true);
+    }
+
+    // --- CRIAR ARQUIVOS JSON PADRÃO ---
+    $arquivosIniciais = [
+        'agenda.json',
+        'calendario.json',
+        'horario.json',
+        'pomodoro.json',
+        'notas.json'
+    ];
+
+    foreach ($arquivosIniciais as $arquivoBase) {
+        $caminho = $pastaUsuario . '/' . $arquivoBase;
+        if (!file_exists($caminho)) {
+            file_put_contents($caminho, json_encode([], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        }
+    }
+
+    // Mensagem + redirecionamento
     exibirMensagem("Cadastro realizado com sucesso :)", "../login/index.php");
     exit;
+
 } else {
     exit("Acesso inválido.");
 }
