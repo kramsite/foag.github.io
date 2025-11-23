@@ -794,8 +794,8 @@ nav.menu a.active {
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.06) inset;
 }
@@ -815,7 +815,7 @@ nav.menu a.active {
 .dot.amarelo { background: #f1c40f; }
 .dot.semaula { background: #f39c12; }
 .dot.roxo { background: #8e44ad; }
-.dot.tarefa { background: #1e3a8a; } /* azul bem escuro */
+.dot.tarefa { background: #0099ff; } /* azul bem escuro */
 
 
 
