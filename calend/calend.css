@@ -800,10 +800,24 @@ nav.menu a.active {
   box-shadow: 0 0 0 1px rgba(0,0,0,0.06) inset;
 }
 
+/* Pontinho azul escuro para dias com tarefa da Agenda */
+.dot.tarefa {
+  background: #1e3a8a; /* azul escuro */
+}
+
+/* só pra garantir posição certinha do container de dots */
+.dia.has-tarefa {
+  position: relative;
+}
+
+
 .dot.vermelho { background: #e74c3c; }
 .dot.amarelo { background: #f1c40f; }
 .dot.semaula { background: #f39c12; }
 .dot.roxo { background: #8e44ad; }
+.dot.tarefa { background: #1e3a8a; } /* azul bem escuro */
+
+
 
 /* =========================
    BACKDROP DO CALENDÁRIO
@@ -888,6 +902,60 @@ footer {
     margin-top: 15px;
   }
 }
+
+/* =========================
+   MINI-AGENDA – VISUAL E LÓGICA
+   ========================= */
+
+/* Começa sempre escondido */
+.mes.expanded .info-mes .mini-agenda .agenda-resumo {
+  display: none;
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--txt);
+}
+
+.mes.expanded .info-mes .mini-agenda .agenda-editor {
+  display: none;
+  margin-top: 8px;
+}
+
+/* Linha dos dois botões */
+.mes.expanded .info-mes .mini-agenda .agenda-opcoes {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.mes.expanded .info-mes .mini-agenda .agenda-opcoes button {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  font-size: 0.85rem;
+  background: #e5e7eb;
+  color: #111827;
+  font-weight: 500;
+}
+
+.mes.expanded .info-mes .mini-agenda .agenda-opcoes button:hover {
+  background: #d4d4d8;
+}
+
+/* Quando não existe tarefa nenhuma */
+.agenda-resumo-vazio {
+  font-style: italic;
+  color: #6b7280;
+  padding: 4px;
+}
+
+/* Lista de tarefas */
+.agenda-bloco ul {
+  margin-top: 6px;
+  margin-left: 18px;
+  list-style: disc;
+}
+
 
 @media (max-width: 480px) {
   .calendario {

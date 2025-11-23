@@ -10,16 +10,11 @@
     "tarefas": [
         {
             "texto": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            "data": "2007-09-22"
-        },
-        {
-            "texto": "",
-            "data": ""
+            "data": "2025-11-21"
         },
         {
             "texto": "Vou me matar hoje",
-            "data": "2025-11-14",
-            "origem": "calendario"
+            "data": "2025-11-14"
         }
     ],
     "nao_esquecer": []

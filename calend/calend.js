@@ -1,7 +1,7 @@
-// calendario.js — FOAG
+// calend.js — FOAG
 
 document.addEventListener('DOMContentLoaded', () => {
-    // ------- AGENDA (ligação com agenda.php) -------
+  // ---------------- AGENDA (integração com agenda.php) ----------------
   const agendaData = window.CAL_AGENDA_DATA || {
     notas: [],
     tarefas: [],
@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // retorna TODAS as tarefas daquele dia (independente da origem)
   function tarefasDoDia(iso) {
     const lista = Array.isArray(agendaData.tarefas) ? agendaData.tarefas : [];
     return lista.filter(t => t.data === iso && t.texto && t.texto.trim() !== '');
@@ -54,7 +55,28 @@ document.addEventListener('DOMContentLoaded', () => {
     salvarAgendaServidor();
   }
 
-  // ========== UTIL: FECHAR MÊS ==========
+  // marca .has-tarefa e adiciona dot azul nos dias com tarefas da Agenda
+  function marcarDiasComTarefa() {
+    if (!agendaData || !Array.isArray(agendaData.tarefas)) return;
+
+    agendaData.tarefas.forEach(t => {
+      const iso = t.data;
+      if (!iso) return;
+      const diaEl = document.querySelector(`.calendario .dia[data-date="${iso}"]`);
+      if (diaEl) {
+        diaEl.classList.add('has-tarefa');
+        atualizarDots(diaEl);
+      }
+    });
+  }
+
+  // ---------------- UTIL: formatação data ----------------
+  function formataDataBR(iso) {
+    const [y, m, d] = iso.split('-').map(Number);
+    return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
+  }
+
+  // ---------------- UTIL: fechar mês ----------------
   function fecharMes(mes) {
     if (!mes) return;
     mes.classList.remove('expanded');
@@ -67,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ========== EXPANDIR MÊS ==========
+  // ---------------- EXPANDIR MÊS (card → tela cheia) ----------------
   document.querySelectorAll('.mes').forEach(mes => {
     mes.addEventListener('click', () => {
       const aberto = document.querySelector('.mes.expanded');
@@ -92,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ========== SELEÇÃO DE COR ==========
+  // ---------------- SELEÇÃO DE COR ----------------
   document.querySelectorAll('.mes').forEach(mes => {
     mes.__corSelecionada = null;
     const botoesCor = mes.querySelectorAll('.btn-cor');
@@ -132,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ========== CLIQUE NOS DIAS ==========
+  // ---------------- CLIQUE NOS DIAS → pintar com cor ----------------
   document.querySelectorAll('.mes').forEach(mes => {
     mes.addEventListener('click', e => {
       if (!mes.classList.contains('expanded')) return;
@@ -159,25 +181,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ========== DOTS ==========
-  function atualizarDots(diaEl) {
-    const dots = diaEl.querySelector('.dots');
-    if (!dots) return;
-    dots.innerHTML = '';
-
-    if (diaEl.classList.contains('vermelho')) dots.appendChild(criaDot('vermelho'));
-    if (diaEl.classList.contains('amarelo')) dots.appendChild(criaDot('amarelo'));
-    if (diaEl.classList.contains('sem-aula')) dots.appendChild(criaDot('semaula'));
-    if (diaEl.classList.contains('roxo')) dots.appendChild(criaDot('roxo'));
-  }
-
+  // ---------------- DOTS (bolinhas) ----------------
   function criaDot(tipo) {
     const s = document.createElement('span');
     s.className = `dot ${tipo}`;
     return s;
   }
 
-  // ========== MÉTRICAS / METAS ==========
+  function atualizarDots(diaEl) {
+    const dots = diaEl.querySelector('.dots');
+    if (!dots) return;
+    dots.innerHTML = '';
+
+    if (diaEl.classList.contains('vermelho'))  dots.appendChild(criaDot('vermelho'));
+    if (diaEl.classList.contains('amarelo'))   dots.appendChild(criaDot('amarelo'));
+    if (diaEl.classList.contains('sem-aula'))  dots.appendChild(criaDot('semaula'));
+    if (diaEl.classList.contains('roxo'))      dots.appendChild(criaDot('roxo'));
+
+    // pontinho azul escuro se tiver tarefa
+    if (diaEl.classList.contains('has-tarefa')) {
+      dots.appendChild(criaDot('tarefa'));
+    }
+  }
+
+  // ---------------- MÉTRICAS / METAS ----------------
   function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
   }
@@ -195,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (d.classList.contains('vermelho')) falt++;
       if (d.classList.contains('amarelo')) atest++;
-      if (d.classList.contains('roxo')) provas++;
+      if (d.classList.contains('roxo'))    provas++;
 
       const marcado = d.classList.contains('vermelho') || d.classList.contains('amarelo');
       const feriado = d.classList.contains('feriado');
@@ -203,20 +230,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const metaInput = mes.querySelector('.meta-presenca');
-    const progress = mes.querySelector('.progress-bar');
-    const label = mes.querySelector('.label-presenca');
+    const progress  = mes.querySelector('.progress-bar');
+    const label     = mes.querySelector('.label-presenca');
 
-    mes.querySelector('.count-presenca').textContent = pres;
-    mes.querySelector('.count-falta').textContent = falt;
-    mes.querySelector('.count-atestado').textContent = atest;
-    mes.querySelector('.count-semaula').textContent = sem;
-    mes.querySelector('.count-prova').textContent = provas;
+    mes.querySelector('.count-presenca').textContent  = pres;
+    mes.querySelector('.count-falta').textContent     = falt;
+    mes.querySelector('.count-atestado').textContent  = atest;
+    mes.querySelector('.count-semaula').textContent   = sem;
+    mes.querySelector('.count-prova').textContent     = provas;
 
     const meta = clamp(parseInt(metaInput?.value || '80', 10), 0, 100);
     const percPres = totalValidos > 0 ? Math.round((pres / totalValidos) * 100) : 0;
 
     if (progress) progress.style.width = Math.min(100, Math.round((percPres / meta) * 100)) + '%';
-    if (label) label.textContent = `${percPres}%`;
+    if (label)    label.textContent = `${percPres}%`;
 
     const ano = mes.dataset.ano;
     const idx = mes.dataset.mes;
@@ -233,42 +260,75 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-    // ========== MINI-AGENDA (integrada com AGENDA) ==========
-  function formataDataBR(iso) {
-    const [y, m, d] = iso.split('-').map(Number);
-    return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
-  }
-
-  document.querySelectorAll('.mes .dia').forEach(d => {
-    d.addEventListener('dblclick', e => {
-      const mes = d.closest('.mes');
+  // ---------------- MINI-AGENDA (Ver tarefas / Agendar nova) ----------------
+  // Clique no dia (sem cor selecionada) → abre mini-agenda com botões
+  document.querySelectorAll('.mes .dia').forEach(diaEl => {
+    diaEl.addEventListener('click', e => {
+      const mes = diaEl.closest('.mes');
       if (!mes || !mes.classList.contains('expanded')) return;
-      if (d.classList.contains('header-dia')) return;
+      if (mes.__corSelecionada) return; // se tiver cor selecionada, o handler de cor cuida
+      if (diaEl.classList.contains('header-dia')) return;
 
-      const box   = mes.querySelector('.mini-agenda');
-      const dataEl  = box?.querySelector('.agenda-data');
-      const notasEl = box?.querySelector('.agenda-notas');
-      if (!box || !dataEl || !notasEl) return;
-
-      const iso = d.getAttribute('data-date');
+      const iso = diaEl.getAttribute('data-date');
       if (!iso) return;
 
-      // mostra data bonitinha
-      dataEl.textContent = formataDataBR(iso);
-      box.dataset.date = iso;
-
-      // procura tarefa desse dia que veio do calendário
-      const tarefasDia = tarefasDoDia(iso);
-      const tarefaCal  = tarefasDia.find(t => t.origem === 'calendario');
-
-      notasEl.value = tarefaCal ? tarefaCal.texto : '';
-
-      box.classList.add('aberto');
-      notasEl.focus();
       e.stopPropagation();
+
+      const mini   = mes.querySelector('.mini-agenda');
+      const dataEl = mini?.querySelector('.agenda-data');
+      const resumo = mini?.querySelector('.agenda-resumo');
+      const editor = mini?.querySelector('.agenda-editor');
+      const notas  = mini?.querySelector('.agenda-notas');
+      const btnVer  = mini?.querySelector('.btn-ver-tarefas');
+      const btnNova = mini?.querySelector('.btn-nova-tarefa');
+
+      if (!mini || !dataEl || !resumo || !editor || !notas || !btnVer || !btnNova) return;
+
+      mini.dataset.date = iso;
+      dataEl.textContent = formataDataBR(iso);
+
+      // sempre começa com tudo escondido
+      resumo.style.display = 'none';
+      editor.style.display = 'none';
+
+      // configura botões
+      btnVer.onclick = () => {
+        const ts = tarefasDoDia(iso);
+        if (!ts.length) {
+          resumo.innerHTML = `<p class="agenda-resumo-vazio">Nenhuma tarefa cadastrada para este dia.</p>`;
+        } else {
+          resumo.innerHTML = `
+            <div class="agenda-bloco">
+              <strong>Tarefas do dia</strong>
+              <ul>${ts.map(t => `<li>${t.texto}</li>`).join('')}</ul>
+            </div>
+          `;
+        }
+        resumo.style.display = 'block';
+        editor.style.display = 'none';
+      };
+
+      btnNova.onclick = () => {
+        const lista = tarefasDoDia(iso);
+        const tCal  = lista.find(t => t.origem === 'calendario');
+        notas.value = tCal ? (tCal.texto || '') : '';
+        editor.style.display = 'block';
+        resumo.style.display = 'none';
+        notas.focus();
+      };
+
+      // comportamento padrão: se já tem tarefa → começa em "ver tarefas"; senão → editor
+      if (tarefasDoDia(iso).length) {
+        btnVer.click();
+      } else {
+        btnNova.click();
+      }
+
+      mini.classList.add('aberto');
     });
   });
 
+  // Botão fechar da mini-agenda
   document.querySelectorAll('.mes .agenda-fechar').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
@@ -278,6 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Salvar texto da mini-agenda → vira tarefa na Agenda
   document.querySelectorAll('.mes .agenda-salvar').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
@@ -291,15 +352,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // salva direto em agendaData.tarefas + POST pra salvar_agenda.php
       salvarTextoDoDiaNaAgenda(iso, notasEl.value);
+
+      // se salvou texto, garante que o dia tenha a bolinha azul
+      const diaEl = document.querySelector(`.calendario .dia[data-date="${iso}"]`);
+      if (diaEl) {
+        if ((notasEl.value || '').trim() === '') {
+          diaEl.classList.remove('has-tarefa');
+        } else {
+          diaEl.classList.add('has-tarefa');
+        }
+        atualizarDots(diaEl);
+      }
 
       box.classList.remove('aberto');
     });
   });
 
-
-  // ========== EXPORTAR / IMPRIMIR ==========
+  // ---------------- EXPORTAR / IMPRIMIR ----------------
   document.querySelectorAll('.mes .btn-imprimir').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
@@ -354,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ========== SELETOR DE ANO ==========
+  // ---------------- SELETOR DE ANO ----------------
   document.querySelectorAll('.mes .anoSelect').forEach(sel => {
     const urlParams = new URLSearchParams(location.search);
     const anoAtual = parseInt(urlParams.get('ano') || new Date().getFullYear(), 10);
@@ -374,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ========== GARANTIR VISIBILIDADE DO PAINEL DE METAS ==========
+  // ---------------- GARANTIR VISIBILIDADE METAS QUANDO ABRIR MÊS ----------------
   function verificarVisibilidadeMeta(mes) {
     const metas = mes.querySelector('.painel-metas');
     if (!metas) return;
@@ -383,8 +453,12 @@ document.addEventListener('DOMContentLoaded', () => {
     metas.style.opacity = '1';
   }
 
-  // ========== INICIALIZAÇÃO ==========
+  // ---------------- INICIALIZAÇÃO (dots + metas + tarefas) ----------------
+  // bolinhas pra tudo que já tem classe (vermelho/amarelo/roxo/etc)
   document.querySelectorAll('.calendario .dia').forEach(atualizarDots);
+
+  // agora marca dias com tarefas vindas da Agenda (pontinho azul já aparece)
+  marcarDiasComTarefa();
 
   document.querySelectorAll('.mes').forEach(mes => {
     recalcularMetricasDoMes(mes);
@@ -398,7 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ========== ÍCONES HEADER (PERFIL / LOGOUT) ==========
+  // ---------------- ÍCONES HEADER (PERFIL / LOGOUT) ----------------
   const perfilIcon = document.getElementById('icon-perfil');
   if (perfilIcon) {
     perfilIcon.addEventListener('click', () => {
@@ -406,10 +480,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const logoutModal = document.getElementById('logout-modal');
-  const iconSair = document.getElementById('icon-sair');
+  const logoutModal   = document.getElementById('logout-modal');
+  const iconSair      = document.getElementById('icon-sair');
   const confirmLogout = document.getElementById('confirm-logout');
-  const cancelLogout = document.getElementById('cancel-logout');
+  const cancelLogout  = document.getElementById('cancel-logout');
 
   if (iconSair && logoutModal) {
     iconSair.addEventListener('click', () => {
@@ -433,8 +507,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ========== MODAL FOGi ==========
-  const fogiBtn = document.getElementById('icon-fogi');
+  // ---------------- MODAL FOGi ----------------
+  const fogiBtn   = document.getElementById('icon-fogi');
   const fogiModal = document.getElementById('fogi-modal');
   const fogiFrame = document.getElementById('fogi-iframe');
   const fogiClose = document.getElementById('fogi-close');
