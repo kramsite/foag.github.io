@@ -685,6 +685,17 @@ nav.menu a.active {
   transition: background 0.3s ease;
 }
 
+/* garantir que o botão não aparece no mês fechado */
+.mes .fechar-btn {
+  display: none !important;
+}
+
+/* e só aparece no modo expandido */
+.mes.expanded .fechar-btn {
+  display: flex !important;
+}
+
+
 /* =========================
    CORES / LEGENDA
    ========================= */
