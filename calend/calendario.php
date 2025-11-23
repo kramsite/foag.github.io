@@ -1,4 +1,49 @@
 <?php
+session_start();
+
+// qual página está ativa
+$current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
+
+// Carrega os feriados do JSON
+$feriados = json_decode(file_get_contents(__DIR__ . '/../json/feriados.json'), true);
+
+// ====== CARREGAR AGENDA DO USUÁRIO (MESMO FORMATO DA AGENDA) ======
+$userId = $_SESSION['user_id'] ?? null;
+
+// se você quiser obrigar login aqui também, pode fazer:
+// if (!$userId) {
+//   header("Location: ../login/index.php");
+//   exit;
+// }
+
+$baseJsonDir  = __DIR__ . '/../json/usuarios';
+$pastaUsuario = $baseJsonDir . '/' . $userId;
+
+if (!is_dir($pastaUsuario)) {
+  mkdir($pastaUsuario, 0755, true);
+}
+
+$arquivoAgenda = $pastaUsuario . '/agenda.json';
+if (!file_exists($arquivoAgenda)) {
+  $estruturaInicial = [
+    'notas'        => [],
+    'tarefas'      => [],
+    'nao_esquecer' => []
+  ];
+  file_put_contents(
+    $arquivoAgenda,
+    json_encode($estruturaInicial, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+  );
+}
+
+$agendaData = json_decode(file_get_contents($arquivoAgenda), true) ?? [
+  'notas'        => [],
+  'tarefas'      => [],
+  'nao_esquecer' => []
+];
+
+// ==== DAQUI PRA BAIXO mantém igual (funções obterDiasDoMes, gerarCalendario, etc) ====
+
 // Carrega os feriados do JSON
   $current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
 
@@ -138,7 +183,14 @@ function gerarCalendario() {
   <!-- Export PNG -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
+    <!-- Agenda do usuário para o calendário -->
+  <script>
+    window.CAL_AGENDA_DATA     = <?= json_encode($agendaData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    window.CAL_AGENDA_SAVE_URL = "../bloco/salvar_agenda.php";
+  </script>
+
 </head>
+
 <!-- Backdrop para bloquear interação no fundo quando um mês estiver expandido -->
 <div id="cal-backdrop" aria-hidden="true"></div>
 
@@ -223,7 +275,7 @@ function gerarCalendario() {
 
   <footer>&copy; 2025 FOAG. Todos os direitos reservados.</footer>
 
-  <script src="calendario.js"></script>
+  <script src="calend.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const fogiBtn   = document.getElementById("icon-fogi");

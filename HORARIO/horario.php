@@ -1,7 +1,43 @@
 <?php
 session_start();
 
-  $current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
+// Exigir login
+if (!isset($_SESSION['user_id'])) {
+  header("Location: ../login/index.php");
+  exit;
+}
+
+$userId = $_SESSION['user_id'];
+$current = basename($_SERVER['PHP_SELF']); // ex: horario.php
+
+// Caminho do JSON por usuário
+$baseJsonDir    = __DIR__ . '/../json/usuarios';
+$pastaUsuario   = $baseJsonDir . '/' . $userId;
+$arquivoHorario = $pastaUsuario . '/horario.json';
+
+// Garante pasta
+if (!is_dir($pastaUsuario)) {
+  mkdir($pastaUsuario, 0755, true);
+}
+
+// Estrutura padrão
+$horarioDataDefault = [
+  'html' => '' // tbody do horário
+];
+
+// Carrega JSON se existir
+if (file_exists($arquivoHorario)) {
+  $horarioData = json_decode(file_get_contents($arquivoHorario), true);
+  if (!is_array($horarioData)) {
+    $horarioData = $horarioDataDefault;
+  }
+} else {
+  $horarioData = $horarioDataDefault;
+  file_put_contents(
+    $arquivoHorario,
+    json_encode($horarioData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+  );
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -9,15 +45,25 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horário Escolar</title>
+
     <link rel="stylesheet" href="horario.css">
+    <link rel="stylesheet" href="../m.escuro/dark_base.css">
     <link rel="stylesheet" href="dark_hora.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-    <!-- Importando a biblioteca jsPDF -->
+
+    <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- Importando a biblioteca jsPDF AutoTable -->
+    <!-- jsPDF AutoTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.24/jspdf.plugin.autotable.min.js"></script>
+
     <script src="../m.escuro/dark-mode.js"></script>
+
+    <!-- Passando dados para o JS -->
+    <script>
+      window.HORARIO_HTML = <?= json_encode($horarioData['html'] ?? '', JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+      window.HORARIO_SAVE_URL = "salvar_horario.php";
+    </script>
 
     <!-- Estilos do botão e modal da FOGi -->
     <style>
@@ -102,38 +148,37 @@ session_start();
     <div class="container">
         <!-- Menu lateral -->
         <nav class="menu">
-  <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-house"></i> Início
-  </a>
+          <a href="../inicioo/inicio.php" class="<?= $current === 'inicio.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-house"></i> Início
+          </a>
 
-  <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-calendar-days"></i> Calendário
-  </a>
+          <a href="../calend/calendario.php" class="<?= $current === 'calendario.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-calendar-days"></i> Calendário
+          </a>
 
-  <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-book"></i> Agenda
-  </a>
+          <a href="../bloco/agenda.php" class="<?= $current === 'agenda.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-book"></i> Agenda
+          </a>
 
-  <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-stopwatch"></i> Pomodoro
-  </a>
+          <a href="../pomodoro/pomodoro.php" class="<?= $current === 'pomodoro.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-stopwatch"></i> Pomodoro
+          </a>
 
-  <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-check-double"></i> Boletim
-  </a>
+          <a href="../notas/notas.php" class="<?= $current === 'notas.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-check-double"></i> Boletim
+          </a>
 
-  <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
-    <i class="fa-solid fa-clock"></i> Horário
-  </a>
+          <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-clock"></i> Horário
+          </a>
 
-  <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
-    <i class="fa-solid fa-circle-info"></i> Sobre
-  </a>
-</nav>
+          <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
+            <i class="fa-solid fa-circle-info"></i> Sobre
+          </a>
+        </nav>
 
         <!-- Área principal para conteúdo -->
         <div class="main-content">
-            <!-- Título da Tabela -->
             <h2 class="titulo-tabela">Horário</h2>
             
             <table id="scheduleTable">
@@ -176,14 +221,17 @@ session_start();
             </table>
 
             <!-- Botões de ação -->
-            <button onclick="salvarEdicoes()">Salvar Edições</button>
-            <button onclick="adicionarLinha()">Adicionar Linha</button>
-            <button onclick="removerLinha()">Remover Linha</button>
-            <button onclick="adicionarIntervalo()">Adicionar Intervalo</button>
-            <button onclick="salvarComoPDF()">Salvar como PDF</button>
+            <div class="horario-buttons">
+              <button onclick="salvarEdicoes()">Salvar Edições</button>
+              <button onclick="adicionarLinha()">Adicionar Linha</button>
+              <button onclick="removerLinha()">Remover Linha</button>
+              <button onclick="adicionarIntervalo()">Adicionar Intervalo</button>
+              <button onclick="salvarComoPDF()">Salvar como PDF</button>
+            </div>
         </div>
     </div>
 
+    <!-- Modal de logout -->
     <div id="logout-modal" class="modal">
       <div class="modal-content">
         <h3>Ah... já vai?</h3>
@@ -210,7 +258,7 @@ session_start();
         &copy; 2025 FOAG. Todos os direitos reservados.
     </footer>
       
-    <script src="horario.js"></script>
+    <script src="horario.js?v=<?=time()?>"></script>
 
     <script>
       const fogiBtn   = document.getElementById("icon-fogi");

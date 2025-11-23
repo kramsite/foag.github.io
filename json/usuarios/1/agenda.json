@@ -15,6 +15,11 @@
         {
             "texto": "",
             "data": ""
+        },
+        {
+            "texto": "Vou me matar hoje",
+            "data": "2025-11-14",
+            "origem": "calendario"
         }
     ],
     "nao_esquecer": []

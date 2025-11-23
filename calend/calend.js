@@ -1,6 +1,59 @@
 // calendario.js — FOAG
 
 document.addEventListener('DOMContentLoaded', () => {
+    // ------- AGENDA (ligação com agenda.php) -------
+  const agendaData = window.CAL_AGENDA_DATA || {
+    notas: [],
+    tarefas: [],
+    nao_esquecer: []
+  };
+  const AGENDA_SAVE_URL = window.CAL_AGENDA_SAVE_URL || '../bloco/salvar_agenda.php';
+
+  function salvarAgendaServidor() {
+    try {
+      fetch(AGENDA_SAVE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(agendaData)
+      })
+        .then(res => res.text())
+        .then(txt => {
+          console.log('Agenda salva via calendário:', txt);
+        })
+        .catch(err => console.error('Erro ao salvar agenda via calendário:', err));
+    } catch (e) {
+      console.error('Erro fetch agenda:', e);
+    }
+  }
+
+  function tarefasDoDia(iso) {
+    const lista = Array.isArray(agendaData.tarefas) ? agendaData.tarefas : [];
+    return lista.filter(t => t.data === iso && t.texto && t.texto.trim() !== '');
+  }
+
+  // salva / atualiza tarefa desse dia com origem "calendario"
+  function salvarTextoDoDiaNaAgenda(iso, texto) {
+    if (!Array.isArray(agendaData.tarefas)) {
+      agendaData.tarefas = [];
+    }
+
+    // remove tarefas desse dia criadas pelo calendário (pra não duplicar)
+    agendaData.tarefas = agendaData.tarefas.filter(
+      t => !(t.data === iso && t.origem === 'calendario')
+    );
+
+    const txt = (texto || '').trim();
+    if (txt !== '') {
+      agendaData.tarefas.push({
+        texto: txt,
+        data: iso,
+        origem: 'calendario'
+      });
+    }
+
+    salvarAgendaServidor();
+  }
+
   // ========== UTIL: FECHAR MÊS ==========
   function fecharMes(mes) {
     if (!mes) return;
@@ -180,11 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ========== MINI-AGENDA ==========
-  function chaveAgenda(iso) {
-    return `foag_agenda_${iso}`;
-  }
-
+    // ========== MINI-AGENDA (integrada com AGENDA) ==========
   function formataDataBR(iso) {
     const [y, m, d] = iso.split('-').map(Number);
     return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
@@ -193,19 +242,29 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.mes .dia').forEach(d => {
     d.addEventListener('dblclick', e => {
       const mes = d.closest('.mes');
-      if (!mes.classList.contains('expanded')) return;
+      if (!mes || !mes.classList.contains('expanded')) return;
+      if (d.classList.contains('header-dia')) return;
 
-      const box = mes.querySelector('.mini-agenda');
-      const dataEl = mes.querySelector('.mini-agenda .agenda-data');
-      const notas = mes.querySelector('.mini-agenda .agenda-notas');
+      const box   = mes.querySelector('.mini-agenda');
+      const dataEl  = box?.querySelector('.agenda-data');
+      const notasEl = box?.querySelector('.agenda-notas');
+      if (!box || !dataEl || !notasEl) return;
 
       const iso = d.getAttribute('data-date');
       if (!iso) return;
 
+      // mostra data bonitinha
       dataEl.textContent = formataDataBR(iso);
-      notas.value = localStorage.getItem(chaveAgenda(iso)) || '';
+      box.dataset.date = iso;
+
+      // procura tarefa desse dia que veio do calendário
+      const tarefasDia = tarefasDoDia(iso);
+      const tarefaCal  = tarefasDia.find(t => t.origem === 'calendario');
+
+      notasEl.value = tarefaCal ? tarefaCal.texto : '';
+
       box.classList.add('aberto');
-      notas.focus();
+      notasEl.focus();
       e.stopPropagation();
     });
   });
@@ -214,29 +273,31 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', e => {
       e.preventDefault();
       const mes = e.target.closest('.mes');
-      mes.querySelector('.mini-agenda').classList.remove('aberto');
+      const box = mes.querySelector('.mini-agenda');
+      box.classList.remove('aberto');
     });
   });
 
   document.querySelectorAll('.mes .agenda-salvar').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
-      const mes = e.target.closest('.mes');
-      const dataBr = mes.querySelector('.mini-agenda .agenda-data').textContent;
-      const notas = mes.querySelector('.mini-agenda .agenda-notas').value;
+      const mes  = e.target.closest('.mes');
+      const box  = mes.querySelector('.mini-agenda');
+      const notasEl = box?.querySelector('.agenda-notas');
+      const iso  = box?.dataset.date;
 
-      if (!dataBr) {
-        mes.querySelector('.mini-agenda').classList.remove('aberto');
+      if (!iso || !notasEl) {
+        box?.classList.remove('aberto');
         return;
       }
 
-      const [d, m, y] = dataBr.split('/').map(Number);
-      const iso = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      // salva direto em agendaData.tarefas + POST pra salvar_agenda.php
+      salvarTextoDoDiaNaAgenda(iso, notasEl.value);
 
-      localStorage.setItem(chaveAgenda(iso), notas);
-      mes.querySelector('.mini-agenda').classList.remove('aberto');
+      box.classList.remove('aberto');
     });
   });
+
 
   // ========== EXPORTAR / IMPRIMIR ==========
   document.querySelectorAll('.mes .btn-imprimir').forEach(btn => {
