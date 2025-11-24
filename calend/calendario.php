@@ -206,7 +206,7 @@ function gerarCalendario() {
   <title>Calendário</title>
   <link rel="stylesheet" href="calendario.css">
   <link rel="stylesheet" href="../m.escuro/dark_base.css">
-  <link rel="stylesheet" href="dark_calend.css">
+  <link rel="stylesheet" href="dark_calendario.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <script src="../m.escuro/dark-mode.js"></script>
