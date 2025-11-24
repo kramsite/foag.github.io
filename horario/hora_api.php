@@ -2,7 +2,7 @@
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-// ==== 1) Confere usuário logado ====
+// ==== 1) Confere usuário logado (ajusta se seu sistema for outro) ====
 $userId = $_SESSION['user_id'] ?? null;
 if (!$userId) {
     echo json_encode(['horarios' => []]);
@@ -33,20 +33,22 @@ $mapaColunas = [
     3 => 3, // quarta
     4 => 4, // quinta
     5 => 5, // sexta
-    6 => null, // sábado
+    6 => null, // sábado (se quiser depois, dá pra mapear)
     7 => null  // domingo
 ];
 
 $colunaDia = $mapaColunas[$diaSemanaNumero] ?? null;
 if ($colunaDia === null) {
+    // Por enquanto, sábado/domingo sem horário
     echo json_encode(['horarios' => []]);
     exit;
 }
 
 // ==== 3) Carrega o JSON de horário do usuário ====
+// AJUSTA o caminho se no teu projeto for diferente
 $baseJsonDir  = __DIR__ . '/../json/usuarios';
 $pastaUsuario = $baseJsonDir . '/' . $userId;
-$arquivoHorario = $pastaUsuario . '/horario.json'; // ajusta se o nome for outro
+$arquivoHorario = $pastaUsuario . '/horario.json';
 
 if (!file_exists($arquivoHorario)) {
     echo json_encode(['horarios' => []]);
@@ -64,6 +66,7 @@ $htmlTabela = $dadosHorario['html'];
 // ==== 4) Parsear o HTML dos <tr> e <td> ====
 $dom = new DOMDocument('1.0', 'UTF-8');
 
+// Silenciar warnings de HTML mal formatado
 libxml_use_internal_errors(true);
 $dom->loadHTML('<table><tbody>' . $htmlTabela . '</tbody></table>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 libxml_clear_errors();
@@ -71,32 +74,29 @@ libxml_clear_errors();
 $xpath = new DOMXPath($dom);
 $linhas = $xpath->query('//tr');
 
-$materiasDoDia = [];
+$listaHorarios = [];
 
 foreach ($linhas as $tr) {
     $tds = $tr->getElementsByTagName('td');
 
+    // precisa ter pelo menos a coluna do horário e a coluna do dia
     if ($tds->length <= $colunaDia) {
         continue;
     }
 
-    // a coluna 0 é o horário, a coluna $colunaDia é a matéria
+    $textoHora = trim($tds->item(0)->textContent ?? '');
     $textoMateria = trim($tds->item($colunaDia)->textContent ?? '');
 
-    // ignora vazio
-    if ($textoMateria === '') {
+    // ignora linhas vazias
+    if ($textoHora === '' || $textoMateria === '') {
         continue;
     }
 
-    // evita duplicar a mesma matéria na lista
-    if (!in_array($textoMateria, $materiasDoDia, true)) {
-        $materiasDoDia[] = $textoMateria;
-    }
+    // Monta o texto final, ex: "7h-7h50 — Matemática"
+    $listaHorarios[] = $textoHora . ' — ' . $textoMateria;
 }
 
 // ==== 5) Retorno em JSON pro calendário ====
 echo json_encode([
-    'horarios' => implode(', ', $materiasDoDia)
+    'horarios' => $listaHorarios
 ]);
-
-

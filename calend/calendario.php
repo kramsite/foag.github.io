@@ -150,7 +150,7 @@ function gerarCalendario() {
         echo "    </div>";
 
         // Mini-agenda integrada com Agenda
-        echo "    <div class='mini-agenda'>";
+               echo "    <div class='mini-agenda'>";
         echo "      <div class='agenda-header'>";
         echo "        <strong class='agenda-data'></strong>";
         echo "        <button class='agenda-fechar'>×</button>";
@@ -159,6 +159,7 @@ function gerarCalendario() {
         echo "      <div class='agenda-opcoes'>";
         echo "        <button class='btn-ver-tarefas'>Ver tarefas do dia</button>";
         echo "        <button class='btn-nova-tarefa'>Agendar nova tarefa</button>";
+        echo "        <button class='btn-ver-horarios'>Ver horários</button>";
         echo "      </div>";
 
         echo "      <div class='agenda-resumo'></div>";
@@ -168,7 +169,8 @@ function gerarCalendario() {
         echo "        <button class='agenda-salvar'>Salvar</button>";
         echo "      </div>";
 
-        echo "    </div>"; // .mini-agenda
+        echo "    </div>";
+
 
         echo "  </div>"; // .info-mes
         echo "</div>";   // .mes
@@ -195,6 +197,13 @@ function gerarCalendario() {
     window.CAL_AGENDA_DATA     = <?= json_encode($agendaData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
     window.CAL_AGENDA_SAVE_URL = "../bloco/salvar_agenda.php";
   </script>
+    <!-- Agenda do usuário para o calendário -->
+  <script>
+    window.CAL_AGENDA_DATA     = <?= json_encode($agendaData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    window.CAL_AGENDA_SAVE_URL = "../bloco/salvar_agenda.php";
+    window.CAL_HORARIO_URL     = "../horario/hora_api.php"; // <- novo
+  </script>
+
 </head>
 
 <body>

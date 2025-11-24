@@ -1,13 +1,14 @@
-// calend.js — FOAG
+// calend.js — FOAG (Calendário + Agenda + Horários)
 
 document.addEventListener('DOMContentLoaded', () => {
-  // ---------------- AGENDA (integração com agenda.php) ----------------
+  // ------- AGENDA (ligação com agenda.php) -------
   const agendaData = window.CAL_AGENDA_DATA || {
     notas: [],
     tarefas: [],
     nao_esquecer: []
   };
-  const AGENDA_SAVE_URL = window.CAL_AGENDA_SAVE_URL || '../bloco/salvar_agenda.php';
+  const AGENDA_SAVE_URL   = window.CAL_AGENDA_SAVE_URL || '../bloco/salvar_agenda.php';
+  const HORARIO_API_URL   = window.CAL_HORARIO_URL     || '../horario/horario_api.php';
 
   function salvarAgendaServidor() {
     try {
@@ -26,10 +27,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // retorna TODAS as tarefas daquele dia (independente da origem)
   function tarefasDoDia(iso) {
     const lista = Array.isArray(agendaData.tarefas) ? agendaData.tarefas : [];
     return lista.filter(t => t.data === iso && t.texto && t.texto.trim() !== '');
+  }
+
+  function marcarDiasComTarefa() {
+    if (!agendaData || !Array.isArray(agendaData.tarefas)) return;
+
+    agendaData.tarefas.forEach(t => {
+      const iso = t.data;
+      if (!iso) return;
+      const diaEl = document.querySelector(`.calendario .dia[data-date="${iso}"]`);
+      if (diaEl) {
+        diaEl.classList.add('has-tarefa');
+        atualizarDots(diaEl);
+      }
+    });
   }
 
   // salva / atualiza tarefa desse dia com origem "calendario"
@@ -55,33 +69,70 @@ document.addEventListener('DOMContentLoaded', () => {
     salvarAgendaServidor();
   }
 
-  // marca .has-tarefa e adiciona dot azul nos dias com tarefas da Agenda
-  function marcarDiasComTarefa() {
-    if (!agendaData || !Array.isArray(agendaData.tarefas)) return;
+  // ------- HORÁRIO (ligação com horário.php via API) -------
 
-    agendaData.tarefas.forEach(t => {
-      const iso = t.data;
-      if (!iso) return;
-      const diaEl = document.querySelector(`.calendario .dia[data-date="${iso}"]`);
-      if (diaEl) {
-        diaEl.classList.add('has-tarefa');
-        atualizarDots(diaEl);
+  async function buscarHorarios(iso) {
+  if (!HORARIO_API_URL) return [];
+
+  try {
+    const url = `${HORARIO_API_URL}?data=${encodeURIComponent(iso)}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+    const json = await res.json();
+    if (!json || !json.html) return [];
+
+    const html = json.html;
+
+    // pega o dia da semana pelo ISO
+    const data = new Date(iso + 'T00:00:00');
+    const diaSemana = data.getDay(); // 0=domingo ... 6=sábado
+
+    const mapCol = {
+      1: 1, // segunda
+      2: 2, // terça
+      3: 3, // quarta
+      4: 4, // quinta
+      5: 5  // sexta
+    };
+
+    const colIndex = mapCol[diaSemana];
+    if (!colIndex) {
+      return []; // sábado/domingo
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(`<table>${html}</table>`, 'text/html');
+    const trs = doc.querySelectorAll('tr');
+
+    const materias = new Set();
+
+    trs.forEach(tr => {
+      const tds = tr.querySelectorAll('td');
+      if (tds.length > colIndex) {
+        const texto = tds[colIndex].textContent.trim();
+        if (texto) materias.add(texto);
       }
     });
-  }
 
-  // ---------------- UTIL: formatação data ----------------
-  function formataDataBR(iso) {
-    const [y, m, d] = iso.split('-').map(Number);
-    return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
+    return Array.from(materias);
+  } catch (e) {
+    console.error('Erro ao buscar horários do dia:', e);
+    return [];
   }
+}
 
-  // ---------------- UTIL: fechar mês ----------------
+
+  // ========== UTIL: FECHAR MÊS ==========
   function fecharMes(mes) {
     if (!mes) return;
     mes.classList.remove('expanded');
     mes.__corSelecionada = null;
     mes?.__atualizarBotoesCor?.();
+
+    // garante que o botão X some no card fechado
+    const btnFechar = mes.querySelector('.fechar-btn');
+    if (btnFechar) btnFechar.style.display = 'none';
 
     if (!document.querySelector('.mes.expanded')) {
       document.body.classList.remove('no-scroll');
@@ -89,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ---------------- EXPANDIR MÊS (card → tela cheia) ----------------
+  // ========== EXPANDIR MÊS ==========
   document.querySelectorAll('.mes').forEach(mes => {
     mes.addEventListener('click', () => {
       const aberto = document.querySelector('.mes.expanded');
@@ -100,8 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('no-scroll');
         document.getElementById('cal-backdrop')?.classList.add('ativo');
 
-        if (!mes.querySelector('.fechar-btn')) {
-          const fechar = document.createElement('button');
+        let fechar = mes.querySelector('.fechar-btn');
+        if (!fechar) {
+          fechar = document.createElement('button');
           fechar.textContent = '×';
           fechar.classList.add('fechar-btn');
           fechar.onclick = e => {
@@ -110,11 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
           };
           mes.appendChild(fechar);
         }
+        fechar.style.display = 'flex';
       }
     });
   });
 
-  // ---------------- SELEÇÃO DE COR ----------------
+  // ========== SELEÇÃO DE COR ==========
   document.querySelectorAll('.mes').forEach(mes => {
     mes.__corSelecionada = null;
     const botoesCor = mes.querySelectorAll('.btn-cor');
@@ -154,7 +207,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ---------------- CLIQUE NOS DIAS → pintar com cor ----------------
+  // ========== DOTS ==========
+  function atualizarDots(diaEl) {
+    const dots = diaEl.querySelector('.dots');
+    if (!dots) return;
+    dots.innerHTML = '';
+
+    if (diaEl.classList.contains('vermelho'))   dots.appendChild(criaDot('vermelho'));
+    if (diaEl.classList.contains('amarelo'))    dots.appendChild(criaDot('amarelo'));
+    if (diaEl.classList.contains('sem-aula'))   dots.appendChild(criaDot('semaula'));
+    if (diaEl.classList.contains('roxo'))       dots.appendChild(criaDot('roxo'));
+
+    // pontinho azul escuro se tiver tarefa
+    if (diaEl.classList.contains('has-tarefa')) {
+      dots.appendChild(criaDot('tarefa'));
+    }
+  }
+
+  function criaDot(tipo) {
+    const s = document.createElement('span');
+    s.className = `dot ${tipo}`;
+    return s;
+  }
+
+  // ========== CLIQUE NOS DIAS (para cores) ==========
   document.querySelectorAll('.mes').forEach(mes => {
     mes.addEventListener('click', e => {
       if (!mes.classList.contains('expanded')) return;
@@ -181,30 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ---------------- DOTS (bolinhas) ----------------
-  function criaDot(tipo) {
-    const s = document.createElement('span');
-    s.className = `dot ${tipo}`;
-    return s;
-  }
-
-  function atualizarDots(diaEl) {
-    const dots = diaEl.querySelector('.dots');
-    if (!dots) return;
-    dots.innerHTML = '';
-
-    if (diaEl.classList.contains('vermelho'))  dots.appendChild(criaDot('vermelho'));
-    if (diaEl.classList.contains('amarelo'))   dots.appendChild(criaDot('amarelo'));
-    if (diaEl.classList.contains('sem-aula'))  dots.appendChild(criaDot('semaula'));
-    if (diaEl.classList.contains('roxo'))      dots.appendChild(criaDot('roxo'));
-
-    // pontinho azul escuro se tiver tarefa
-    if (diaEl.classList.contains('has-tarefa')) {
-      dots.appendChild(criaDot('tarefa'));
-    }
-  }
-
-  // ---------------- MÉTRICAS / METAS ----------------
+  // ========== MÉTRICAS / METAS ==========
   function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
   }
@@ -221,8 +274,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!d.classList.contains('feriado')) totalValidos++;
 
       if (d.classList.contains('vermelho')) falt++;
-      if (d.classList.contains('amarelo')) atest++;
-      if (d.classList.contains('roxo'))    provas++;
+      if (d.classList.contains('amarelo'))  atest++;
+      if (d.classList.contains('roxo'))     provas++;
 
       const marcado = d.classList.contains('vermelho') || d.classList.contains('amarelo');
       const feriado = d.classList.contains('feriado');
@@ -233,13 +286,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const progress  = mes.querySelector('.progress-bar');
     const label     = mes.querySelector('.label-presenca');
 
-    mes.querySelector('.count-presenca').textContent  = pres;
-    mes.querySelector('.count-falta').textContent     = falt;
-    mes.querySelector('.count-atestado').textContent  = atest;
-    mes.querySelector('.count-semaula').textContent   = sem;
-    mes.querySelector('.count-prova').textContent     = provas;
+    mes.querySelector('.count-presenca').textContent = pres;
+    mes.querySelector('.count-falta').textContent    = falt;
+    mes.querySelector('.count-atestado').textContent = atest;
+    mes.querySelector('.count-semaula').textContent  = sem;
+    mes.querySelector('.count-prova').textContent    = provas;
 
-    const meta = clamp(parseInt(metaInput?.value || '80', 10), 0, 100);
+    const meta    = clamp(parseInt(metaInput?.value || '80', 10), 0, 100);
     const percPres = totalValidos > 0 ? Math.round((pres / totalValidos) * 100) : 0;
 
     if (progress) progress.style.width = Math.min(100, Math.round((percPres / meta) * 100)) + '%';
@@ -260,13 +313,80 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ---------------- MINI-AGENDA (Ver tarefas / Agendar nova) ----------------
-  // Clique no dia (sem cor selecionada) → abre mini-agenda com botões
+  // ========== MINI-AGENDA (Agenda + Horários) ==========
+  function formataDataBR(iso) {
+    const [y, m, d] = iso.split('-').map(Number);
+    return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
+  }
+
+  // Duplo clique = ir direto pro editor (como estava antes)
+  document.querySelectorAll('.mes .dia').forEach(d => {
+    d.addEventListener('dblclick', e => {
+      const mes = d.closest('.mes');
+      if (!mes || !mes.classList.contains('expanded')) return;
+      if (d.classList.contains('header-dia')) return;
+
+      const box     = mes.querySelector('.mini-agenda');
+      const dataEl  = box?.querySelector('.agenda-data');
+      const notasEl = box?.querySelector('.agenda-notas');
+
+      if (!box || !dataEl || !notasEl) return;
+
+      const iso = d.getAttribute('data-date');
+      if (!iso) return;
+
+      box.dataset.date = iso;
+      dataEl.textContent = formataDataBR(iso);
+
+      const lista     = tarefasDoDia(iso);
+      const tarefaCal = lista.find(t => t.origem === 'calendario');
+      notasEl.value = tarefaCal ? tarefaCal.texto : '';
+
+      // mostra só o editor
+      const resumo = box.querySelector('.agenda-resumo');
+      const editor = box.querySelector('.agenda-editor');
+      if (resumo) resumo.style.display = 'none';
+      if (editor) editor.style.display = 'block';
+
+      box.classList.add('aberto');
+      notasEl.focus();
+      e.stopPropagation();
+    });
+  });
+
+  document.querySelectorAll('.mes .agenda-fechar').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const mes = e.target.closest('.mes');
+      const box = mes.querySelector('.mini-agenda');
+      box.classList.remove('aberto');
+    });
+  });
+
+  document.querySelectorAll('.mes .agenda-salvar').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const mes  = e.target.closest('.mes');
+      const box  = mes.querySelector('.mini-agenda');
+      const notasEl = box?.querySelector('.agenda-notas');
+      const iso  = box?.dataset.date;
+
+      if (!iso || !notasEl) {
+        box?.classList.remove('aberto');
+        return;
+      }
+
+      salvarTextoDoDiaNaAgenda(iso, notasEl.value);
+      box.classList.remove('aberto');
+    });
+  });
+
+  // Clique simples no dia (sem cor selecionada) → abre mini-agenda com opções
   document.querySelectorAll('.mes .dia').forEach(diaEl => {
     diaEl.addEventListener('click', e => {
       const mes = diaEl.closest('.mes');
       if (!mes || !mes.classList.contains('expanded')) return;
-      if (mes.__corSelecionada) return; // se tiver cor selecionada, o handler de cor cuida
+      if (mes.__corSelecionada) return; // se tiver cor, quem manda é o handler de cor
       if (diaEl.classList.contains('header-dia')) return;
 
       const iso = diaEl.getAttribute('data-date');
@@ -281,17 +401,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const notas  = mini?.querySelector('.agenda-notas');
       const btnVer  = mini?.querySelector('.btn-ver-tarefas');
       const btnNova = mini?.querySelector('.btn-nova-tarefa');
+      const btnHor  = mini?.querySelector('.btn-ver-horarios');
 
-      if (!mini || !dataEl || !resumo || !editor || !notas || !btnVer || !btnNova) return;
+      if (!mini || !dataEl || !resumo || !editor || !notas || !btnVer || !btnNova || !btnHor) return;
 
       mini.dataset.date = iso;
       dataEl.textContent = formataDataBR(iso);
 
-      // sempre começa com tudo escondido
-      resumo.style.display = 'none';
-      editor.style.display = 'none';
-
-      // configura botões
+      // Handler: Ver tarefas do dia
       btnVer.onclick = () => {
         const ts = tarefasDoDia(iso);
         if (!ts.length) {
@@ -308,16 +425,42 @@ document.addEventListener('DOMContentLoaded', () => {
         editor.style.display = 'none';
       };
 
+      // Handler: Agendar nova tarefa
       btnNova.onclick = () => {
-        const lista = tarefasDoDia(iso);
-        const tCal  = lista.find(t => t.origem === 'calendario');
-        notas.value = tCal ? (tCal.texto || '') : '';
+        const lista  = tarefasDoDia(iso);
+        const tCal   = lista.find(t => t.origem === 'calendario');
+        notas.value  = tCal ? (tCal.texto || '') : '';
         editor.style.display = 'block';
         resumo.style.display = 'none';
         notas.focus();
       };
 
-      // comportamento padrão: se já tem tarefa → começa em "ver tarefas"; senão → editor
+      // Handler: Ver horários do dia
+     btnHor.onclick = async () => {
+  resumo.style.display = 'block';
+  editor.style.display = 'none';
+  resumo.innerHTML = `<p>Carregando horários...</p>`;
+
+  const horarios = await buscarHorarios(iso);
+
+  if (!horarios.length) {
+    resumo.innerHTML = `<p class="agenda-resumo-vazio">Nenhum horário cadastrado para este dia.</p>`;
+  } else {
+    const materias = Array.from(new Set(horarios)); // remove duplicados
+
+    resumo.innerHTML = `
+      <div class="agenda-bloco">
+        <strong>Horários do dia</strong>
+        <p>${materias.join(', ')}</p>
+      </div>
+    `;
+  }
+};
+
+
+      // Comportamento padrão ao clicar:
+      // se já tem tarefa → mostra "ver tarefas"
+      // se não tem → abre direto o editor
       if (tarefasDoDia(iso).length) {
         btnVer.click();
       } else {
@@ -328,48 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Botão fechar da mini-agenda
-  document.querySelectorAll('.mes .agenda-fechar').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      const mes = e.target.closest('.mes');
-      const box = mes.querySelector('.mini-agenda');
-      box.classList.remove('aberto');
-    });
-  });
-
-  // Salvar texto da mini-agenda → vira tarefa na Agenda
-  document.querySelectorAll('.mes .agenda-salvar').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      const mes  = e.target.closest('.mes');
-      const box  = mes.querySelector('.mini-agenda');
-      const notasEl = box?.querySelector('.agenda-notas');
-      const iso  = box?.dataset.date;
-
-      if (!iso || !notasEl) {
-        box?.classList.remove('aberto');
-        return;
-      }
-
-      salvarTextoDoDiaNaAgenda(iso, notasEl.value);
-
-      // se salvou texto, garante que o dia tenha a bolinha azul
-      const diaEl = document.querySelector(`.calendario .dia[data-date="${iso}"]`);
-      if (diaEl) {
-        if ((notasEl.value || '').trim() === '') {
-          diaEl.classList.remove('has-tarefa');
-        } else {
-          diaEl.classList.add('has-tarefa');
-        }
-        atualizarDots(diaEl);
-      }
-
-      box.classList.remove('aberto');
-    });
-  });
-
-  // ---------------- EXPORTAR / IMPRIMIR ----------------
+  // ========== EXPORTAR / IMPRIMIR ==========
   document.querySelectorAll('.mes .btn-imprimir').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
@@ -379,8 +481,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('no-scroll');
         document.getElementById('cal-backdrop')?.classList.add('ativo');
 
-        if (!mes.querySelector('.fechar-btn')) {
-          const fechar = document.createElement('button');
+        let fechar = mes.querySelector('.fechar-btn');
+        if (!fechar) {
+          fechar = document.createElement('button');
           fechar.textContent = '×';
           fechar.classList.add('fechar-btn');
           fechar.onclick = ev => {
@@ -389,6 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
           };
           mes.appendChild(fechar);
         }
+        fechar.style.display = 'flex';
       }
       window.print();
     });
@@ -424,7 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ---------------- SELETOR DE ANO ----------------
+  // ========== SELETOR DE ANO ==========
   document.querySelectorAll('.mes .anoSelect').forEach(sel => {
     const urlParams = new URLSearchParams(location.search);
     const anoAtual = parseInt(urlParams.get('ano') || new Date().getFullYear(), 10);
@@ -444,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ---------------- GARANTIR VISIBILIDADE METAS QUANDO ABRIR MÊS ----------------
+  // ========== GARANTIR VISIBILIDADE DO PAINEL DE METAS ==========
   function verificarVisibilidadeMeta(mes) {
     const metas = mes.querySelector('.painel-metas');
     if (!metas) return;
@@ -453,11 +557,8 @@ document.addEventListener('DOMContentLoaded', () => {
     metas.style.opacity = '1';
   }
 
-  // ---------------- INICIALIZAÇÃO (dots + metas + tarefas) ----------------
-  // bolinhas pra tudo que já tem classe (vermelho/amarelo/roxo/etc)
+  // ========== INICIALIZAÇÃO ==========
   document.querySelectorAll('.calendario .dia').forEach(atualizarDots);
-
-  // agora marca dias com tarefas vindas da Agenda (pontinho azul já aparece)
   marcarDiasComTarefa();
 
   document.querySelectorAll('.mes').forEach(mes => {
@@ -472,18 +573,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ---------------- ÍCONES HEADER (PERFIL / LOGOUT) ----------------
-  const perfilIcon = document.getElementById('icon-perfil');
+  // ========== ÍCONES HEADER (PERFIL / LOGOUT) ==========
+  const perfilIcon   = document.getElementById('icon-perfil');
+  const logoutModal  = document.getElementById('logout-modal');
+  const iconSair     = document.getElementById('icon-sair');
+  const confirmLogout = document.getElementById('confirm-logout');
+  const cancelLogout  = document.getElementById('cancel-logout');
+
   if (perfilIcon) {
     perfilIcon.addEventListener('click', () => {
       window.location.href = '../perfil/perfil.php';
     });
   }
-
-  const logoutModal   = document.getElementById('logout-modal');
-  const iconSair      = document.getElementById('icon-sair');
-  const confirmLogout = document.getElementById('confirm-logout');
-  const cancelLogout  = document.getElementById('cancel-logout');
 
   if (iconSair && logoutModal) {
     iconSair.addEventListener('click', () => {
@@ -507,7 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ---------------- MODAL FOGi ----------------
+  // ========== MODAL FOGi ==========
   const fogiBtn   = document.getElementById('icon-fogi');
   const fogiModal = document.getElementById('fogi-modal');
   const fogiFrame = document.getElementById('fogi-iframe');
