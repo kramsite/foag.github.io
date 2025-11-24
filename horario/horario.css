@@ -217,6 +217,34 @@ td:first-child {
     font-weight: bold;
 }
 
+/* FIX — Garantir que o modal fica acima de TUDO */
+.modal-sucesso {
+    position: fixed !important;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+    z-index: 999999 !important;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.modal-sucesso .modal-box {
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 18px;
+    width: 330px;
+    text-align: center;
+    box-shadow: 0 0 18px rgba(0,0,0,0.15);
+    transform: translateY(20px);
+    transition: transform 0.25s ease;
+    z-index: 1000000 !important;
+}
+
+
 /* Botões */
 button {
     margin: 15px 0;

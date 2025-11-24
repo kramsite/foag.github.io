@@ -76,7 +76,7 @@ if (file_exists($arquivoHorario)) {
         transform: scale(1.1);
       }
 
-      /* Modal full-screen da FOGi */
+      /* Modal full-screen da FOGi (usa mesmo overlay da classe .modal) */
       #fogi-modal {
         display: none;
         position: fixed;
@@ -254,6 +254,15 @@ if (file_exists($arquivoHorario)) {
       </div>
     </div>
 
+    <!-- MODAL DE SUCESSO FOAG (padronizado com .modal) -->
+    <div id="modal-sucesso" class="modal">
+      <div class="modal-content modal-sucesso-content">
+        <h3>Horário salvo!</h3>
+        <p>Suas alterações foram registradas com sucesso.</p>
+        <button id="fechar-modal" class="btn-modal">OK</button>
+      </div>
+    </div>
+
     <footer>
         &copy; 2025 FOAG. Todos os direitos reservados.
     </footer>
@@ -261,26 +270,28 @@ if (file_exists($arquivoHorario)) {
     <script src="horario.js?v=<?=time()?>"></script>
 
     <script>
+      // --------- FOGi ----------
       const fogiBtn   = document.getElementById("icon-fogi");
       const fogiModal = document.getElementById("fogi-modal");
       const fogiFrame = document.getElementById("fogi-iframe");
       const fogiClose = document.getElementById("fogi-close");
 
-      // abre IA
-      fogiBtn.addEventListener("click", () => {
-        fogiFrame.src = "http://127.0.0.1:5000";  // Flask/Ollama rodando
-        fogiModal.style.display = "flex";
-        document.body.style.overflow = "hidden";
-      });
+      if (fogiBtn) {
+        fogiBtn.addEventListener("click", () => {
+          fogiFrame.src = "http://127.0.0.1:5000";
+          fogiModal.style.display = "flex";
+          document.body.style.overflow = "hidden";
+        });
+      }
 
-      // fecha IA pelo botão "Fechar" do modal
-      fogiClose.addEventListener("click", () => {
-        fogiModal.style.display = "none";
-        fogiFrame.src = "about:blank"; // limpa sessão
-        document.body.style.overflow = "";
-      });
+      if (fogiClose) {
+        fogiClose.addEventListener("click", () => {
+          fogiModal.style.display = "none";
+          fogiFrame.src = "about:blank";
+          document.body.style.overflow = "";
+        });
+      }
 
-      // sair da IA via postMessage (botão X dentro do FOGi.html)
       window.addEventListener("message", (ev) => {
         if (ev.data && ev.data.type === "FOGI_CLOSE") {
           fogiModal.style.display = "none";
@@ -288,6 +299,23 @@ if (file_exists($arquivoHorario)) {
           document.body.style.overflow = "";
         }
       });
+
+      // --------- Modal de sucesso ----------
+      const modalSucesso = document.getElementById("modal-sucesso");
+      const btnFecharModal = document.getElementById("fechar-modal");
+
+      if (btnFecharModal && modalSucesso) {
+        btnFecharModal.addEventListener("click", () => {
+          modalSucesso.style.display = "none";
+        });
+      }
+
+      // Função global para ser chamada no horario.js após salvar
+      window.abrirModalSucesso = function () {
+        if (modalSucesso) {
+          modalSucesso.style.display = "flex";
+        }
+      };
     </script>
 </body>
 </html>

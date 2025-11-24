@@ -192,16 +192,11 @@ function gerarCalendario() {
   <!-- Export PNG -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-  <!-- Agenda do usuário para o calendário -->
-  <script>
-    window.CAL_AGENDA_DATA     = <?= json_encode($agendaData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
-    window.CAL_AGENDA_SAVE_URL = "../bloco/salvar_agenda.php";
-  </script>
     <!-- Agenda do usuário para o calendário -->
   <script>
     window.CAL_AGENDA_DATA     = <?= json_encode($agendaData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
     window.CAL_AGENDA_SAVE_URL = "../bloco/salvar_agenda.php";
-    window.CAL_HORARIO_URL     = "../horario/hora_api.php"; // <- novo
+    window.CAL_HORARIO_URL     = "../horario/horario_api.php"; // <- novo
   </script>
 
 </head>

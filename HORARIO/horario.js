@@ -1,29 +1,72 @@
-document.addEventListener('DOMContentLoaded', function () {
-  console.log('horario.js carregado');
+// horario.js — FOAG
 
-  const SAVE_URL = window.HORARIO_SAVE_URL || 'salvar_horario.php';
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('horario.js carregado ✅');
+
+  const SAVE_URL     = window.HORARIO_SAVE_URL || 'salvar_hora.php';
   const HORARIO_HTML = window.HORARIO_HTML || '';
 
   const tabela = document.getElementById('scheduleTable');
-  const tbody = tabela ? tabela.querySelector('tbody') : null;
+  const tbody  = tabela ? tabela.querySelector('tbody') : null;
 
-  // Carregar horário salvo do JSON
+  if (!tabela) {
+    console.error('❌ Não encontrei a tabela #scheduleTable no DOM.');
+  } else {
+    console.log('✅ Tabela encontrada:', tabela);
+  }
+
+  // --------- CARREGAR HORÁRIO SALVO DO JSON ---------
   if (tbody && HORARIO_HTML && HORARIO_HTML.trim() !== '') {
     console.log('Carregando HTML salvo do horário...');
     tbody.innerHTML = HORARIO_HTML;
-    // Garantir contenteditable nas células
-    tbody.querySelectorAll('td').forEach((td, idx) => {
+    tbody.querySelectorAll('td').forEach((td) => {
       td.contentEditable = true;
     });
   }
 
-  // ---------- Funções globais (usadas no HTML via onclick) ----------
+  // --------- MODAL DE SUCESSO ---------
+  const modalSucesso   = document.getElementById('modal-sucesso');
+  const btnFecharModal = document.getElementById('fechar-modal');
 
+  function abrirModalSucesso() {
+    console.log('abrirModalSucesso() chamado');
+    if (!modalSucesso) {
+      alert('Horário salvo com sucesso!');
+      return;
+    }
+    // aparece centralizado (CSS faz o resto)
+    modalSucesso.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fecharModalSucesso() {
+    if (!modalSucesso) return;
+    modalSucesso.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  if (btnFecharModal && modalSucesso) {
+    btnFecharModal.addEventListener('click', fecharModalSucesso);
+
+    // clicar no fundo fecha também
+    modalSucesso.addEventListener('click', (e) => {
+      if (e.target === modalSucesso) {
+        fecharModalSucesso();
+      }
+    });
+  }
+
+  // ---------- Funções globais (usadas no HTML via onclick) ----------
   window.salvarEdicoes = function () {
-    if (!tbody) return;
+    console.log('🖱️ salvarEdicoes() foi chamada');
+    if (!tbody) {
+      alert('Erro: tabela não encontrada.');
+      return;
+    }
 
     const html = tbody.innerHTML;
-    console.log('Salvando horário no servidor...', SAVE_URL);
+    console.log('Enviando para', SAVE_URL);
+    console.log('HTML a ser salvo:', html);
 
     fetch(SAVE_URL, {
       method: 'POST',
@@ -34,28 +77,34 @@ document.addEventListener('DOMContentLoaded', function () {
     })
       .then(async (res) => {
         const txt = await res.text();
-        console.log('Resposta salvar_horario.php:', res.status, txt);
+        console.log('📩 Resposta bruta de salvar_hora.php:', res.status, txt);
+
+        let json;
         try {
-          const json = JSON.parse(txt);
-          if (json.status === 'ok') {
-            alert('Horário salvo com sucesso!');
-          } else {
-            alert('Erro ao salvar horário.');
-          }
+          json = JSON.parse(txt);
+          console.log('JSON parseado:', json);
         } catch (e) {
-          alert('Horário salvo (retorno não JSON, ver console).');
+          console.error('Erro ao fazer JSON.parse:', e);
+          alert('Erro ao salvar horário: resposta inválida do servidor.');
+          return;
+        }
+
+        if (json.ok === true) {
+          abrirModalSucesso();
+        } else {
+          console.warn('Servidor respondeu, mas ok != true:', json);
+          alert('Erro ao salvar horário. Verifique se está logado ou tente novamente.');
         }
       })
       .catch((err) => {
-        console.error('Erro ao salvar horário:', err);
-        alert('Erro ao salvar horário. Ver console.');
+        console.error('Erro no fetch para salvar_hora.php:', err);
+        alert('Erro ao salvar horário. Veja o console para detalhes.');
       });
   };
 
   window.adicionarLinha = function () {
     if (!tabela) return;
     const novaLinha = tabela.insertRow(tabela.rows.length);
-    // 6 colunas: horário + 5 dias
     for (let i = 0; i < 6; i++) {
       const celula = novaLinha.insertCell(i);
       celula.contentEditable = true;
@@ -71,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   window.removerLinha = function () {
     if (!tabela) return;
-    // mantém thead, nunca remove a linha de cabeçalho
     if (tabela.rows.length > 1) {
       tabela.deleteRow(tabela.rows.length - 1);
     }
@@ -158,12 +206,11 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   // ---------- Logout + Perfil ----------
-
-  const logoutModal = document.getElementById('logout-modal');
+  const logoutModal   = document.getElementById('logout-modal');
   const confirmLogout = document.getElementById('confirm-logout');
-  const cancelLogout = document.getElementById('cancel-logout');
-  const iconSair = document.getElementById('icon-sair');
-  const iconPerfil = document.getElementById('icon-perfil');
+  const cancelLogout  = document.getElementById('cancel-logout');
+  const iconSair      = document.getElementById('icon-sair');
+  const iconPerfil    = document.getElementById('icon-perfil');
 
   if (iconSair && logoutModal) {
     iconSair.addEventListener('click', () => {
@@ -172,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     confirmLogout &&
       confirmLogout.addEventListener('click', () => {
-        window.location.href = '../index/index.php';
+        window.location.href = '../login/index.php';
       });
 
     cancelLogout &&

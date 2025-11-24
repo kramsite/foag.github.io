@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     tarefas: [],
     nao_esquecer: []
   };
-  const AGENDA_SAVE_URL   = window.CAL_AGENDA_SAVE_URL || '../bloco/salvar_agenda.php';
-  const HORARIO_API_URL   = window.CAL_HORARIO_URL     || '../horario/horario_api.php';
+  const AGENDA_SAVE_URL = window.CAL_AGENDA_SAVE_URL || '../bloco/salvar_agenda.php';
+  const HORARIO_API_URL = window.CAL_HORARIO_URL     || '../horario/horario_api.php';
 
   function salvarAgendaServidor() {
     try {
@@ -66,62 +66,71 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    // atualiza bolinha azul no dia imediatamente
+    const diaEl = document.querySelector(`.calendario .dia[data-date="${iso}"]`);
+    if (diaEl) {
+      if (txt !== '') {
+        diaEl.classList.add('has-tarefa');
+      } else {
+        diaEl.classList.remove('has-tarefa');
+      }
+      atualizarDots(diaEl);
+    }
+
     salvarAgendaServidor();
   }
 
   // ------- HORÁRIO (ligação com horário.php via API) -------
-
   async function buscarHorarios(iso) {
-  if (!HORARIO_API_URL) return [];
+    if (!HORARIO_API_URL) return [];
 
-  try {
-    const url = `${HORARIO_API_URL}?data=${encodeURIComponent(iso)}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+    try {
+      const url = `${HORARIO_API_URL}?data=${encodeURIComponent(iso)}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
 
-    const json = await res.json();
-    if (!json || !json.html) return [];
+      const json = await res.json();
+      if (!json || !json.html) return [];
 
-    const html = json.html;
+      const html = json.html;
 
-    // pega o dia da semana pelo ISO
-    const data = new Date(iso + 'T00:00:00');
-    const diaSemana = data.getDay(); // 0=domingo ... 6=sábado
+      // pega o dia da semana pelo ISO
+      const data = new Date(iso + 'T00:00:00');
+      const diaSemana = data.getDay(); // 0=domingo ... 6=sábado
 
-    const mapCol = {
-      1: 1, // segunda
-      2: 2, // terça
-      3: 3, // quarta
-      4: 4, // quinta
-      5: 5  // sexta
-    };
+      const mapCol = {
+        1: 1, // segunda
+        2: 2, // terça
+        3: 3, // quarta
+        4: 4, // quinta
+        5: 5  // sexta
+      };
 
-    const colIndex = mapCol[diaSemana];
-    if (!colIndex) {
-      return []; // sábado/domingo
-    }
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(`<table>${html}</table>`, 'text/html');
-    const trs = doc.querySelectorAll('tr');
-
-    const materias = new Set();
-
-    trs.forEach(tr => {
-      const tds = tr.querySelectorAll('td');
-      if (tds.length > colIndex) {
-        const texto = tds[colIndex].textContent.trim();
-        if (texto) materias.add(texto);
+      const colIndex = mapCol[diaSemana];
+      if (!colIndex) {
+        return []; // sábado/domingo → sem aula
       }
-    });
 
-    return Array.from(materias);
-  } catch (e) {
-    console.error('Erro ao buscar horários do dia:', e);
-    return [];
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(`<table>${html}</table>`, 'text/html');
+      const trs = doc.querySelectorAll('tr');
+
+      const materias = new Set();
+
+      trs.forEach(tr => {
+        const tds = tr.querySelectorAll('td');
+        if (tds.length > colIndex) {
+          const texto = tds[colIndex].textContent.trim();
+          if (texto) materias.add(texto);
+        }
+      });
+
+      return Array.from(materias);
+    } catch (e) {
+      console.error('Erro ao buscar horários do dia:', e);
+      return [];
+    }
   }
-}
-
 
   // ========== UTIL: FECHAR MÊS ==========
   function fecharMes(mes) {
@@ -213,10 +222,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!dots) return;
     dots.innerHTML = '';
 
-    if (diaEl.classList.contains('vermelho'))   dots.appendChild(criaDot('vermelho'));
-    if (diaEl.classList.contains('amarelo'))    dots.appendChild(criaDot('amarelo'));
-    if (diaEl.classList.contains('sem-aula'))   dots.appendChild(criaDot('semaula'));
-    if (diaEl.classList.contains('roxo'))       dots.appendChild(criaDot('roxo'));
+    if (diaEl.classList.contains('vermelho')) dots.appendChild(criaDot('vermelho'));
+    if (diaEl.classList.contains('amarelo'))  dots.appendChild(criaDot('amarelo'));
+    if (diaEl.classList.contains('sem-aula')) dots.appendChild(criaDot('semaula'));
+    if (diaEl.classList.contains('roxo'))     dots.appendChild(criaDot('roxo'));
 
     // pontinho azul escuro se tiver tarefa
     if (diaEl.classList.contains('has-tarefa')) {
@@ -292,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mes.querySelector('.count-semaula').textContent  = sem;
     mes.querySelector('.count-prova').textContent    = provas;
 
-    const meta    = clamp(parseInt(metaInput?.value || '80', 10), 0, 100);
+    const meta     = clamp(parseInt(metaInput?.value || '80', 10), 0, 100);
     const percPres = totalValidos > 0 ? Math.round((pres / totalValidos) * 100) : 0;
 
     if (progress) progress.style.width = Math.min(100, Math.round((percPres / meta) * 100)) + '%';
@@ -319,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
   }
 
-  // Duplo clique = ir direto pro editor (como estava antes)
+  // Duplo clique = ir direto pro editor
   document.querySelectorAll('.mes .dia').forEach(d => {
     d.addEventListener('dblclick', e => {
       const mes = d.closest('.mes');
@@ -342,7 +351,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const tarefaCal = lista.find(t => t.origem === 'calendario');
       notasEl.value = tarefaCal ? tarefaCal.texto : '';
 
-      // mostra só o editor
       const resumo = box.querySelector('.agenda-resumo');
       const editor = box.querySelector('.agenda-editor');
       if (resumo) resumo.style.display = 'none';
@@ -366,10 +374,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.mes .agenda-salvar').forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
-      const mes  = e.target.closest('.mes');
-      const box  = mes.querySelector('.mini-agenda');
+      const mes    = e.target.closest('.mes');
+      const box    = mes.querySelector('.mini-agenda');
       const notasEl = box?.querySelector('.agenda-notas');
-      const iso  = box?.dataset.date;
+      const iso    = box?.dataset.date;
 
       if (!iso || !notasEl) {
         box?.classList.remove('aberto');
@@ -381,12 +389,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Clique simples no dia (sem cor selecionada) → abre mini-agenda com opções
+  // Clique simples no dia (sem cor selecionada) → mini-agenda com opções
   document.querySelectorAll('.mes .dia').forEach(diaEl => {
     diaEl.addEventListener('click', e => {
       const mes = diaEl.closest('.mes');
       if (!mes || !mes.classList.contains('expanded')) return;
-      if (mes.__corSelecionada) return; // se tiver cor, quem manda é o handler de cor
+      if (mes.__corSelecionada) return;
       if (diaEl.classList.contains('header-dia')) return;
 
       const iso = diaEl.getAttribute('data-date');
@@ -408,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mini.dataset.date = iso;
       dataEl.textContent = formataDataBR(iso);
 
-      // Handler: Ver tarefas do dia
+      // Ver tarefas do dia
       btnVer.onclick = () => {
         const ts = tarefasDoDia(iso);
         if (!ts.length) {
@@ -425,42 +433,39 @@ document.addEventListener('DOMContentLoaded', () => {
         editor.style.display = 'none';
       };
 
-      // Handler: Agendar nova tarefa
+      // Agendar nova tarefa
       btnNova.onclick = () => {
-        const lista  = tarefasDoDia(iso);
-        const tCal   = lista.find(t => t.origem === 'calendario');
-        notas.value  = tCal ? (tCal.texto || '') : '';
+        const lista = tarefasDoDia(iso);
+        const tCal  = lista.find(t => t.origem === 'calendario');
+        notas.value = tCal ? (tCal.texto || '') : '';
         editor.style.display = 'block';
         resumo.style.display = 'none';
         notas.focus();
       };
 
-      // Handler: Ver horários do dia
-     btnHor.onclick = async () => {
-  resumo.style.display = 'block';
-  editor.style.display = 'none';
-  resumo.innerHTML = `<p>Carregando horários...</p>`;
+      // Ver horários do dia
+      btnHor.onclick = async () => {
+        resumo.style.display = 'block';
+        editor.style.display = 'none';
+        resumo.innerHTML = `<p>Carregando horários...</p>`;
 
-  const horarios = await buscarHorarios(iso);
+        const horarios = await buscarHorarios(iso);
 
-  if (!horarios.length) {
-    resumo.innerHTML = `<p class="agenda-resumo-vazio">Nenhum horário cadastrado para este dia.</p>`;
-  } else {
-    const materias = Array.from(new Set(horarios)); // remove duplicados
+        if (!horarios.length) {
+          resumo.innerHTML = `<p class="agenda-resumo-vazio">Nenhum horário cadastrado para este dia.</p>`;
+        } else {
+          const materias = Array.from(new Set(horarios)); // remove duplicados
 
-    resumo.innerHTML = `
-      <div class="agenda-bloco">
-        <strong>Horários do dia</strong>
-        <p>${materias.join(', ')}</p>
-      </div>
-    `;
-  }
-};
+          resumo.innerHTML = `
+            <div class="agenda-bloco">
+              <strong>Horários do dia</strong>
+              <p>${materias.join(', ')}</p>
+            </div>
+          `;
+        }
+      };
 
-
-      // Comportamento padrão ao clicar:
-      // se já tem tarefa → mostra "ver tarefas"
-      // se não tem → abre direto o editor
+      // padrão ao clicar
       if (tarefasDoDia(iso).length) {
         btnVer.click();
       } else {
@@ -574,9 +579,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ========== ÍCONES HEADER (PERFIL / LOGOUT) ==========
-  const perfilIcon   = document.getElementById('icon-perfil');
-  const logoutModal  = document.getElementById('logout-modal');
-  const iconSair     = document.getElementById('icon-sair');
+  const perfilIcon    = document.getElementById('icon-perfil');
+  const logoutModal   = document.getElementById('logout-modal');
+  const iconSair      = document.getElementById('icon-sair');
   const confirmLogout = document.getElementById('confirm-logout');
   const cancelLogout  = document.getElementById('cancel-logout');
 
