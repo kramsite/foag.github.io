@@ -9,6 +9,31 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   const AGENDA_SAVE_URL = window.CAL_AGENDA_SAVE_URL || '../bloco/salvar_agenda.php';
   const HORARIO_API_URL = window.CAL_HORARIO_URL     || '../horario/horario_api.php';
+  // ----- DADOS DO CALENDÁRIO (cores + metas) -----
+  const rawCalendData = window.CAL_CALEND_DATA || {};
+
+  const calendData = {
+    dias:  (rawCalendData.dias  && typeof rawCalendData.dias  === 'object') ? rawCalendData.dias  : {},
+    metas: (rawCalendData.metas && typeof rawCalendData.metas === 'object') ? rawCalendData.metas : {}
+  };
+
+  const CALEND_SAVE_URL = window.CAL_CALEND_SAVE_URL || 'salvar_calendario.php';
+
+  function salvarCalendarioServidor() {
+    try {
+      fetch(CALEND_SAVE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(calendData)
+      })
+        .then(r => r.text())
+        .then(txt => console.log('Calendário salvo:', txt))
+        .catch(err => console.error('Erro ao salvar calendário:', err));
+    } catch (e) {
+      console.error('Erro fetch calendário:', e);
+    }
+  }
+
 
   function salvarAgendaServidor() {
     try {
@@ -239,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return s;
   }
 
-  // ========== CLIQUE NOS DIAS (para cores) ==========
+    // ========== CLIQUE NOS DIAS (para cores) ==========
   document.querySelectorAll('.mes').forEach(mes => {
     mes.addEventListener('click', e => {
       if (!mes.classList.contains('expanded')) return;
@@ -259,12 +284,30 @@ document.addEventListener('DOMContentLoaded', () => {
         t.classList.add(mes.__corSelecionada);
       }
 
+      const iso = t.getAttribute('data-date');
+      if (iso) {
+        // qual status ficou no final?
+        let status = null;
+        if (t.classList.contains('vermelho'))  status = 'vermelho';
+        else if (t.classList.contains('amarelo'))  status = 'amarelo';
+        else if (t.classList.contains('sem-aula')) status = 'sem-aula';
+        else if (t.classList.contains('roxo'))     status = 'roxo';
+
+        if (status) {
+          calendData.dias[iso] = status;
+        } else {
+          delete calendData.dias[iso];
+        }
+        salvarCalendarioServidor();
+      }
+
       setTimeout(() => {
         atualizarDots(t);
         recalcularMetricasDoMes(mes);
       }, 0);
     });
   });
+
 
   // ========== MÉTRICAS / METAS ==========
   function clamp(n, min, max) {
@@ -315,12 +358,21 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   }
 
-  document.querySelectorAll('.mes .meta-presenca').forEach(inp => {
+    document.querySelectorAll('.mes .meta-presenca').forEach(inp => {
     inp.addEventListener('change', e => {
       const mes = e.target.closest('.mes');
+      const ano = mes.dataset.ano;
+      const idx = mes.dataset.mes;
+      const key = `${ano}-${idx}`;
+
+      const valor = parseInt(e.target.value || '0', 10);
+      calendData.metas[key] = isNaN(valor) ? 0 : valor;
+
+      salvarCalendarioServidor();
       recalcularMetricasDoMes(mes);
     });
   });
+
 
   // ========== MINI-AGENDA (Agenda + Horários) ==========
   function formataDataBR(iso) {
@@ -562,11 +614,34 @@ document.addEventListener('DOMContentLoaded', () => {
     metas.style.opacity = '1';
   }
 
-  // ========== INICIALIZAÇÃO ==========
-  document.querySelectorAll('.calendario .dia').forEach(atualizarDots);
+    // ========== INICIALIZAÇÃO ==========
+
+  // 1) aplicar cores salvas
+  document.querySelectorAll('.calendario .dia').forEach(diaEl => {
+    const iso = diaEl.getAttribute('data-date');
+    if (!iso) return;
+    const status = calendData.dias?.[iso];
+    if (status) {
+      diaEl.classList.add(status); // 'vermelho', 'amarelo', 'sem-aula', 'roxo'
+    }
+    atualizarDots(diaEl);
+  });
+
+  // 2) marcar dias com tarefa
   marcarDiasComTarefa();
 
+  // 3) aplicar metas salvas e recalcular
   document.querySelectorAll('.mes').forEach(mes => {
+    const ano = mes.dataset.ano;
+    const idx = mes.dataset.mes;
+    const key = `${ano}-${idx}`;
+
+    const metaSalva = calendData.metas?.[key];
+    const metaInput = mes.querySelector('.meta-presenca');
+    if (metaInput && metaSalva != null) {
+      metaInput.value = metaSalva;
+    }
+
     recalcularMetricasDoMes(mes);
 
     mes.addEventListener('click', () => {
@@ -577,6 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 80);
     });
   });
+
 
   // ========== ÍCONES HEADER (PERFIL / LOGOUT) ==========
   const perfilIcon    = document.getElementById('icon-perfil');

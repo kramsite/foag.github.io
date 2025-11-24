@@ -44,6 +44,27 @@ $agendaData = json_decode(file_get_contents($arquivoAgenda), true) ?? [
   'nao_esquecer' => []
 ];
 
+
+// ================== CALENDÁRIO DO USUÁRIO ==================
+$arquivoCalend = $pastaUsuario . '/calendario.json';
+
+if (!file_exists($arquivoCalend)) {
+  $calendarioInicial = [
+    'dias'  => [], // 'YYYY-MM-DD' => 'vermelho' | 'amarelo' | 'sem-aula' | 'roxo'
+    'metas' => []  // 'ANO-MES' => 80, 90...
+  ];
+  file_put_contents(
+    $arquivoCalend,
+    json_encode($calendarioInicial, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+  );
+}
+
+$calendData = json_decode(file_get_contents($arquivoCalend), true);
+if (!is_array($calendData)) {
+  $calendData = ['dias' => [], 'metas' => []];
+}
+
+
 // ================== FUNÇÕES DO CALENDÁRIO ==================
 
 // Função para gerar os dias de cada mês
@@ -192,12 +213,17 @@ function gerarCalendario() {
   <!-- Export PNG -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-    <!-- Agenda do usuário para o calendário -->
-  <script>
-    window.CAL_AGENDA_DATA     = <?= json_encode($agendaData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
-    window.CAL_AGENDA_SAVE_URL = "../bloco/salvar_agenda.php";
-    window.CAL_HORARIO_URL     = "../horario/horario_api.php"; // <- novo
+      <script>
+    window.CAL_AGENDA_DATA      = <?= json_encode($agendaData,  JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    window.CAL_AGENDA_SAVE_URL  = "../bloco/salvar_agenda.php";
+
+    window.CAL_HORARIO_URL      = "../horario/horario_api.php";
+
+    // NOVO: dados do calendário salvo
+    window.CAL_CALEND_DATA      = <?= json_encode($calendData,  JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    window.CAL_CALEND_SAVE_URL  = "salvar_calendario.php";
   </script>
+
 
 </head>
 
