@@ -190,9 +190,6 @@ $current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
         <i class="fa-solid fa-clock"></i> Horário
       </a>
 
-      <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
-        <i class="fa-solid fa-circle-info"></i> Sobre
-      </a>
     </nav>
 
     <main class="main-content">
