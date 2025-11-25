@@ -65,6 +65,58 @@ body.dark-mode .btn.ghost {
   color: var(--dark-text) !important;
 }
 
+/* ================= TEXTO GERAL ================= */
+body.dark-mode,
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode label,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode option,
+body.dark-mode small,
+body.dark-mode .lbl {
+  color: var(--dark-text) !important;
+}
+
+/* Inputs que estavam apagando o texto */
+body.dark-mode input.input,
+body.dark-mode select.select,
+body.dark-mode textarea {
+  color: var(--dark-text) !important;
+  background-color: #020617 !important;
+}
+
+/* Placeholders claros */
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Títulos que estavam sumindo em cards e painéis */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5 {
+  color: var(--dark-text) !important;
+}
+
+/* Tabs */
+body.dark-mode .tab-btn {
+  color: var(--dark-text) !important;
+}
+
+body.dark-mode .tab-btn.active {
+  color: #0b1120 !important;
+}
+
+/* Tabela */
+body.dark-mode table td,
+body.dark-mode table th {
+  color: var(--dark-text) !important;
+}
+
+
 /* ============= TIMER / PILLS / PROGRESS ============= */
 body.dark-mode .timer {
   color: #f9fafb !important;
