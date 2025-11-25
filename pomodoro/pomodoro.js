@@ -41,7 +41,7 @@ iconSair &&
 confirmLogout &&
   confirmLogout.addEventListener(
     'click',
-    () => (location.href = '../index/index.php')
+    () => (location.href = '../login/index.php')
   );
 
 cancelLogout &&

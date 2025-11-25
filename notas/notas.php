@@ -385,7 +385,7 @@ $current = basename($_SERVER['PHP_SELF']); // pra menu ativo
   <title>FOAG — Notas e Médias</title>
   <link rel="stylesheet" href="boletim.css">
   <link rel="stylesheet" href="../m.escuro/dark_base.css">
-  <link rel="stylesheet" href="dark_boletim.css">
+  <link rel="stylesheet" href="dark_notas.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
@@ -449,6 +449,8 @@ $current = basename($_SERVER['PHP_SELF']); // pra menu ativo
         width: 100%;
         height: 100%;
       }
+
+      
   </style>
 </head>
 
@@ -824,7 +826,7 @@ $current = basename($_SERVER['PHP_SELF']); // pra menu ativo
   <div id="logout-modal" class="modal">
     <div class="modal-content">
       <h3>Ah... já vai?</h3>
-      <h4>Tem certeza de que deseja sair?</h4>
+      <h4>Tem certeza que deseja sair?</h4>
       <div class="modal-buttons">
         <button id="confirm-logout" class="btn">Sim</button>
         <button id="cancel-logout" class="btn secondary">Cancelar</button>
@@ -879,7 +881,7 @@ $current = basename($_SERVER['PHP_SELF']); // pra menu ativo
     });
 
     confirmLogout && confirmLogout.addEventListener('click', () => {
-      window.location.href = '../index/index.php';
+      window.location.href = '../login/index.php';
     });
 
     cancelLogout && cancelLogout.addEventListener('click', () => {

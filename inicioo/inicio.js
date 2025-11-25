@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (confirmLogout) {
             confirmLogout.addEventListener('click', () => {
-                window.location.href = '../index/index.php';
+                window.location.href = '../login/index.php';
             });
         }
 
