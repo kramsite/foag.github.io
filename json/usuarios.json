@@ -10,5 +10,17 @@
         "escola": "Escola Estadual Militar Dom Pedro II",
         "termos_aceitos": true,
         "cadastrado_em": "2025-11-22 22:29:32"
+    },
+    {
+        "id": 2,
+        "nome": "marianna",
+        "email": "marianna@gmail.com",
+        "senha": "$2y$10$7JnMbiCkTB89.6bc7IE\/5esjIOk9HkpyJBj3mMj.z1zXoYXaZoQdu",
+        "nascimento": "2008-11-28",
+        "telefone": "(65) 9234-6361",
+        "serie": "2º ano do Ensino Médio",
+        "escola": "Escola Estadual Militar Dom Pedro II",
+        "termos_aceitos": true,
+        "cadastrado_em": "2025-11-25 13:13:10"
     }
 ]
