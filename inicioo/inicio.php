@@ -155,9 +155,6 @@ try {
                 <a href="../horario/horario.php">
                     <i class="fa-solid fa-clock"></i> Horário
                 </a>
-                <a href="../sobre/sobre.html">
-                    <i class="fa-solid fa-circle-info"></i> Sobre
-                </a>
             </nav>
         </div>
         <div class="header-icons">

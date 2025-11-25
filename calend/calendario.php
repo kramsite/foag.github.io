@@ -269,10 +269,6 @@ function gerarCalendario() {
       <a href="../horario/horario.php" class="<?= $current === 'horario.php' ? 'active' : '' ?>">
         <i class="fa-solid fa-clock"></i> Horário
       </a>
-
-      <a href="../sobre/sobre.html" class="<?= $current === 'sobre.html' ? 'active' : '' ?>">
-        <i class="fa-solid fa-circle-info"></i> Sobre
-      </a>
     </nav>
 
     <div class="conteudo">
