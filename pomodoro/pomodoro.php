@@ -62,7 +62,7 @@ $current = basename($_SERVER['PHP_SELF']); // ex: pomodoro.php, calendario.php
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="pomodoro.css">
   <link rel="stylesheet" href="../m.escuro/dark_base.css">
-  <link rel="stylesheet" href="dark_pomod.css">
+  <link rel="stylesheet" href="dark_pomo.css">
   <!-- Chart.js para os gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="../m.escuro/dark-mode.js"></script>
