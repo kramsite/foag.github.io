@@ -10,5 +10,17 @@
         "escola": "Escola Estadual Militar Dom Pedro II",
         "termos_aceitos": true,
         "cadastrado_em": "2025-11-22 22:29:32"
+    },
+    {
+        "id": 2,
+        "nome": "kezia",
+        "email": "keziaazevedo2009@gmail.com",
+        "senha": "$2y$10$sB.hoF3CF1B6bHdRlNZABOkVfrTRBdFo5KN9OTU3o4nj2J160p8XG",
+        "nascimento": "2009-04-21",
+        "telefone": "(65) 99324-4876",
+        "serie": "2º ano do Ensino Médio",
+        "escola": "Escola Estadual Militar Dom Pedro II",
+        "termos_aceitos": true,
+        "cadastrado_em": "2025-11-25 13:14:41"
     }
 ]
